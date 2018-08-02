@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/zhs007/jarvistelebot/base"
 	"github.com/zhs007/jarvistelebot/controller/telegram"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,8 @@ func SetRouter() {
 
 	// Router.LoadHTMLGlob(base.BuildResPath("./views") + "/*.html")
 
-	Router.GET("/telegram/612523255:AAHDo94TU3wZVfYwBwbZpYlUjeeSGyJ3o-c", telegramctrl.Root())
-	Router.POST("/telegram/612523255:AAHDo94TU3wZVfYwBwbZpYlUjeeSGyJ3o-c", telegramctrl.Root())
+	config := base.GetConfig()
+
+	Router.GET("/telegram/"+config.TelegramBotToken, telegramctrl.Root())
+	Router.POST("/telegram/"+config.TelegramBotToken, telegramctrl.Root())
 }

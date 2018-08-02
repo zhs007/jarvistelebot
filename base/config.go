@@ -11,15 +11,13 @@ import (
 
 // Config - config
 type Config struct {
-	WebServAddr  string
-	LogPath      string
-	ErrPath      string
-	LogLevel     string
-	DTAPI        string
-	DTAPPKEY     string
-	DTBusinessid string
-	runpath      string
-	respath      string
+	WebServAddr      string
+	LogPath          string
+	ErrPath          string
+	LogLevel         string
+	TelegramBotToken string
+	runpath          string
+	respath          string
 }
 
 var cfg Config
