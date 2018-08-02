@@ -1,4 +1,4 @@
 webservaddr: ':7100'
 logpath: './output.log'
 errpath: './error.log'
-telegrambottoken: '612523255:AAHDo94TU3wZVfYwBwbZpYlUjeeSGyJ3o-c'
+telegrambottoken: '<your token>'

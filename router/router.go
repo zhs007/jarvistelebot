@@ -26,6 +26,11 @@ func SetRouter() {
 
 	config := base.GetConfig()
 
+	Router.GET("/", telegramctrl.Index())
+
+	Router.GET("/telegram", telegramctrl.Root())
+	Router.POST("/telegram", telegramctrl.Root())
+
 	Router.GET("/telegram/"+config.TelegramBotToken, telegramctrl.Root())
 	Router.POST("/telegram/"+config.TelegramBotToken, telegramctrl.Root())
 }
