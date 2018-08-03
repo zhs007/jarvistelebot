@@ -12,4 +12,5 @@
 *.out
 
 vendor
+runpath
 ./jarvistelebot
