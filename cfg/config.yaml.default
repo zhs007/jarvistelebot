@@ -1,0 +1,23 @@
+# jarvis telegram bot config file
+
+# telebottoken - telegram bot token
+telebottoken: '<your telegram bot token>'
+
+# telebottype - it meybe 'getupdate' or 'webhook'
+telebottype: 'getupdate'
+
+# webhookurl - like 'https://telebot.heyjarvis.ai/telebot'
+webhookurl: 'https://telebot.heyjarvis.ai/telebot'
+
+# webhookaddr - service bind addr
+webhookaddr: ':443'
+
+# logpath - if you need console, set this value to 'console'
+#       otherwise you can give a file path
+logpath: 'console'
+
+# loglevel - log level
+loglevel: 'debug'
+
+# debugmode: true or false
+debugmode: true

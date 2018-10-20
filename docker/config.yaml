@@ -1,4 +1,0 @@
-webservaddr: ':7100'
-logpath: './output.log'
-errpath: './error.log'
-telegrambottoken: '<your token>'

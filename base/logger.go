@@ -1,6 +1,7 @@
 package base
 
 import (
+	"os"
 	"sync"
 
 	"go.uber.org/zap"
@@ -10,26 +11,31 @@ import (
 var logger *zap.Logger
 var onceLogger sync.Once
 
-func initLogger() (*zap.Logger, error) {
-	var cfgZap zap.Config
-	atom := zap.NewAtomicLevel()
-	atom.SetLevel(zap.DebugLevel)
+func initLogger() *zap.Logger {
 
-	cfgZap.Encoding = "json"
-	cfgZap.OutputPaths = []string{cfg.LogPath}
-	cfgZap.ErrorOutputPaths = []string{cfg.ErrPath}
-	cfgZap.Level = atom
-	cfgZap.EncoderConfig = zap.NewProductionEncoderConfig()
-	cfgZap.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	loglevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl >= cfg.lvl
+	})
 
-	return cfgZap.Build()
+	if cfg.LogPath == LOGPATHConsole {
+		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
+		consoleDebugging := zapcore.Lock(os.Stdout)
+		core := zapcore.NewTee(
+			zapcore.NewCore(consoleEncoder, consoleDebugging, loglevel),
+		)
+
+		logger := zap.New(core)
+		defer logger.Sync()
+	}
+
+	return logger
 }
 
 // InitLogger - initializes a thread-safe singleton logger
-func InitLogger() (err error) {
+func InitLogger() {
 	// once ensures the singleton is initialized only once
 	onceLogger.Do(func() {
-		logger, err = initLogger()
+		logger = initLogger()
 	})
 
 	return
