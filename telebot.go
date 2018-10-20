@@ -10,7 +10,7 @@ import (
 func startWithGetUpdate(token string, debugMode bool) {
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
-		base.Fatal("tgbotapi.NewBotAPI", zap.Error(base.ErrNewTeleBot))
+		base.Fatal("tgbotapi.NewBotAPI", zap.Error(err))
 	}
 
 	bot.Debug = debugMode
