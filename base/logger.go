@@ -24,11 +24,12 @@ func initLogger() *zap.Logger {
 			zapcore.NewCore(consoleEncoder, consoleDebugging, loglevel),
 		)
 
-		logger := zap.New(core)
-		defer logger.Sync()
+		cl := zap.New(core)
+		// defer cl.Sync()
+		return cl
 	}
 
-	return logger
+	return nil
 }
 
 // InitLogger - initializes a thread-safe singleton logger
@@ -69,4 +70,9 @@ func Error(message string, fields ...zap.Field) {
 // Fatal logs a message than calls os.Exit(1)
 func Fatal(message string, fields ...zap.Field) {
 	logger.Fatal(message, fields...)
+}
+
+// SyncLogger - sync logger
+func SyncLogger() {
+	logger.Sync()
 }

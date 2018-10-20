@@ -8,6 +8,7 @@ import (
 func main() {
 	base.LoadConfig("./cfg/config.yaml")
 	base.InitLogger()
+	defer base.SyncLogger()
 
 	tgbotapi.SetLogger(&telebotlog{})
 

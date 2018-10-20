@@ -14,3 +14,6 @@
 vendor
 runpath
 jarvistelebot
+.vscode
+cfg/config.yaml
+debug
