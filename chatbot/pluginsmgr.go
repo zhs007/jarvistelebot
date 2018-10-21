@@ -21,6 +21,8 @@ type pluginsMgr struct {
 }
 
 func (mgr *pluginsMgr) RegPlugins(plugins Plugins) error {
+	mgr.plugins = append(mgr.plugins, plugins)
+
 	return nil
 }
 
