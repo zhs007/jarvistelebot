@@ -1,4 +1,4 @@
-package base
+package chatbot
 
 import (
 	"os"
@@ -11,13 +11,12 @@ import (
 var logger *zap.Logger
 var onceLogger sync.Once
 
-func initLogger() *zap.Logger {
-
+func initLogger(level zapcore.Level, isConsole bool, logpath string) *zap.Logger {
 	loglevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
-		return lvl >= cfg.lvl
+		return lvl >= level
 	})
 
-	if cfg.LogPath == LOGPATHConsole {
+	if isConsole {
 		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
 		consoleDebugging := zapcore.Lock(os.Stdout)
 		core := zapcore.NewTee(
@@ -33,10 +32,10 @@ func initLogger() *zap.Logger {
 }
 
 // InitLogger - initializes a thread-safe singleton logger
-func InitLogger() {
+func InitLogger(level zapcore.Level, isConsole bool, logpath string) {
 	// once ensures the singleton is initialized only once
 	onceLogger.Do(func() {
-		logger = initLogger()
+		logger = initLogger(level, isConsole, logpath)
 	})
 
 	return

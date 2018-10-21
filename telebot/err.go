@@ -1,4 +1,4 @@
-package base
+package telebot
 
 import "errors"
 
@@ -17,4 +17,6 @@ var (
 	ErrCfgLogLevel = errors.New("invalid log level")
 	// ErrNewTeleBot - NewBotAPI err
 	ErrNewTeleBot = errors.New("NewBotAPI err")
+	// ErrInvalidUser - invalid teleUser
+	ErrInvalidUser = errors.New("invalid teleUser")
 )

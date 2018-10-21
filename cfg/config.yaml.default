@@ -3,6 +3,9 @@
 # telebottoken - telegram bot token
 telebottoken: '<your telegram bot token>'
 
+# telebotmaster - telegram bot's master 
+telebotmaster: '<your telegram username>'
+
 # telebottype - it meybe 'getupdate' or 'webhook'
 telebottype: 'getupdate'
 

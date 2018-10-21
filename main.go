@@ -1,17 +1,16 @@
 package main
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/zhs007/jarvistelebot/base"
+	"github.com/zhs007/jarvistelebot/telebot"
 )
 
 func main() {
-	base.LoadConfig("./cfg/config.yaml")
-	base.InitLogger()
-	defer base.SyncLogger()
+	err := telebot.InitTeleBot("./cfg/config.yaml")
+	if err != nil {
+		telebot.Error("InitTeleBot err.")
+	}
 
-	tgbotapi.SetLogger(&telebotlog{})
+	defer telebot.ReleaseTeleBot()
 
-	base.Info("tele bot start")
-	startTeleBot()
+	telebot.StartTeleBot()
 }

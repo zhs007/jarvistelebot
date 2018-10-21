@@ -1,0 +1,98 @@
+package telebot
+
+import (
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/zhs007/jarvistelebot/chatbot"
+	"go.uber.org/zap"
+)
+
+// teleChatBot - tele chat bot
+type teleChatBot struct {
+	teleBotAPI *tgbotapi.BotAPI
+	mgrUser    chatbot.UserMgr
+	mgrPlugins chatbot.PluginsMgr
+}
+
+// NewTeleChatBot - new tele chat bot
+func NewTeleChatBot(token string, debugMode bool) (chatbot.ChatBot, error) {
+	bot, err := tgbotapi.NewBotAPI(token)
+	if err != nil {
+		chatbot.Fatal("tgbotapi.NewBotAPI", zap.Error(err))
+	}
+
+	bot.Debug = debugMode
+
+	chatbot.Info("Authorized on account " + bot.Self.UserName)
+
+	mgrPlugins := chatbot.NewPluginsMgr()
+	chatbot.RegNormalPlugins(mgrPlugins)
+
+	return &teleChatBot{
+		teleBotAPI: bot,
+		mgrUser:    chatbot.NewUserMgr(),
+		mgrPlugins: mgrPlugins,
+	}, nil
+}
+
+// SendMsg -
+func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
+	u, ok := (user).(*teleUser)
+	if !ok {
+		return ErrInvalidUser
+	}
+
+	telemsg := tgbotapi.NewMessage(u.chatid, text)
+	cb.teleBotAPI.Send(telemsg)
+
+	return nil
+}
+
+// Start
+func (cb *teleChatBot) Start() error {
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
+
+	updates, err := cb.teleBotAPI.GetUpdatesChan(u)
+	if err != nil {
+		return err
+	}
+
+	for update := range updates {
+		if update.Message == nil { // ignore any non-Message Updates
+			continue
+		}
+
+		user := cb.mgrUser.GetUser(update.Message.From.UserName)
+		if user == nil {
+			user = newUser(update.Message.From.UserName, int64(update.Message.From.ID),
+				update.Message.From.FirstName+" "+update.Message.From.LastName)
+
+			cb.mgrUser.AddUser(user)
+		}
+
+		msg := newMsg(user, update.Message.Text)
+
+		err := cb.mgrPlugins.OnMessage(cb, msg)
+		if err != nil {
+			chatbot.Error("mgrPlugins.OnMessage", zap.Error(err))
+		}
+
+		// if IsMaster(update.Message.From.UserName) {
+		// 	chatbot.Info("got master msg",
+		// 		zap.String("username", update.Message.From.UserName),
+		// 		zap.String("text", update.Message.Text))
+		// } else {
+		// 	chatbot.Info("got msg",
+		// 		zap.String("username", update.Message.From.UserName),
+		// 		zap.String("text", update.Message.Text))
+		// }
+
+		// msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+		// msg.ReplyToMessageID = update.Message.MessageID
+
+		// cb.SendMsg()
+		// bot.Send(msg)
+	}
+
+	return nil
+}

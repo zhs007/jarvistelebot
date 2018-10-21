@@ -1,4 +1,4 @@
-package base
+package telebot
 
 import (
 	"io/ioutil"
@@ -28,13 +28,14 @@ const (
 
 // Config - config
 type Config struct {
-	TeleBotToken string
-	TeleBotType  string
-	WebHookURL   string
-	WebKookAddr  string
-	LogPath      string
-	LogLevel     string
-	DebugMode    bool
+	TeleBotToken  string
+	TeleBotMaster string
+	TeleBotType   string
+	WebHookURL    string
+	WebKookAddr   string
+	LogPath       string
+	LogLevel      string
+	DebugMode     bool
 
 	lvl zapcore.Level
 }
