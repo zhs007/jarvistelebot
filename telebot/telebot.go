@@ -8,40 +8,47 @@ import (
 
 // startWithGetUpdate - start tele bot with getupdate mode
 func startWithGetUpdate(token string, debugMode bool) {
-	bot, err := tgbotapi.NewBotAPI(token)
+	bot, err := NewTeleChatBot(token, debugMode)
 	if err != nil {
-		chatbot.Fatal("tgbotapi.NewBotAPI", zap.Error(err))
+		chatbot.Fatal("NewTeleChatBot", zap.Error(err))
 	}
 
-	bot.Debug = debugMode
+	bot.Start()
 
-	chatbot.Info("Authorized on account " + bot.Self.UserName)
+	// bot, err := tgbotapi.NewBotAPI(token)
+	// if err != nil {
+	// 	chatbot.Fatal("tgbotapi.NewBotAPI", zap.Error(err))
+	// }
 
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
+	// bot.Debug = debugMode
 
-	updates, err := bot.GetUpdatesChan(u)
+	// chatbot.Info("Authorized on account " + bot.Self.UserName)
 
-	for update := range updates {
-		if update.Message == nil { // ignore any non-Message Updates
-			continue
-		}
+	// u := tgbotapi.NewUpdate(0)
+	// u.Timeout = 60
 
-		if IsMaster(update.Message.From.UserName) {
-			chatbot.Info("got master msg",
-				zap.String("username", update.Message.From.UserName),
-				zap.String("text", update.Message.Text))
-		} else {
-			chatbot.Info("got msg",
-				zap.String("username", update.Message.From.UserName),
-				zap.String("text", update.Message.Text))
-		}
+	// updates, err := bot.GetUpdatesChan(u)
 
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-		msg.ReplyToMessageID = update.Message.MessageID
+	// for update := range updates {
+	// 	if update.Message == nil { // ignore any non-Message Updates
+	// 		continue
+	// 	}
 
-		bot.Send(msg)
-	}
+	// 	if IsMaster(update.Message.From.UserName) {
+	// 		chatbot.Info("got master msg",
+	// 			zap.String("username", update.Message.From.UserName),
+	// 			zap.String("text", update.Message.Text))
+	// 	} else {
+	// 		chatbot.Info("got msg",
+	// 			zap.String("username", update.Message.From.UserName),
+	// 			zap.String("text", update.Message.Text))
+	// 	}
+
+	// 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+	// 	msg.ReplyToMessageID = update.Message.MessageID
+
+	// 	bot.Send(msg)
+	// }
 }
 
 // StartTeleBot - start tele bot
@@ -76,7 +83,7 @@ func ReleaseTeleBot() {
 	chatbot.SyncLogger()
 }
 
-// IsMaster - is master?
-func IsMaster(uname string) bool {
-	return cfg.TeleBotMaster == uname
-}
+// // IsMaster - is master?
+// func IsMaster(uname string) bool {
+// 	return cfg.TeleBotMaster == uname
+// }
