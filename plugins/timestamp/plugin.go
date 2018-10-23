@@ -38,7 +38,7 @@ func (p *timestampPlugin) OnMessage(bot chatbot.ChatBot, mgr chatbot.PluginsMgr,
 		} else {
 			tm2, err := time.Parse("2006-01-02 15:04:05", msg.GetText())
 			if err == nil {
-				bot.SendMsg(from, string(tm2.Unix()))
+				bot.SendMsg(from, strconv.FormatInt(tm2.Unix(), 10))
 
 				return true, nil
 			}
