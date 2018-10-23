@@ -3,6 +3,8 @@ package telebot
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/plugins/normal"
+	"github.com/zhs007/jarvistelebot/plugins/timestamp"
 	"go.uber.org/zap"
 )
 
@@ -11,6 +13,11 @@ type teleChatBot struct {
 	teleBotAPI *tgbotapi.BotAPI
 	mgrUser    chatbot.UserMgr
 	mgrPlugins chatbot.PluginsMgr
+}
+
+func regPlugins(mgrPlugins chatbot.PluginsMgr) {
+	pluginnormal.RegPlugin(mgrPlugins)
+	plugintimestamp.RegPlugin(mgrPlugins)
 }
 
 // NewTeleChatBot - new tele chat bot
@@ -25,7 +32,8 @@ func NewTeleChatBot(token string, debugMode bool) (chatbot.ChatBot, error) {
 	chatbot.Info("Authorized on account " + bot.Self.UserName)
 
 	mgrPlugins := chatbot.NewPluginsMgr()
-	chatbot.RegNormalPlugins(mgrPlugins)
+
+	regPlugins(mgrPlugins)
 
 	return &teleChatBot{
 		teleBotAPI: bot,
@@ -96,3 +104,8 @@ func (cb *teleChatBot) Start() error {
 
 	return nil
 }
+
+// // GetPluginsMgr - get PluginsMgr
+// func (cb *teleChatBot) GetPluginsMgr() chatbot.PluginsMgr {
+// 	return cb.mgrPlugins
+// }
