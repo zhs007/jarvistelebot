@@ -13,5 +13,7 @@ func main() {
 
 	defer telebot.ReleaseTeleBot()
 
+	// jarvisnode.Init()
+
 	telebot.StartTeleBot()
 }

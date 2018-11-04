@@ -1,10 +1,10 @@
 # jarvis telegram bot config file
 
 # telebottoken - telegram bot token
-telebottoken: '<your telegram bot token>'
+telebottoken: '612523255:AAEzaszTeDlt_mH-WS6zXAZfEtL-YrCsB_o'
 
 # telebotmaster - telegram bot's master 
-telebotmaster: '<your telegram username>'
+telebotmaster: 'zeroz777'
 
 # telebottype - it meybe 'getupdate' or 'webhook'
 telebottype: 'getupdate'

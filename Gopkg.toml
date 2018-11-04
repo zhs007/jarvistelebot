@@ -40,3 +40,7 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  name = "github.com/zhs007/jarviscore"
+  version = "0.2.7"
