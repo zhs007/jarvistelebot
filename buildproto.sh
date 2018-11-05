@@ -1,0 +1,1 @@
+protoc -I chatbotdb/proto/ chatbotdb/proto/chatbotdb.proto --go_out=plugins=grpc:chatbotdb/proto

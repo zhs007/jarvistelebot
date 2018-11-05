@@ -1,18 +1,25 @@
 package telebot
 
-import "github.com/zhs007/jarvistelebot/chatbot"
+import (
+	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
+)
 
 // teleMsg - telegram msg
 type teleMsg struct {
-	from chatbot.User
-	to   chatbot.User
-	text string
+	chatID    string
+	from      chatbot.User
+	to        chatbot.User
+	text      string
+	timeStamp int64
 }
 
-func newMsg(from chatbot.User, text string) *teleMsg {
+func newMsg(chatID string, from chatbot.User, text string, date int) *teleMsg {
 	return &teleMsg{
-		from: from,
-		text: text,
+		chatID:    chatID,
+		from:      from,
+		text:      text,
+		timeStamp: int64(date),
 	}
 }
 
@@ -29,4 +36,24 @@ func (msg *teleMsg) GetTo() chatbot.User {
 // GetText - get message text
 func (msg *teleMsg) GetText() string {
 	return msg.text
+}
+
+// ToProto - ToProto - to proto message
+func (msg *teleMsg) ToProto() *chatbotdbpb.Message {
+	return &chatbotdbpb.Message{
+		From:      msg.from.ToProto(),
+		To:        msg.to.ToProto(),
+		Text:      msg.text,
+		TimeStamp: msg.timeStamp,
+	}
+}
+
+// GetTimeStamp - get timestamp
+func (msg *teleMsg) GetTimeStamp() int64 {
+	return msg.timeStamp
+}
+
+// GetChatID - get chatID
+func (msg *teleMsg) GetChatID() string {
+	return msg.chatID
 }

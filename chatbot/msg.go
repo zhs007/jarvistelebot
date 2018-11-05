@@ -1,5 +1,9 @@
 package chatbot
 
+import (
+	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
+)
+
 // Message - other user info
 type Message interface {
 	// GetFrom - get message sender
@@ -8,4 +12,10 @@ type Message interface {
 	GetTo() User
 	// GetText - get message text
 	GetText() string
+	// GetTimeStamp - get timestamp
+	GetTimeStamp() int64
+	// GetChatID - get chatID
+	GetChatID() string
+	// ToProto - to proto message
+	ToProto() *chatbotdbpb.Message
 }

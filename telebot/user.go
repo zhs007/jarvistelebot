@@ -1,5 +1,9 @@
 package telebot
 
+import (
+	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
+)
+
 // teleUser - telegram user
 type teleUser struct {
 	username string
@@ -28,4 +32,12 @@ func (user *teleUser) GetUserID() string {
 // IsMaster - is master
 func (user *teleUser) IsMaster() bool {
 	return cfg.TeleBotMaster == user.username
+}
+
+// ToProto - to proto user
+func (user *teleUser) ToProto() *chatbotdbpb.User {
+	return &chatbotdbpb.User{
+		NickName: user.nickname,
+		UserID:   user.username,
+	}
 }

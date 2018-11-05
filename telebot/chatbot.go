@@ -78,7 +78,7 @@ func (cb *teleChatBot) Start() error {
 			cb.mgrUser.AddUser(user)
 		}
 
-		msg := newMsg(user, update.Message.Text)
+		msg := newMsg(string(update.Message.MessageID), user, update.Message.Text, update.Message.Date)
 
 		err := cb.mgrPlugins.OnMessage(cb, msg)
 		if err != nil {

@@ -1,0 +1,25 @@
+type User {
+    nickName: String!
+    userID: ID!
+}
+
+type Message {
+    chatID: ID!
+    from: User
+    to: User
+    text: String
+    timeStamp: Timestamp
+}
+
+type UserMessageChunk {
+    from: User
+    msgs: [Message]
+}
+
+type Query {
+    msg(chatID: ID!): Message!
+}
+
+type Mutation {
+    newMsg(chatID: ID!, fromNickName: String!, fromUserID: ID!, text: String!, timeStamp: Timestamp!): Message!
+}

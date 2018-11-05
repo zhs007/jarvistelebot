@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package chatbotdbpb;
+
+message User {
+    string nickName = 1;
+    string userID = 2;
+}
+
+message Message {
+    string chatID = 1;
+    User from = 2;
+    User to = 3;
+    string text = 4;
+    int64 timeStamp = 5;
+}
