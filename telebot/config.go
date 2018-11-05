@@ -37,6 +37,12 @@ type Config struct {
 	LogLevel      string
 	DebugMode     bool
 
+	AnkaDB struct {
+		DBPath   string
+		Engine   string
+		HTTPAddr string
+	}
+
 	lvl zapcore.Level
 }
 

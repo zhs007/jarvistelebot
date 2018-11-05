@@ -11,4 +11,6 @@ var (
 	ErrRepeatUserID = errors.New("the userid repeat")
 	// ErrMsgNoFrom - msg no from
 	ErrMsgNoFrom = errors.New("msg no from")
+	// ErrChatBotDBNil - chatbotdb is nil
+	ErrChatBotDBNil = errors.New("chatbotdb is nil")
 )

@@ -7,11 +7,13 @@ import (
 )
 
 // startWithGetUpdate - start tele bot with getupdate mode
-func startWithGetUpdate(token string, debugMode bool) {
-	bot, err := NewTeleChatBot(token, debugMode)
+func startWithGetUpdate(cfg *Config) {
+	bot, err := NewTeleChatBot(cfg.TeleBotToken, cfg.DebugMode)
 	if err != nil {
 		chatbot.Fatal("NewTeleChatBot", zap.Error(err))
 	}
+
+	bot.Init(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
 
 	bot.Start()
 
@@ -58,7 +60,7 @@ func StartTeleBot() {
 	if cfg.TeleBotType == TBTGetUpdate {
 		chatbot.Info("tele bot type is " + TBTGetUpdate)
 
-		startWithGetUpdate(cfg.TeleBotToken, cfg.DebugMode)
+		startWithGetUpdate(cfg)
 	}
 }
 

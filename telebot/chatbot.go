@@ -10,6 +10,8 @@ import (
 
 // teleChatBot - tele chat bot
 type teleChatBot struct {
+	chatbot.BaseChatBot
+
 	teleBotAPI *tgbotapi.BotAPI
 	mgrUser    chatbot.UserMgr
 	mgrPlugins chatbot.PluginsMgr
@@ -80,7 +82,12 @@ func (cb *teleChatBot) Start() error {
 
 		msg := newMsg(string(update.Message.MessageID), user, update.Message.Text, update.Message.Date)
 
-		err := cb.mgrPlugins.OnMessage(cb, msg)
+		err := cb.SaveMsg(msg)
+		if err != nil {
+			chatbot.Warn("teleChatBot.Start", zap.Error(err))
+		}
+
+		err = cb.mgrPlugins.OnMessage(cb, msg)
 		if err != nil {
 			chatbot.Error("mgrPlugins.OnMessage", zap.Error(err))
 		}

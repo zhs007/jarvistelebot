@@ -24,3 +24,12 @@ loglevel: 'debug'
 
 # debugmode: true or false
 debugmode: true
+
+# ankadb config
+ankadb:
+  # dbpath
+  dbpath: './dat'
+  # engine
+  engine: 'leveldb'
+  # httpaddr
+  httpaddr: ':8881'
