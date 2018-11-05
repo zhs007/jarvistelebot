@@ -16,5 +16,7 @@ runpath
 jarvistelebot
 .vscode
 cfg/config.yaml
+cfg/jarvisnode.yaml
 debug
 .vscode
+dat
