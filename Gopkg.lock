@@ -2,10 +2,77 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/fomichev/secp256k1"
+  packages = ["."]
+  revision = "00116ff8c62fc6d4daa24156ce0ad03ce49ae845"
+
+[[projects]]
   name = "github.com/go-telegram-bot-api/telegram-bot-api"
   packages = ["."]
   revision = "9860bdfd3a171ceafb6e1eafa163482a6ef92643"
   version = "v4.6.4"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/goinggo/mapstructure"
+  packages = ["."]
+  revision = "194205d9b4a98eff86d4e8d3c0dfe87dea59ef81"
+
+[[projects]]
+  name = "github.com/golang/protobuf"
+  packages = [
+    "proto",
+    "ptypes",
+    "ptypes/any",
+    "ptypes/duration",
+    "ptypes/timestamp"
+  ]
+  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
+  version = "v1.2.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/golang/snappy"
+  packages = ["."]
+  revision = "2e65f85255dbc3072edf28d6b5b8efc472979f5a"
+
+[[projects]]
+  name = "github.com/graphql-go/graphql"
+  packages = [
+    ".",
+    "gqlerrors",
+    "language/ast",
+    "language/kinds",
+    "language/lexer",
+    "language/location",
+    "language/parser",
+    "language/printer",
+    "language/source",
+    "language/typeInfo",
+    "language/visitor"
+  ]
+  revision = "5c1be0872a56fba73b279434ea95dfda735abedd"
+  version = "v0.7.6"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/syndtr/goleveldb"
+  packages = [
+    "leveldb",
+    "leveldb/cache",
+    "leveldb/comparer",
+    "leveldb/errors",
+    "leveldb/filter",
+    "leveldb/iterator",
+    "leveldb/journal",
+    "leveldb/memdb",
+    "leveldb/opt",
+    "leveldb/storage",
+    "leveldb/table",
+    "leveldb/util"
+  ]
+  revision = "f9080354173f192dfc8821931eacf9cfd6819253"
 
 [[projects]]
   name = "github.com/technoweenie/multipartstreamer"
@@ -14,10 +81,34 @@
   version = "v1.0.1"
 
 [[projects]]
+  name = "github.com/zhs007/ankadb"
+  packages = [
+    ".",
+    "database",
+    "graphqlext",
+    "proto"
+  ]
+  revision = "ef6651b14ec19cf5ffe33ecc445bf468d56a16fe"
+  version = "v0.2.7"
+
+[[projects]]
+  name = "github.com/zhs007/jarviscore"
+  packages = [
+    ".",
+    "base",
+    "coredb",
+    "coredb/proto",
+    "crypto",
+    "proto"
+  ]
+  revision = "fe7dbecc6fad55a8c8e8232c1363e7e1de572e07"
+  version = "v0.2.8"
+
+[[projects]]
   name = "go.uber.org/atomic"
   packages = ["."]
-  revision = "4e336646b2ef9fc6e47be8e21594178f98e5ebcf"
-  version = "v1.2.0"
+  revision = "1ea20fb1cbb1cc08cbd0d913a96dead89aa18289"
+  version = "v1.3.2"
 
 [[projects]]
   name = "go.uber.org/multierr"
@@ -39,6 +130,92 @@
   version = "v1.9.1"
 
 [[projects]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = ["ripemd160"]
+  revision = "4d3f4d9ffa16a13f451c3b2999e9c49e9750bf06"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = [
+    "context",
+    "http/httpguts",
+    "http2",
+    "http2/hpack",
+    "idna",
+    "internal/timeseries",
+    "trace"
+  ]
+  revision = "c10e9556a7bc0e7c942242b606f0acf024ad5d6a"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "9b800f95dbbc54abff0acf7ee32d88ba4e328c89"
+
+[[projects]]
+  name = "golang.org/x/text"
+  packages = [
+    "collate",
+    "collate/build",
+    "internal/colltab",
+    "internal/gen",
+    "internal/tag",
+    "internal/triegen",
+    "internal/ucd",
+    "language",
+    "secure/bidirule",
+    "transform",
+    "unicode/bidi",
+    "unicode/cldr",
+    "unicode/norm",
+    "unicode/rangetable"
+  ]
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
+
+[[projects]]
+  branch = "master"
+  name = "google.golang.org/genproto"
+  packages = ["googleapis/rpc/status"]
+  revision = "c830210a61dfaa790e1920f8d0470fc27bc2efbe"
+
+[[projects]]
+  name = "google.golang.org/grpc"
+  packages = [
+    ".",
+    "balancer",
+    "balancer/base",
+    "balancer/roundrobin",
+    "codes",
+    "connectivity",
+    "credentials",
+    "encoding",
+    "encoding/proto",
+    "grpclog",
+    "internal",
+    "internal/backoff",
+    "internal/channelz",
+    "internal/envconfig",
+    "internal/grpcrand",
+    "internal/transport",
+    "keepalive",
+    "metadata",
+    "naming",
+    "peer",
+    "resolver",
+    "resolver/dns",
+    "resolver/passthrough",
+    "stats",
+    "status",
+    "tap"
+  ]
+  revision = "2e463a05d100327ca47ac218281906921038fd95"
+  version = "v1.16.0"
+
+[[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
@@ -47,6 +224,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5502ffc82ea47deba6182f583244fc92738f87061b785751460739bf32144b2b"
+  inputs-digest = "5f66aff1d17edd4e29a30d6f768c8b8360032eab459a222d3501cbf5f00001bc"
   solver-name = "gps-cdcl"
   solver-version = 1
