@@ -26,8 +26,8 @@ log:
 # basenodeinfo - my node base config  
 basenodeinfo:
   # nodename - my node name
-  nodename: 'node001'
+  nodename: 'jarvistelebot'
   # bindaddr - my bind address
   bindaddr: ':7788'
   # servaddr - other node connct me
-  servaddr: '127.0.0.1:7788'
+  servaddr: ':7788'
