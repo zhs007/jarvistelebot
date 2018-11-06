@@ -36,6 +36,8 @@ func (p *jarvisnodePlugin) OnMessage(params *chatbot.MessageParams) (bool, error
 	}
 
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
+		p.cmd.Run(params.LstStr[1], params)
+
 		return true, nil
 	}
 
