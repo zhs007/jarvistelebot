@@ -1,5 +1,7 @@
 package chatbot
 
+import "strings"
+
 // PluginsMgr - chat bot plugins interface
 type PluginsMgr interface {
 	// RegPlugin - reg plugin
@@ -50,8 +52,15 @@ func (mgr *pluginsMgr) RegPlugin(plugin Plugin) error {
 }
 
 func (mgr *pluginsMgr) OnMessage(bot ChatBot, msg Message) error {
+	params := &MessageParams{
+		ChatBot:    bot,
+		MgrPlugins: mgr,
+		Msg:        msg,
+		LstStr:     strings.Fields(msg.GetText()),
+	}
+
 	if mgr.curPlugin != nil {
-		r, err := mgr.curPlugin.OnMessage(bot, mgr, msg)
+		r, err := mgr.curPlugin.OnMessage(params)
 		if err != nil {
 			return err
 		}
@@ -64,7 +73,7 @@ func (mgr *pluginsMgr) OnMessage(bot ChatBot, msg Message) error {
 	}
 
 	for _, v := range mgr.plugins {
-		r, err := v.OnMessage(bot, mgr, msg)
+		r, err := v.OnMessage(params)
 		if err != nil {
 			return err
 		}

@@ -1,8 +1,6 @@
 package pluginnormal
 
 import (
-	"strings"
-
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
@@ -18,33 +16,33 @@ func RegPlugin(mgr chatbot.PluginsMgr) {
 }
 
 // OnMessage - get message
-func (p *normalPlugin) OnMessage(bot chatbot.ChatBot, mgr chatbot.PluginsMgr, msg chatbot.Message) (bool, error) {
-	from := msg.GetFrom()
+func (p *normalPlugin) OnMessage(params *chatbot.MessageParams) (bool, error) {
+	from := params.Msg.GetFrom()
 	if from == nil {
 		return false, chatbot.ErrMsgNoFrom
 	}
 
 	if from.IsMaster() {
-		arr := strings.Fields(msg.GetText())
-		if arr[0] == "comein" {
-			p := mgr.GetComeInPlugin(arr[1])
+		// arr := strings.Fields(params.Msg.GetText())
+		if params.LstStr[0] == "comein" {
+			p := params.MgrPlugins.GetComeInPlugin(params.LstStr[1])
 			if p != nil {
-				mgr.ComeInPlugin(p)
+				params.MgrPlugins.ComeInPlugin(p)
 			}
-		} else if arr[0] == "exit" {
-			mgr.ComeInPlugin(nil)
-		} else if arr[0] == "getmystate" {
-			p := mgr.GetCurPlugin()
+		} else if params.LstStr[0] == "exit" {
+			params.MgrPlugins.ComeInPlugin(nil)
+		} else if params.LstStr[0] == "getmystate" {
+			p := params.MgrPlugins.GetCurPlugin()
 			if p != nil {
-				bot.SendMsg(from, "Your are in "+p.GetComeInCode())
+				params.ChatBot.SendMsg(from, "Your are in "+p.GetComeInCode())
 			} else {
-				bot.SendMsg(from, "nil.")
+				params.ChatBot.SendMsg(from, "nil.")
 			}
 		} else {
-			bot.SendMsg(from, "Yes, master.")
+			params.ChatBot.SendMsg(from, "Yes, master.")
 		}
 	} else {
-		bot.SendMsg(from, "sorry, you are not my master.")
+		params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 	}
 
 	return true, nil
@@ -53,4 +51,9 @@ func (p *normalPlugin) OnMessage(bot chatbot.ChatBot, mgr chatbot.PluginsMgr, ms
 // GetComeInCode - if return is empty string, it means not comein
 func (p *normalPlugin) GetComeInCode() string {
 	return ""
+}
+
+// IsMyMessage
+func (p *normalPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
+	return false
 }

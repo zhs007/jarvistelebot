@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
 	"github.com/zhs007/jarvistelebot/plugins/timestamp"
 	"go.uber.org/zap"
@@ -22,6 +23,7 @@ type teleChatBot struct {
 func regPlugins(mgrPlugins chatbot.PluginsMgr) {
 	pluginnormal.RegPlugin(mgrPlugins)
 	plugintimestamp.RegPlugin(mgrPlugins)
+	pluginjarvisnode.RegPlugin(mgrPlugins)
 }
 
 // NewTeleChatBot - new tele chat bot
