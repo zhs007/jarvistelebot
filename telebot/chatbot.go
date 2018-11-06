@@ -21,9 +21,9 @@ type teleChatBot struct {
 }
 
 func regPlugins(mgrPlugins chatbot.PluginsMgr) {
-	pluginnormal.RegPlugin(mgrPlugins)
-	plugintimestamp.RegPlugin(mgrPlugins)
 	pluginjarvisnode.RegPlugin(mgrPlugins)
+	plugintimestamp.RegPlugin(mgrPlugins)
+	pluginnormal.RegPlugin(mgrPlugins)
 }
 
 // NewTeleChatBot - new tele chat bot
