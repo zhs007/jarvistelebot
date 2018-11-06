@@ -3,6 +3,8 @@ package telebot
 import (
 	"strconv"
 
+	"github.com/zhs007/jarviscore"
+
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
@@ -62,7 +64,9 @@ func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
 }
 
 // Start
-func (cb *teleChatBot) Start() error {
+func (cb *teleChatBot) Start(node jarviscore.JarvisNode) error {
+	cb.BaseChatBot.Start(node)
+
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 

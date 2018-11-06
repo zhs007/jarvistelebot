@@ -13,6 +13,7 @@ func newPlugin() *jarvisnodePlugin {
 	cmd := chatbot.NewCommandMap()
 
 	cmd.RegFunc("help", cmdHelp)
+	cmd.RegFunc("mystate", cmdMyState)
 
 	p := &jarvisnodePlugin{
 		cmd: cmd,

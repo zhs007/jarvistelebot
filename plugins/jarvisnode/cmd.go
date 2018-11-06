@@ -9,3 +9,12 @@ func cmdHelp(params *chatbot.MessageParams) bool {
 
 	return true
 }
+
+func cmdMyState(params *chatbot.MessageParams) bool {
+	coredb := params.ChatBot.GetJarvisNodeCoreDB()
+
+	str, _ := coredb.GetMyState()
+	params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+
+	return true
+}

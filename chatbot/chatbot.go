@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/zhs007/ankadb"
+	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarvistelebot/chatbotdb"
 )
 
@@ -12,16 +13,19 @@ type ChatBot interface {
 	// Init
 	Init(dbpath string, httpAddr string, engine string) error
 	// Start
-	Start() error
+	Start(node jarviscore.JarvisNode) error
 	// SendMsg
 	SendMsg(user User, text string) error
 	// SaveMsg
 	SaveMsg(msg Message) error
+	// GetJarvisNodeCoreDB - get jarvis node coredb
+	GetJarvisNodeCoreDB() *jarviscore.CoreDB
 }
 
 // BaseChatBot - base chatbot
 type BaseChatBot struct {
 	ChatBotDB *ankadb.AnkaDB
+	Node      jarviscore.JarvisNode
 }
 
 const querySaveMsg = `mutation NewMsg($chatID: ID!, $fromNickName: String!, $fromUserID: ID!, $text: String!, $timeStamp: Timestamp!) {
@@ -64,4 +68,16 @@ func (base *BaseChatBot) SaveMsg(msg Message) error {
 		JSON("result", result))
 
 	return nil
+}
+
+// Start - start chatbot
+func (base *BaseChatBot) Start(node jarviscore.JarvisNode) error {
+	base.Node = node
+
+	return nil
+}
+
+// GetJarvisNodeCoreDB - get jarvis node coredb
+func (base *BaseChatBot) GetJarvisNodeCoreDB() *jarviscore.CoreDB {
+	return base.Node.GetCoreDB()
 }

@@ -25,5 +25,5 @@ func main() {
 	node := jarvisnode.NewNode(myni)
 	go node.Start(context.Background())
 
-	telebot.StartTeleBot()
+	telebot.StartTeleBot(node)
 }

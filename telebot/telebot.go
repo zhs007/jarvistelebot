@@ -2,12 +2,13 @@ package telebot
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"go.uber.org/zap"
 )
 
 // startWithGetUpdate - start tele bot with getupdate mode
-func startWithGetUpdate(cfg *Config) {
+func startWithGetUpdate(cfg *Config, node jarviscore.JarvisNode) {
 	bot, err := NewTeleChatBot(cfg.TeleBotToken, cfg.DebugMode)
 	if err != nil {
 		chatbot.Fatal("NewTeleChatBot", zap.Error(err))
@@ -15,7 +16,7 @@ func startWithGetUpdate(cfg *Config) {
 
 	bot.Init(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
 
-	bot.Start()
+	bot.Start(node)
 
 	// bot, err := tgbotapi.NewBotAPI(token)
 	// if err != nil {
@@ -54,13 +55,13 @@ func startWithGetUpdate(cfg *Config) {
 }
 
 // StartTeleBot - start tele bot
-func StartTeleBot() {
+func StartTeleBot(node jarviscore.JarvisNode) {
 	cfg := GetConfig()
 
 	if cfg.TeleBotType == TBTGetUpdate {
 		chatbot.Info("tele bot type is " + TBTGetUpdate)
 
-		startWithGetUpdate(cfg)
+		startWithGetUpdate(cfg, node)
 	}
 }
 
