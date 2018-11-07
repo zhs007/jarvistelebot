@@ -41,3 +41,18 @@ func cmdRun(ctx context.Context, params *chatbot.MessageParams) bool {
 
 	return true
 }
+
+// cmdNodes - nodes
+func cmdNodes(ctx context.Context, params *chatbot.MessageParams) bool {
+	coredb := params.ChatBot.GetJarvisNodeCoreDB()
+
+	str, _ := coredb.GetNodes(100)
+	strret, err := chatbot.FormatJSON(str)
+	if err != nil {
+		params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+	} else {
+		params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+	}
+
+	return true
+}
