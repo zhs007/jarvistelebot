@@ -14,7 +14,12 @@ func cmdMyState(params *chatbot.MessageParams) bool {
 	coredb := params.ChatBot.GetJarvisNodeCoreDB()
 
 	str, _ := coredb.GetMyState()
-	params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+	strret, err := chatbot.FormatJSON(str)
+	if err != nil {
+		params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+	} else {
+		params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+	}
 
 	return true
 }
