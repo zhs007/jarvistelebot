@@ -2,7 +2,6 @@ package jarvisnode
 
 import (
 	"github.com/zhs007/jarviscore"
-	pb "github.com/zhs007/jarviscore/proto"
 )
 
 // Init - init node module
@@ -18,7 +17,6 @@ func Init(filename string) (*jarviscore.BaseInfo, error) {
 		Name:     cfg.BaseNodeInfo.NodeName,
 		BindAddr: cfg.BaseNodeInfo.BindAddr,
 		ServAddr: cfg.BaseNodeInfo.ServAddr,
-		NodeType: pb.NODETYPE_SH,
 	}
 
 	return bi, nil
