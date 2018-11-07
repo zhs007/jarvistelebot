@@ -1,6 +1,7 @@
 package plugintimestamp
 
 import (
+	"context"
 	"strconv"
 	"strings"
 	"time"
@@ -20,7 +21,7 @@ func RegPlugin(mgr chatbot.PluginsMgr) {
 }
 
 // OnMessage - get message
-func (p *timestampPlugin) OnMessage(params *chatbot.MessageParams) (bool, error) {
+func (p *timestampPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
 	from := params.Msg.GetFrom()
 	if from == nil {
 		return false, chatbot.ErrMsgNoFrom

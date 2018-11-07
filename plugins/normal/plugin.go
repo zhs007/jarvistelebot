@@ -1,6 +1,8 @@
 package pluginnormal
 
 import (
+	"context"
+
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
@@ -16,7 +18,7 @@ func RegPlugin(mgr chatbot.PluginsMgr) {
 }
 
 // OnMessage - get message
-func (p *normalPlugin) OnMessage(params *chatbot.MessageParams) (bool, error) {
+func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
 	from := params.Msg.GetFrom()
 	if from == nil {
 		return false, chatbot.ErrMsgNoFrom

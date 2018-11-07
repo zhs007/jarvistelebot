@@ -1,5 +1,7 @@
 package chatbot
 
+import "context"
+
 // MessageParams - Message func params
 type MessageParams struct {
 	ChatBot    ChatBot
@@ -9,7 +11,7 @@ type MessageParams struct {
 }
 
 // FuncCommand - func ([]string)
-type FuncCommand func(*MessageParams) bool
+type FuncCommand func(context.Context, *MessageParams) bool
 
 // CommandMap - command list
 type CommandMap struct {
@@ -29,10 +31,10 @@ func (m *CommandMap) RegFunc(cmd string, f FuncCommand) {
 }
 
 // Run - reg func with cmd
-func (m *CommandMap) Run(cmd string, params *MessageParams) bool {
+func (m *CommandMap) Run(ctx context.Context, cmd string, params *MessageParams) bool {
 	f, ok := m.mapCmd[cmd]
 	if ok {
-		return f(params)
+		return f(ctx, params)
 	}
 
 	return false

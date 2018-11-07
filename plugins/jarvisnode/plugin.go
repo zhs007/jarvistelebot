@@ -1,6 +1,8 @@
 package pluginjarvisnode
 
 import (
+	"context"
+
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
@@ -14,6 +16,7 @@ func newPlugin() *jarvisnodePlugin {
 
 	cmd.RegFunc("help", cmdHelp)
 	cmd.RegFunc("mystate", cmdMyState)
+	cmd.RegFunc("run", cmdRun)
 
 	p := &jarvisnodePlugin{
 		cmd: cmd,
@@ -30,14 +33,14 @@ func RegPlugin(mgr chatbot.PluginsMgr) {
 }
 
 // OnMessage - get message
-func (p *jarvisnodePlugin) OnMessage(params *chatbot.MessageParams) (bool, error) {
+func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
 	from := params.Msg.GetFrom()
 	if from == nil {
 		return false, chatbot.ErrMsgNoFrom
 	}
 
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
-		p.cmd.Run(params.LstStr[1], params)
+		p.cmd.Run(ctx, params.LstStr[1], params)
 
 		return true, nil
 	}

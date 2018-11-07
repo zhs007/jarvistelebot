@@ -1,6 +1,7 @@
 package telebot
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/zhs007/jarviscore"
@@ -64,8 +65,8 @@ func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
 }
 
 // Start
-func (cb *teleChatBot) Start(node jarviscore.JarvisNode) error {
-	cb.BaseChatBot.Start(node)
+func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
+	cb.BaseChatBot.Start(ctx, node)
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
@@ -96,7 +97,10 @@ func (cb *teleChatBot) Start(node jarviscore.JarvisNode) error {
 			chatbot.Warn("teleChatBot.Start", zap.Error(err))
 		}
 
-		err = cb.mgrPlugins.OnMessage(cb, msg)
+		curctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+
+		err = cb.mgrPlugins.OnMessage(curctx, cb, msg)
 		if err != nil {
 			chatbot.Error("mgrPlugins.OnMessage", zap.Error(err))
 		}

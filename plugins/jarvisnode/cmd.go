@@ -1,16 +1,20 @@
 package pluginjarvisnode
 
 import (
+	"context"
+
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
-func cmdHelp(params *chatbot.MessageParams) bool {
+// cmdHelp - help
+func cmdHelp(ctx context.Context, params *chatbot.MessageParams) bool {
 	params.ChatBot.SendMsg(params.Msg.GetFrom(), "This is jarvisnode plugin help.")
 
 	return true
 }
 
-func cmdMyState(params *chatbot.MessageParams) bool {
+// cmdMyState - mystate
+func cmdMyState(ctx context.Context, params *chatbot.MessageParams) bool {
 	coredb := params.ChatBot.GetJarvisNodeCoreDB()
 
 	str, _ := coredb.GetMyState()
@@ -19,6 +23,20 @@ func cmdMyState(params *chatbot.MessageParams) bool {
 		params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
 	} else {
 		params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+	}
+
+	return true
+}
+
+// cmdRun - run
+func cmdRun(ctx context.Context, params *chatbot.MessageParams) bool {
+	node := params.ChatBot.GetJarvisNode()
+
+	err := node.SendCtrl(ctx, "", "shell", "haha")
+	if err != nil {
+		params.ChatBot.SendMsg(params.Msg.GetFrom(), err.Error())
+	} else {
+		params.ChatBot.SendMsg(params.Msg.GetFrom(), "OK!")
 	}
 
 	return true

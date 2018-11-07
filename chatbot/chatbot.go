@@ -13,13 +13,15 @@ type ChatBot interface {
 	// Init
 	Init(dbpath string, httpAddr string, engine string) error
 	// Start
-	Start(node jarviscore.JarvisNode) error
+	Start(ctx context.Context, node jarviscore.JarvisNode) error
 	// SendMsg
 	SendMsg(user User, text string) error
 	// SaveMsg
 	SaveMsg(msg Message) error
 	// GetJarvisNodeCoreDB - get jarvis node coredb
 	GetJarvisNodeCoreDB() *jarviscore.CoreDB
+	// GetJarvisNode - get jarvis node
+	GetJarvisNode() jarviscore.JarvisNode
 }
 
 // BaseChatBot - base chatbot
@@ -71,7 +73,7 @@ func (base *BaseChatBot) SaveMsg(msg Message) error {
 }
 
 // Start - start chatbot
-func (base *BaseChatBot) Start(node jarviscore.JarvisNode) error {
+func (base *BaseChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
 	base.Node = node
 
 	return nil
@@ -80,4 +82,9 @@ func (base *BaseChatBot) Start(node jarviscore.JarvisNode) error {
 // GetJarvisNodeCoreDB - get jarvis node coredb
 func (base *BaseChatBot) GetJarvisNodeCoreDB() *jarviscore.CoreDB {
 	return base.Node.GetCoreDB()
+}
+
+// GetJarvisNode - get jarvis node
+func (base *BaseChatBot) GetJarvisNode() jarviscore.JarvisNode {
+	return base.Node
 }
