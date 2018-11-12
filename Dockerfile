@@ -17,6 +17,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o jarvistelebot . \
     && mkdir /home/jarvistelebot/dat \
     && mkdir /home/jarvistelebot/logs \
     && cp ./jarvistelebot /home/jarvistelebot/ \
+    && cp -r www /home/jarvistelebot/www \
     && cp ./cfg/config.yaml.default /home/jarvistelebot/cfg/config.yaml
 
 FROM alpine
