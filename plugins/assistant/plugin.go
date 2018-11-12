@@ -49,7 +49,12 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		jarvisbase.Debug("assistantPlugin.OnMessage:parseInput", zap.String("ret", str))
 
 		if len(dat) > 0 {
-			p.db.NewMsg(dat, keys)
+			err := p.db.NewMsg(dat, keys)
+			if err != nil {
+				jarvisbase.Warn("assistantPlugin.OnMessage:NewMsg", zap.Error(err))
+
+				return false, err
+			}
 
 			params.ChatBot.SendMsg(from, "ok.")
 
