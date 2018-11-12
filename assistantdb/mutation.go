@@ -43,7 +43,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 			},
 		},
 		"updAssistantData": &graphql.Field{
-			Type:        typeMessage,
+			Type:        typeAssistantData,
 			Description: "update AssistantData",
 			Args: graphql.FieldConfigArgument{
 				"dat": &graphql.ArgumentConfig{
