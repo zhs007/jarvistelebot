@@ -60,7 +60,7 @@ func Test_IsMyMessage(t *testing.T) {
 		}
 
 		if !p.IsMyMessage(params) {
-			t.Log("Test_IsMyMessage Err")
+			t.Fatalf("Test_IsMyMessage Err")
 		}
 	}
 
@@ -78,7 +78,7 @@ func Test_IsMyMessage(t *testing.T) {
 		}
 
 		if p.IsMyMessage(params) {
-			t.Log("Test_IsMyMessage Err")
+			t.Fatalf("Test_IsMyMessage Err")
 		}
 	}
 
