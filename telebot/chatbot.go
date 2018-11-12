@@ -4,10 +4,13 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/zhs007/jarviscore/base"
+
 	"github.com/zhs007/jarviscore"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/plugins/assistant"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
 	"github.com/zhs007/jarvistelebot/plugins/timestamp"
@@ -24,9 +27,25 @@ type teleChatBot struct {
 }
 
 func regPlugins(mgrPlugins chatbot.PluginsMgr) {
-	pluginjarvisnode.RegPlugin(mgrPlugins)
-	plugintimestamp.RegPlugin(mgrPlugins)
-	pluginnormal.RegPlugin(mgrPlugins)
+	err := pluginjarvisnode.RegPlugin(cfg.CfgPath, mgrPlugins)
+	if err != nil {
+		jarvisbase.Warn("telbot.regPlugins:pluginjarvisnode.RegPlugin", zap.Error(err))
+	}
+
+	err = plugintimestamp.RegPlugin(cfg.CfgPath, mgrPlugins)
+	if err != nil {
+		jarvisbase.Warn("telbot.regPlugins:plugintimestamp.RegPlugin", zap.Error(err))
+	}
+
+	err = pluginnormal.RegPlugin(cfg.CfgPath, mgrPlugins)
+	if err != nil {
+		jarvisbase.Warn("telbot.regPlugins:pluginnormal.RegPlugin", zap.Error(err))
+	}
+
+	err = pluginassistant.RegPlugin(cfg.CfgPath, mgrPlugins)
+	if err != nil {
+		jarvisbase.Warn("telbot.regPlugins:pluginassistant.RegPlugin", zap.Error(err))
+	}
 }
 
 // NewTeleChatBot - new tele chat bot

@@ -1,0 +1,24 @@
+type Message {
+    msgID: Int64
+    data: String 
+    keys: [String]
+    createTime: Int64
+    updateTime: Int64
+}
+
+type AssistantData {
+    maxMsgID: Int64
+    keys: [String]
+}
+
+type Query {
+    msg(msgID: Int64!): Message!
+
+    assistantData(): AssistantData!
+}
+
+type Mutation {
+    updMsg(msg: Message!): Message!
+
+    updAssistantData(dat: AssistantData!): AssistantData!
+}

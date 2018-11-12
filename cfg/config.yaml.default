@@ -25,6 +25,9 @@ loglevel: 'debug'
 # debugmode: true or false
 debugmode: true
 
+# cfgpath: 
+cfgpath: './cfg'
+
 # ankadb config
 ankadb:
   # dbpath

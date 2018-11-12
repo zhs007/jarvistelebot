@@ -11,10 +11,12 @@ type normalPlugin struct {
 }
 
 // RegPlugin - reg normal plugin
-func RegPlugin(mgr chatbot.PluginsMgr) {
+func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
 	chatbot.Info("RegPlugin - normalPlugin")
 
 	mgr.RegPlugin(&normalPlugin{})
+
+	return nil
 }
 
 // OnMessage - get message

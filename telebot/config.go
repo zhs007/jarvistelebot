@@ -36,6 +36,7 @@ type Config struct {
 	LogPath       string
 	LogLevel      string
 	DebugMode     bool
+	CfgPath       string
 
 	AnkaDB struct {
 		DBPath   string

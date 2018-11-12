@@ -14,10 +14,12 @@ type timestampPlugin struct {
 }
 
 // RegPlugin - reg timestamp plugin
-func RegPlugin(mgr chatbot.PluginsMgr) {
+func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
 	chatbot.Info("RegPlugin - timestampPlugin")
 
 	mgr.RegPlugin(&timestampPlugin{})
+
+	return nil
 }
 
 // OnMessage - get message

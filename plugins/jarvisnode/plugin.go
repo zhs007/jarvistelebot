@@ -27,10 +27,12 @@ func newPlugin() *jarvisnodePlugin {
 }
 
 // RegPlugin - reg timestamp plugin
-func RegPlugin(mgr chatbot.PluginsMgr) {
+func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
 	chatbot.Info("RegPlugin - jarvisnodePlugin")
 
 	mgr.RegPlugin(newPlugin())
+
+	return nil
 }
 
 // OnMessage - get message
@@ -46,32 +48,6 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 		return true, nil
 	}
 
-	// arr := strings.Fields(params.Msg.GetText())
-	// if len(arr) > 1 && arr[0] == ">" {
-	// 	return true, nil
-	// }
-
-	// if from.IsMaster() {
-	// 	arr := strings.Fields(msg.GetText())
-
-	// 	ts, err := strconv.ParseInt(arr[0], 10, 64)
-	// 	if err == nil {
-	// 		tm := time.Unix(ts, 0)
-	// 		bot.SendMsg(from, tm.Format("2006-01-02 15:04:05"))
-
-	// 		return true, nil
-	// 	} else {
-	// 		tm2, err := time.Parse("2006-01-02 15:04:05", msg.GetText())
-	// 		if err == nil {
-	// 			bot.SendMsg(from, strconv.FormatInt(tm2.Unix(), 10))
-
-	// 			return true, nil
-	// 		}
-	// 	}
-	// } else {
-	// 	bot.SendMsg(from, "sorry, you are not my master.")
-	// }
-
 	return false, nil
 }
 
@@ -82,7 +58,6 @@ func (p *jarvisnodePlugin) GetComeInCode() string {
 
 // IsMyMessage
 func (p *jarvisnodePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-	// arr := strings.Fields(msg.GetText())
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
 		return true
 	}
