@@ -49,14 +49,14 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		jarvisbase.Debug("assistantPlugin.OnMessage:parseInput", zap.String("ret", str))
 
 		if len(dat) > 0 {
-			err := p.db.NewMsg(dat, keys)
+			msg, err := p.db.NewMsg(dat, keys)
 			if err != nil {
 				jarvisbase.Warn("assistantPlugin.OnMessage:NewMsg", zap.Error(err))
 
 				return false, err
 			}
 
-			params.ChatBot.SendMsg(from, "ok.")
+			params.ChatBot.SendMsg(from, fmt.Sprintf("ok. current msgID is %+v", msg))
 
 			return true, nil
 		}

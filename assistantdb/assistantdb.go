@@ -163,7 +163,7 @@ func (db *AssistantDB) updAssistantData(dat *pb.AssistantData) error {
 }
 
 // NewMsg - new Message
-func (db *AssistantDB) NewMsg(dat string, keys []string) error {
+func (db *AssistantDB) NewMsg(dat string, keys []string) (*pb.Message, error) {
 	msg := &pb.Message{
 		MsgID:      db.newMsgID(),
 		Data:       dat,
@@ -173,20 +173,20 @@ func (db *AssistantDB) NewMsg(dat string, keys []string) error {
 	}
 
 	if msg.MsgID < 0 {
-		return ErrNoAssistantData
+		return nil, ErrNoAssistantData
 	}
 
 	err := db.updMsg(msg)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = db.updAssistantData(db.dat)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return msg, nil
 }
 
 // Start - start
