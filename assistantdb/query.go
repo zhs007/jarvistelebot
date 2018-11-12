@@ -40,6 +40,42 @@ var typeQuery = graphql.NewObject(
 					return msg, nil
 				},
 			},
+			"assistantData": &graphql.Field{
+				Type: typeAssistantData,
+				Args: graphql.FieldConfigArgument{},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+					if anka == nil {
+						return nil, ankadb.ErrCtxAnkaDB
+					}
+
+					curdb := anka.MgrDB.GetDB("assistantdb")
+					if curdb == nil {
+						return nil, ankadb.ErrCtxCurDB
+					}
+
+					haskey, err := curdb.Has([]byte(makeAssistantDataKey()))
+					if err != nil {
+						return nil, err
+					}
+
+					if !haskey {
+						dat := &pb.AssistantData{
+							MaxMsgID: 0,
+						}
+
+						return dat, nil
+					}
+
+					dat := &pb.AssistantData{}
+					err = ankadb.GetMsgFromDB(curdb, []byte(makeAssistantDataKey()), dat)
+					if err != nil {
+						return nil, err
+					}
+
+					return dat, nil
+				},
+			},
 		},
 	},
 )
