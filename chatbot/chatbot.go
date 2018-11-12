@@ -11,7 +11,7 @@ import (
 // ChatBot - chat bot interface
 type ChatBot interface {
 	// Init
-	Init(dbpath string, httpAddr string, engine string) error
+	Init(dbpath string, httpAddr string, engine string, mgr PluginsMgr) error
 	// Start
 	Start(ctx context.Context, node jarviscore.JarvisNode) error
 	// SendMsg
@@ -28,7 +28,7 @@ type ChatBot interface {
 type BaseChatBot struct {
 	ChatBotDB  *ankadb.AnkaDB
 	Node       jarviscore.JarvisNode
-	mgrPlugins PluginsMgr
+	MgrPlugins PluginsMgr
 }
 
 const querySaveMsg = `mutation NewMsg($chatID: ID!, $fromNickName: String!, $fromUserID: ID!, $text: String!, $timeStamp: Timestamp!) {
@@ -38,13 +38,14 @@ const querySaveMsg = `mutation NewMsg($chatID: ID!, $fromNickName: String!, $fro
 }`
 
 // Init - init
-func (base *BaseChatBot) Init(dbpath string, httpAddr string, engine string) error {
+func (base *BaseChatBot) Init(dbpath string, httpAddr string, engine string, mgr PluginsMgr) error {
 	db, err := chatbotdb.NewChatBotDB(dbpath, httpAddr, engine)
 	if err != nil {
 		return err
 	}
 
 	base.ChatBotDB = db
+	base.MgrPlugins = mgr
 
 	return nil
 }
@@ -77,7 +78,7 @@ func (base *BaseChatBot) SaveMsg(msg Message) error {
 func (base *BaseChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
 	base.Node = node
 
-	go base.mgrPlugins.OnStart(ctx)
+	go base.MgrPlugins.OnStart(ctx)
 
 	return nil
 }

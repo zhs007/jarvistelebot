@@ -23,7 +23,7 @@ type teleChatBot struct {
 
 	teleBotAPI *tgbotapi.BotAPI
 	mgrUser    chatbot.UserMgr
-	mgrPlugins chatbot.PluginsMgr
+	// mgrPlugins chatbot.PluginsMgr
 }
 
 func regPlugins(mgrPlugins chatbot.PluginsMgr) {
@@ -63,11 +63,15 @@ func NewTeleChatBot(token string, debugMode bool) (chatbot.ChatBot, error) {
 
 	regPlugins(mgrPlugins)
 
-	return &teleChatBot{
+	tcb := &teleChatBot{
 		teleBotAPI: bot,
 		mgrUser:    chatbot.NewUserMgr(),
-		mgrPlugins: mgrPlugins,
-	}, nil
+		// MgrPlugins: mgrPlugins,
+	}
+
+	tcb.Init(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine, mgrPlugins)
+
+	return tcb, nil
 }
 
 // SendMsg -
@@ -119,7 +123,7 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 		curctx, cancel := context.WithCancel(ctx)
 		defer cancel()
 
-		err = cb.mgrPlugins.OnMessage(curctx, cb, msg)
+		err = cb.MgrPlugins.OnMessage(curctx, cb, msg)
 		if err != nil {
 			chatbot.Error("mgrPlugins.OnMessage", zap.Error(err))
 		}

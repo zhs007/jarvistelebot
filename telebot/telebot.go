@@ -16,7 +16,7 @@ func startWithGetUpdate(ctx context.Context, cfg *Config, node jarviscore.Jarvis
 		chatbot.Fatal("NewTeleChatBot", zap.Error(err))
 	}
 
-	bot.Init(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
+	// bot.Init(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
 
 	bot.Start(ctx, node)
 
