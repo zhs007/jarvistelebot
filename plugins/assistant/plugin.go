@@ -2,7 +2,11 @@ package pluginassistant
 
 import (
 	"context"
+	"fmt"
 	"path"
+
+	"github.com/zhs007/jarviscore/base"
+	"go.uber.org/zap"
 
 	"github.com/zhs007/jarvistelebot/assistantdb"
 	"github.com/zhs007/jarvistelebot/chatbot"
@@ -40,8 +44,14 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 
 	if from.IsMaster() {
 		dat, keys := p.parseInput(params)
+
+		str := fmt.Sprintf("%v%v", dat, keys)
+		jarvisbase.Debug("assistantPlugin.OnMessage:parseInput", zap.String("ret", str))
+
 		if len(dat) > 0 {
 			p.db.NewMsg(dat, keys)
+
+			params.ChatBot.SendMsg(from, "ok.")
 
 			return true, nil
 		}
