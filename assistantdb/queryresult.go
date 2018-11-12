@@ -23,11 +23,29 @@ type ResultUpdMsg struct {
 	} `json:"updMsg"`
 }
 
+// ResultUpdAssistantData -
+type ResultUpdAssistantData struct {
+	UpdAssistantData struct {
+		MaxMsgID int64    `json:"maxMsgID"`
+		Keys     []string `json:"keys"`
+	} `json:"updAssistantData"`
+}
+
 // ResultAssistantData2AssistantData - ResultAssistantData -> AssistantData
 func ResultAssistantData2AssistantData(result *ResultAssistantData) *pb.AssistantData {
 	dat := &pb.AssistantData{
 		MaxMsgID: result.AssistantData.MaxMsgID,
 		Keys:     result.AssistantData.Keys,
+	}
+
+	return dat
+}
+
+// ResultUpdAssistantData2AssistantData - ResultUpdAssistantData -> AssistantData
+func ResultUpdAssistantData2AssistantData(result *ResultUpdAssistantData) *pb.AssistantData {
+	dat := &pb.AssistantData{
+		MaxMsgID: result.UpdAssistantData.MaxMsgID,
+		Keys:     result.UpdAssistantData.Keys,
 	}
 
 	return dat

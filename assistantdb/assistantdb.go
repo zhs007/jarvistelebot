@@ -124,6 +124,9 @@ func (db *AssistantDB) updMsg(msg *pb.Message) error {
 		return err
 	}
 
+	jarvisbase.Info("AssistantDB.updMsg",
+		jarvisbase.JSON("result", result))
+
 	rum := &ResultUpdMsg{}
 	err = ankadb.MakeObjFromResult(result, rum)
 	if err != nil {
@@ -147,7 +150,10 @@ func (db *AssistantDB) updAssistantData(dat *pb.AssistantData) error {
 		return err
 	}
 
-	rum := &ResultUpdMsg{}
+	jarvisbase.Info("AssistantDB.updAssistantData",
+		jarvisbase.JSON("result", result))
+
+	rum := &ResultUpdAssistantData{}
 	err = ankadb.MakeObjFromResult(result, rum)
 	if err != nil {
 		return err
@@ -164,6 +170,10 @@ func (db *AssistantDB) NewMsg(dat string, keys []string) error {
 		Keys:       keys,
 		CreateTime: time.Now().Unix(),
 		UpdateTime: time.Now().Unix(),
+	}
+
+	if msg.MsgID < 0 {
+		return ErrNoAssistantData
 	}
 
 	err := db.updMsg(msg)
