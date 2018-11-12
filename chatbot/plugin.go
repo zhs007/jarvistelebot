@@ -10,4 +10,6 @@ type Plugin interface {
 	GetComeInCode() string
 	// IsMyMessage
 	IsMyMessage(params *MessageParams) bool
+	// OnStart - on start
+	OnStart(ctx context.Context) error
 }

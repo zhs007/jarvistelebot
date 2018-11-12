@@ -26,8 +26,9 @@ type ChatBot interface {
 
 // BaseChatBot - base chatbot
 type BaseChatBot struct {
-	ChatBotDB *ankadb.AnkaDB
-	Node      jarviscore.JarvisNode
+	ChatBotDB  *ankadb.AnkaDB
+	Node       jarviscore.JarvisNode
+	mgrPlugins PluginsMgr
 }
 
 const querySaveMsg = `mutation NewMsg($chatID: ID!, $fromNickName: String!, $fromUserID: ID!, $text: String!, $timeStamp: Timestamp!) {
@@ -75,6 +76,8 @@ func (base *BaseChatBot) SaveMsg(msg Message) error {
 // Start - start chatbot
 func (base *BaseChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
 	base.Node = node
+
+	go base.mgrPlugins.OnStart(ctx)
 
 	return nil
 }

@@ -61,3 +61,8 @@ func (p *normalPlugin) GetComeInCode() string {
 func (p *normalPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
 	return false
 }
+
+// OnStart - on start
+func (p *normalPlugin) OnStart(ctx context.Context) error {
+	return nil
+}

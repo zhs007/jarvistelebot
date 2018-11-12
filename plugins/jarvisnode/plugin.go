@@ -64,3 +64,8 @@ func (p *jarvisnodePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
 
 	return false
 }
+
+// OnStart - on start
+func (p *jarvisnodePlugin) OnStart(ctx context.Context) error {
+	return nil
+}

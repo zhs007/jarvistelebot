@@ -106,3 +106,8 @@ func (p *assistantPlugin) parseInput(params *chatbot.MessageParams) (dat string,
 
 	return
 }
+
+// OnStart - on start
+func (p *assistantPlugin) OnStart(ctx context.Context) error {
+	return p.db.Start(ctx)
+}

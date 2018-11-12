@@ -38,14 +38,15 @@ func (p *timestampPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 			params.ChatBot.SendMsg(from, tm.Format("2006-01-02 15:04:05"))
 
 			return true, nil
-		} else {
-			tm2, err := time.Parse("2006-01-02 15:04:05", params.Msg.GetText())
-			if err == nil {
-				params.ChatBot.SendMsg(from, strconv.FormatInt(tm2.Unix(), 10))
-
-				return true, nil
-			}
 		}
+
+		tm2, err := time.Parse("2006-01-02 15:04:05", params.Msg.GetText())
+		if err == nil {
+			params.ChatBot.SendMsg(from, strconv.FormatInt(tm2.Unix(), 10))
+
+			return true, nil
+		}
+
 	} else {
 		params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 	}
@@ -61,4 +62,9 @@ func (p *timestampPlugin) GetComeInCode() string {
 // IsMyMessage
 func (p *timestampPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
 	return false
+}
+
+// OnStart - on start
+func (p *timestampPlugin) OnStart(ctx context.Context) error {
+	return nil
 }

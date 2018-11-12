@@ -178,3 +178,8 @@ func (db *AssistantDB) NewMsg(dat string, keys []string) error {
 
 	return nil
 }
+
+// Start - start
+func (db *AssistantDB) Start(ctx context.Context) error {
+	return db.ankaDB.Start(ctx)
+}

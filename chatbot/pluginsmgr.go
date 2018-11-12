@@ -17,6 +17,8 @@ type PluginsMgr interface {
 	ComeInPlugin(plugin Plugin)
 	// GetCurPlugin
 	GetCurPlugin() Plugin
+	// OnStart - on start
+	OnStart(ctx context.Context) error
 }
 
 // NewPluginsMgr - new default plugins mgr
@@ -99,4 +101,13 @@ func (mgr *pluginsMgr) ComeInPlugin(plugin Plugin) {
 // GetCurPlugin
 func (mgr *pluginsMgr) GetCurPlugin() Plugin {
 	return mgr.curPlugin
+}
+
+// OnStart - on start
+func (mgr *pluginsMgr) OnStart(ctx context.Context) error {
+	for _, v := range mgr.plugins {
+		go v.OnStart(ctx)
+	}
+
+	return nil
 }
