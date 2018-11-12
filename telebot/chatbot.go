@@ -27,7 +27,12 @@ type teleChatBot struct {
 }
 
 func regPlugins(mgrPlugins chatbot.PluginsMgr) {
-	err := pluginjarvisnode.RegPlugin(cfg.CfgPath, mgrPlugins)
+	err := pluginassistant.RegPlugin(cfg.CfgPath, mgrPlugins)
+	if err != nil {
+		jarvisbase.Warn("telbot.regPlugins:pluginassistant.RegPlugin", zap.Error(err))
+	}
+
+	err = pluginjarvisnode.RegPlugin(cfg.CfgPath, mgrPlugins)
 	if err != nil {
 		jarvisbase.Warn("telbot.regPlugins:pluginjarvisnode.RegPlugin", zap.Error(err))
 	}
@@ -40,11 +45,6 @@ func regPlugins(mgrPlugins chatbot.PluginsMgr) {
 	err = pluginnormal.RegPlugin(cfg.CfgPath, mgrPlugins)
 	if err != nil {
 		jarvisbase.Warn("telbot.regPlugins:pluginnormal.RegPlugin", zap.Error(err))
-	}
-
-	err = pluginassistant.RegPlugin(cfg.CfgPath, mgrPlugins)
-	if err != nil {
-		jarvisbase.Warn("telbot.regPlugins:pluginassistant.RegPlugin", zap.Error(err))
 	}
 }
 
