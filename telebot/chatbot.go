@@ -112,6 +112,10 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			cb.mgrUser.AddUser(user)
 		}
 
+		if update.Message.Text == "" {
+			continue
+		}
+
 		msg := newMsg(user.GetUserID()+":"+strconv.Itoa(update.Message.MessageID),
 			user, update.Message.Text, update.Message.Date)
 
