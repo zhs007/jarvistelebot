@@ -31,6 +31,17 @@ type ResultUpdAssistantData struct {
 	} `json:"updAssistantData"`
 }
 
+// ResultMsg -
+type ResultMsg struct {
+	Msg struct {
+		MsgID      int64    `json:"msgID"`
+		Data       string   `json:"data"`
+		Keys       []string `json:"keys"`
+		CreateTime int64    `json:"createTime"`
+		UpdateTime int64    `json:"updateTime"`
+	} `json:"msg"`
+}
+
 // ResultAssistantData2AssistantData - ResultAssistantData -> AssistantData
 func ResultAssistantData2AssistantData(result *ResultAssistantData) *pb.AssistantData {
 	dat := &pb.AssistantData{
@@ -59,6 +70,19 @@ func ResultUpdMsg2Msg(result *ResultUpdMsg) *pb.Message {
 		Keys:       result.UpdMsg.Keys,
 		CreateTime: result.UpdMsg.CreateTime,
 		UpdateTime: result.UpdMsg.UpdateTime,
+	}
+
+	return msg
+}
+
+// ResultMsg2Msg - ResultMsg -> Message
+func ResultMsg2Msg(result *ResultMsg) *pb.Message {
+	msg := &pb.Message{
+		MsgID:      result.Msg.MsgID,
+		Data:       result.Msg.Data,
+		Keys:       result.Msg.Keys,
+		CreateTime: result.Msg.CreateTime,
+		UpdateTime: result.Msg.UpdateTime,
 	}
 
 	return msg

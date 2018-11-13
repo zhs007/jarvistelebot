@@ -18,6 +18,16 @@ const queryAssistantData = `{
 	}
 }`
 
+const queryGetMsg = `mutation GetMsg($msgid: Int64!) {
+	msg(msgid: $msgid) {
+		msgID
+		data
+		keys
+		createTime
+		updateTime
+	}
+}`
+
 const queryUpdMsg = `mutation UpdMsg($msg: MessageInput!) {
 	updMsg(msg: $msg) {
 		msgID
@@ -160,6 +170,29 @@ func (db *AssistantDB) updAssistantData(dat *pb.AssistantData) error {
 	}
 
 	return nil
+}
+
+// GetMsg - get message from db
+func (db *AssistantDB) GetMsg(msgid int64) (*pb.Message, error) {
+	params := make(map[string]interface{})
+
+	params["msgid"] = msgid
+
+	result, err := db.ankaDB.LocalQuery(context.Background(), queryGetMsg, params)
+	if err != nil {
+		return nil, err
+	}
+
+	jarvisbase.Info("AssistantDB.GetMsg",
+		jarvisbase.JSON("result", result))
+
+	rm := &ResultMsg{}
+	err = ankadb.MakeObjFromResult(result, rm)
+	if err != nil {
+		return nil, err
+	}
+
+	return ResultMsg2Msg(rm), nil
 }
 
 // NewMsg - new Message
