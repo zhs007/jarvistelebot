@@ -118,7 +118,10 @@ func (p *assistantPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
 // parseInput
 func (p *assistantPlugin) parseInput(params *chatbot.MessageParams) *inputParams {
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
-		ip := &inputParams{}
+		ip := &inputParams{
+			isSave: true,
+		}
+
 		ck := ""
 
 		for i := 1; i < len(params.LstStr)-1; i++ {
@@ -154,7 +157,7 @@ func (p *assistantPlugin) parseInput(params *chatbot.MessageParams) *inputParams
 
 	if len(params.LstStr) == 3 && params.LstStr[0] == "<<" && params.LstStr[1] == "@" {
 		msgid, err := strconv.ParseInt(params.LstStr[2], 10, 64)
-		if err == nil {
+		if err != nil {
 			return nil
 		}
 
