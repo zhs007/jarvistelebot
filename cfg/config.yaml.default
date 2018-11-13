@@ -1,7 +1,7 @@
 # jarvis telegram bot config file
 
 # telebottoken - telegram bot token
-telebottoken: '612523255:AAEzaszTeDlt_mH-WS6zXAZfEtL-YrCsB_o'
+telebottoken: '<TOKEN>'
 
 # telebotmaster - telegram bot's master 
 telebotmaster: 'zeroz777'

@@ -87,6 +87,20 @@ func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
 	return nil
 }
 
+func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisNode, doc *tgbotapi.Document) error {
+	file, err := cb.teleBotAPI.GetFile(tgbotapi.FileConfig{
+		FileID: doc.FileID,
+	})
+	if err != nil {
+		return err
+	}
+
+	jarvisbase.Info("teleChatBot.procDocument",
+		jarvisbase.JSON("file", file))
+
+	return nil
+}
+
 // Start
 func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
 	cb.BaseChatBot.Start(ctx, node)
@@ -110,6 +124,15 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 				update.Message.From.FirstName+" "+update.Message.From.LastName)
 
 			cb.mgrUser.AddUser(user)
+		}
+
+		if update.Message.Document != nil {
+			err = cb.procDocument(ctx, node, update.Message.Document)
+			if err != nil {
+				chatbot.Warn("teleChatBot.Start:procDocument", zap.Error(err))
+			}
+
+			continue
 		}
 
 		if update.Message.Text == "" {
