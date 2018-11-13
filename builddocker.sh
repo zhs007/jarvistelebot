@@ -7,3 +7,8 @@ fi
 if [ ! -d "dat" ]; then
     mkdir dat
 fi
+
+if [ ! -d "download" ]; then
+    mkdir download
+    mkdir download/scripts
+fi

@@ -28,6 +28,9 @@ debugmode: true
 # cfgpath: 
 cfgpath: './cfg'
 
+# downloadpath: 
+downloadpath: './download'
+
 # ankadb config
 ankadb:
   # dbpath

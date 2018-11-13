@@ -2,6 +2,10 @@ package telebot
 
 import (
 	"context"
+	"io"
+	"net/http"
+	"os"
+	"path"
 	"strconv"
 
 	"github.com/zhs007/jarviscore/base"
@@ -95,8 +99,26 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 		return err
 	}
 
+	localfn := path.Join(cfg.DownloadPath, doc.FileName)
+	if doc.MimeType == "text/x-script.sh" {
+		localfn = path.Join(cfg.DownloadPath, "scripts", doc.FileName)
+	}
+
 	jarvisbase.Info("teleChatBot.procDocument",
 		jarvisbase.JSON("file", file))
+
+	url := file.Link(cb.teleBotAPI.Token)
+
+	res, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+
+	f, err := os.Create(localfn)
+	if err != nil {
+		return err
+	}
+	io.Copy(f, res.Body)
 
 	return nil
 }
