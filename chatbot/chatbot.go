@@ -11,7 +11,7 @@ import (
 // ChatBot - chat bot interface
 type ChatBot interface {
 	// Init
-	Init(dbpath string, httpAddr string, engine string, mgr PluginsMgr) error
+	Init(cfgfilename string, mgr PluginsMgr) error
 	// Start
 	Start(ctx context.Context, node jarviscore.JarvisNode) error
 	// SendMsg
@@ -22,6 +22,8 @@ type ChatBot interface {
 	GetJarvisNodeCoreDB() *jarviscore.CoreDB
 	// GetJarvisNode - get jarvis node
 	GetJarvisNode() jarviscore.JarvisNode
+	// GetConfig - get Config
+	GetConfig() *Config
 }
 
 // BaseChatBot - base chatbot
@@ -29,6 +31,7 @@ type BaseChatBot struct {
 	ChatBotDB  *ankadb.AnkaDB
 	Node       jarviscore.JarvisNode
 	MgrPlugins PluginsMgr
+	cfg        *Config
 }
 
 const querySaveMsg = `mutation NewMsg($chatID: ID!, $fromNickName: String!, $fromUserID: ID!, $text: String!, $timeStamp: Timestamp!) {
@@ -38,14 +41,20 @@ const querySaveMsg = `mutation NewMsg($chatID: ID!, $fromNickName: String!, $fro
 }`
 
 // Init - init
-func (base *BaseChatBot) Init(dbpath string, httpAddr string, engine string, mgr PluginsMgr) error {
-	db, err := chatbotdb.NewChatBotDB(dbpath, httpAddr, engine)
+func (base *BaseChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
+	cfg, err := LoadConfig(cfgfilename)
+	if err != nil {
+		return err
+	}
+
+	db, err := chatbotdb.NewChatBotDB(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
 	if err != nil {
 		return err
 	}
 
 	base.ChatBotDB = db
 	base.MgrPlugins = mgr
+	base.cfg = cfg
 
 	return nil
 }
@@ -91,4 +100,9 @@ func (base *BaseChatBot) GetJarvisNodeCoreDB() *jarviscore.CoreDB {
 // GetJarvisNode - get jarvis node
 func (base *BaseChatBot) GetJarvisNode() jarviscore.JarvisNode {
 	return base.Node
+}
+
+// GetConfig - get Config
+func (base *BaseChatBot) GetConfig() *Config {
+	return base.cfg
 }

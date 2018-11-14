@@ -2,6 +2,9 @@ package pluginjarvisnode
 
 import (
 	"context"
+	"fmt"
+	"path"
+	"path/filepath"
 
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
@@ -49,6 +52,21 @@ func cmdNodes(ctx context.Context, params *chatbot.MessageParams) bool {
 	str, _ := coredb.GetNodes(100)
 	strret, err := chatbot.FormatJSON(str)
 	if err != nil {
+		params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+	} else {
+		params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+	}
+
+	return true
+}
+
+// cmdScripts - scripts
+func cmdScripts(ctx context.Context, params *chatbot.MessageParams) bool {
+	files, _ := filepath.Glob(path.Join(params.ChatBot.GetConfig().DownloadPath, "*.sh"))
+
+	strret, err := chatbot.FormatJSONObj(files)
+	if err != nil {
+		str := fmt.Sprintf("%+v", files)
 		params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
 	} else {
 		params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)

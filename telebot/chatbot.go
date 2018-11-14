@@ -73,7 +73,7 @@ func NewTeleChatBot(token string, debugMode bool) (chatbot.ChatBot, error) {
 		// MgrPlugins: mgrPlugins,
 	}
 
-	tcb.Init(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine, mgrPlugins)
+	tcb.Init(path.Join(cfg.CfgPath, "chatbot.yaml"), mgrPlugins)
 
 	return tcb, nil
 }
@@ -99,9 +99,9 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 		return err
 	}
 
-	localfn := path.Join(cfg.DownloadPath, doc.FileName)
+	localfn := path.Join(cb.GetConfig().DownloadPath, doc.FileName)
 	if doc.MimeType == "text/x-script.sh" {
-		localfn = path.Join(cfg.DownloadPath, "scripts", doc.FileName)
+		localfn = path.Join(cb.GetConfig().DownloadPath, "scripts", doc.FileName)
 	}
 
 	jarvisbase.Info("teleChatBot.procDocument",

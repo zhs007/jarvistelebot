@@ -17,3 +17,13 @@ func FormatJSON(str string) (string, error) {
 
 	return string(jsonStr), nil
 }
+
+// FormatJSONObj - format JSON string
+func FormatJSONObj(obj interface{}) (string, error) {
+	jsonStr, err := json.MarshalIndent(obj, "", "  ")
+	if err != nil {
+		return "", err
+	}
+
+	return string(jsonStr), nil
+}
