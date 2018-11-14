@@ -62,7 +62,7 @@ func cmdNodes(ctx context.Context, params *chatbot.MessageParams) bool {
 
 // cmdScripts - scripts
 func cmdScripts(ctx context.Context, params *chatbot.MessageParams) bool {
-	files, _ := filepath.Glob(path.Join(params.ChatBot.GetConfig().DownloadPath, "*.sh"))
+	files, _ := filepath.Glob(path.Join(params.ChatBot.GetConfig().DownloadPath, "scripts", "*.sh"))
 
 	strret, err := chatbot.FormatJSONObj(files)
 	if err != nil {
