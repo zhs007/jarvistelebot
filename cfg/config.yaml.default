@@ -27,15 +27,3 @@ debugmode: true
 
 # cfgpath: 
 cfgpath: './cfg'
-
-# downloadpath: 
-downloadpath: './download'
-
-# ankadb config
-ankadb:
-  # dbpath
-  dbpath: './dat'
-  # engine
-  engine: 'leveldb'
-  # httpaddr
-  httpaddr: ':8881'
