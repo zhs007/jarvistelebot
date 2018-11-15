@@ -3,7 +3,6 @@ package telebot
 import (
 	"context"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -125,12 +124,12 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 	}
 	io.Copy(f, res.Body)
 
-	dat, err := ioutil.ReadFile(localfn)
-	if err != nil {
-		jarvisbase.Warn("load script file", zap.Error(err))
+	// dat, err := ioutil.ReadFile(localfn)
+	// if err != nil {
+	// 	jarvisbase.Warn("load script file", zap.Error(err))
 
-		return err
-	}
+	// 	return err
+	// }
 
 	// ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, doc.FileName, dat, "")
 
