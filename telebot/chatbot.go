@@ -3,21 +3,24 @@ package telebot
 import (
 	"context"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
 	"strconv"
 
-	"github.com/zhs007/jarviscore/base"
-
 	"github.com/zhs007/jarviscore"
+	"github.com/zhs007/jarviscore/base"
+	"github.com/zhs007/jarviscore/proto"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/plugins/assistant"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
 	"github.com/zhs007/jarvistelebot/plugins/timestamp"
+
 	"go.uber.org/zap"
 )
 
@@ -27,6 +30,8 @@ type teleChatBot struct {
 
 	teleBotAPI *tgbotapi.BotAPI
 	mgrUser    chatbot.UserMgr
+
+	scriptUser chatbot.User
 	// mgrPlugins chatbot.PluginsMgr
 }
 
@@ -120,12 +125,28 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 	}
 	io.Copy(f, res.Body)
 
+	dat, err := ioutil.ReadFile(localfn)
+	if err != nil {
+		jarvisbase.Warn("load script file", zap.Error(err))
+
+		return err
+	}
+
+	ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, doc.FileName, dat, "")
+
+	cb.Node.SendCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
+
 	return nil
 }
 
 // Start
 func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
 	cb.BaseChatBot.Start(ctx, node)
+
+	node.RegMsgEventFunc(jarviscore.EventOnCtrlResult,
+		func(curctx context.Context, jarvisnode jarviscore.JarvisNode, msg *jarviscorepb.JarvisMsg) error {
+			return cb.OnJarvisCtrlResult(curctx, msg)
+		})
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
@@ -153,6 +174,8 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			if err != nil {
 				chatbot.Warn("teleChatBot.Start:procDocument", zap.Error(err))
 			}
+
+			cb.scriptUser = user
 
 			continue
 		}
@@ -201,3 +224,11 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 // func (cb *teleChatBot) GetPluginsMgr() chatbot.PluginsMgr {
 // 	return cb.mgrPlugins
 // }
+
+// OnJarvisCtrlResult - event handle
+func (cb *teleChatBot) OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+	cr := msg.GetCtrlResult()
+	cb.SendMsg(cb.scriptUser, cr.CtrlResult)
+
+	return nil
+}

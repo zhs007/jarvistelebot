@@ -5,6 +5,7 @@ import (
 
 	"github.com/zhs007/ankadb"
 	"github.com/zhs007/jarviscore"
+	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbotdb"
 )
 
@@ -24,6 +25,9 @@ type ChatBot interface {
 	GetJarvisNode() jarviscore.JarvisNode
 	// GetConfig - get Config
 	GetConfig() *Config
+
+	// OnJarvisCtrlResult - event handle
+	OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error
 }
 
 // BaseChatBot - base chatbot
