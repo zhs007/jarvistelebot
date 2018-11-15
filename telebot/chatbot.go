@@ -96,6 +96,8 @@ func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
 }
 
 func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisNode, doc *tgbotapi.Document) error {
+	jarvisbase.Debug("teleChatBot.procDocument")
+
 	file, err := cb.teleBotAPI.GetFile(tgbotapi.FileConfig{
 		FileID: doc.FileID,
 	})
