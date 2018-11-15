@@ -101,8 +101,8 @@
     "crypto",
     "proto"
   ]
-  revision = "2818eb32e0f49c48493305c534d331af63cf8556"
-  version = "v0.5.0"
+  revision = "cdb159a86a329f9433f7f0bd448c8d0c1cf3dc9c"
+  version = "v0.6.0"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -133,7 +133,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ripemd160"]
-  revision = "e4dc69e5b2fd71dcaf8bd5d054eb936deb78d1fa"
+  revision = "3d3f9f413869b949e48070b5bc593aa22cc2b8f2"
 
 [[projects]]
   branch = "master"
@@ -147,7 +147,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "03003ca0c849e57b6ea29a4bab8d3cb6e4d568fe"
+  revision = "adae6a3d119ae4890b46832a2e88a95adc62b8e7"
 
 [[projects]]
   branch = "master"
@@ -224,6 +224,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dff11ddc443c7d4228af761983c228ab78fa10e90f9b88a873b19be55a7e8ade"
+  inputs-digest = "f99c49e5d723c41a5913fb7b7b28be02d3067e21c6021fd410861addbb0f5dc9"
   solver-name = "gps-cdcl"
   solver-version = 1

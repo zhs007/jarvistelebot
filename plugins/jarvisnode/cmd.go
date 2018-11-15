@@ -33,14 +33,14 @@ func cmdMyState(ctx context.Context, params *chatbot.MessageParams) bool {
 
 // cmdRun - run
 func cmdRun(ctx context.Context, params *chatbot.MessageParams) bool {
-	node := params.ChatBot.GetJarvisNode()
+	// node := params.ChatBot.GetJarvisNode()
 
-	err := node.SendCtrl(ctx, "1JJaKpZGhYPuVHc1EKiiHZEswPAB5SybW5", "shell", "haha")
-	if err != nil {
-		params.ChatBot.SendMsg(params.Msg.GetFrom(), err.Error())
-	} else {
-		params.ChatBot.SendMsg(params.Msg.GetFrom(), "OK!")
-	}
+	// err := node.SendCtrl(ctx, "1JJaKpZGhYPuVHc1EKiiHZEswPAB5SybW5", "shell", "haha")
+	// if err != nil {
+	// 	params.ChatBot.SendMsg(params.Msg.GetFrom(), err.Error())
+	// } else {
+	// 	params.ChatBot.SendMsg(params.Msg.GetFrom(), "OK!")
+	// }
 
 	return true
 }
