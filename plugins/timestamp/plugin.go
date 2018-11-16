@@ -29,7 +29,7 @@ func (p *timestampPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		return false, chatbot.ErrMsgNoFrom
 	}
 
-	if from.IsMaster() {
+	if params.ChatBot.IsMaster(from) {
 		arr := strings.Fields(params.Msg.GetText())
 
 		ts, err := strconv.ParseInt(arr[0], 10, 64)

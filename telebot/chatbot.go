@@ -25,16 +25,17 @@ import (
 
 // teleChatBot - tele chat bot
 type teleChatBot struct {
-	chatbot.BaseChatBot
+	*chatbot.BasicChatBot
 
 	teleBotAPI *tgbotapi.BotAPI
-	mgrUser    chatbot.UserMgr
+	cfg        *Config
+	// mgrUser    chatbot.UserMgr
 
 	scriptUser chatbot.User
 	// mgrPlugins chatbot.PluginsMgr
 }
 
-func regPlugins(mgrPlugins chatbot.PluginsMgr) {
+func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	err := pluginassistant.RegPlugin(cfg.CfgPath, mgrPlugins)
 	if err != nil {
 		jarvisbase.Warn("telbot.regPlugins:pluginassistant.RegPlugin", zap.Error(err))
@@ -57,25 +58,28 @@ func regPlugins(mgrPlugins chatbot.PluginsMgr) {
 }
 
 // NewTeleChatBot - new tele chat bot
-func NewTeleChatBot(token string, debugMode bool) (chatbot.ChatBot, error) {
-	bot, err := tgbotapi.NewBotAPI(token)
+func NewTeleChatBot(cfg *Config) (chatbot.ChatBot, error) {
+	bot, err := tgbotapi.NewBotAPI(cfg.TeleBotToken)
 	if err != nil {
 		chatbot.Fatal("tgbotapi.NewBotAPI", zap.Error(err))
 	}
 
-	bot.Debug = debugMode
+	bot.Debug = cfg.DebugMode
 
 	chatbot.Info("Authorized on account " + bot.Self.UserName)
 
 	mgrPlugins := chatbot.NewPluginsMgr()
 
-	regPlugins(mgrPlugins)
+	regPlugins(cfg, mgrPlugins)
 
 	tcb := &teleChatBot{
-		teleBotAPI: bot,
-		mgrUser:    chatbot.NewUserMgr(),
+		BasicChatBot: chatbot.NewBasicChatBot(),
+		teleBotAPI:   bot,
+		// mgrUser:    chatbot.NewUserMgr(),
 		// MgrPlugins: mgrPlugins,
 	}
+
+	tcb.MgrUser = newTeleUserMgr(cfg.TeleBotMaster)
 
 	tcb.Init(path.Join(cfg.CfgPath, "chatbot.yaml"), mgrPlugins)
 
@@ -84,12 +88,18 @@ func NewTeleChatBot(token string, debugMode bool) (chatbot.ChatBot, error) {
 
 // SendMsg -
 func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
-	u, ok := (user).(*teleUser)
-	if !ok {
-		return ErrInvalidUser
+	// u, ok := (user).(*teleUser)
+	// if !ok {
+	// 	return ErrInvalidUser
+	// }
+
+	chatid, err := strconv.ParseInt(user.GetUserID(), 10, 64)
+	if err != nil {
+		return err
 	}
 
-	telemsg := tgbotapi.NewMessage(u.chatid, text)
+	telemsg := tgbotapi.NewMessage(chatid, text)
+
 	cb.teleBotAPI.Send(telemsg)
 
 	return nil
@@ -142,7 +152,7 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 
 // Start
 func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
-	cb.BaseChatBot.Start(ctx, node)
+	cb.BasicChatBot.Start(ctx, node)
 
 	node.RegMsgEventFunc(jarviscore.EventOnCtrlResult,
 		func(curctx context.Context, jarvisnode jarviscore.JarvisNode, msg *jarviscorepb.JarvisMsg) error {
@@ -162,12 +172,14 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			continue
 		}
 
-		user := cb.mgrUser.GetUser(update.Message.From.UserName)
+		user := cb.MgrUser.GetUser(update.Message.From.UserName)
 		if user == nil {
-			user = newUser(update.Message.From.UserName, int64(update.Message.From.ID),
-				update.Message.From.FirstName+" "+update.Message.From.LastName)
+			userid := strconv.Itoa(update.Message.From.ID)
 
-			cb.mgrUser.AddUser(user)
+			user = chatbot.NewBasicUser(update.Message.From.UserName, userid,
+				update.Message.From.FirstName+" "+update.Message.From.LastName, int64(update.Message.MessageID))
+
+			cb.MgrUser.AddUser(user)
 		}
 
 		if update.Message.Document != nil {

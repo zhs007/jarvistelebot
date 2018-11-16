@@ -3,10 +3,8 @@ package chatbot
 import (
 	"context"
 
-	"github.com/zhs007/ankadb"
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/proto"
-	"github.com/zhs007/jarvistelebot/chatbotdb"
 )
 
 // ChatBot - chat bot interface
@@ -26,69 +24,55 @@ type ChatBot interface {
 	// GetConfig - get Config
 	GetConfig() *Config
 
+	// IsMaster - is master
+	IsMaster(user User) bool
+	// GetUserMgr - get user manager
+	GetUserMgr() UserMgr
+
 	// OnJarvisCtrlResult - event handle
 	OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error
 }
 
-// BaseChatBot - base chatbot
-type BaseChatBot struct {
-	ChatBotDB  *ankadb.AnkaDB
+// BasicChatBot - base chatbot
+type BasicChatBot struct {
+	DB         *chatBotDB
 	Node       jarviscore.JarvisNode
 	MgrPlugins PluginsMgr
-	cfg        *Config
+	Config     *Config
+	MgrUser    UserMgr
 }
 
-const querySaveMsg = `mutation NewMsg($chatID: ID!, $fromNickName: String!, $fromUserID: ID!, $text: String!, $timeStamp: Timestamp!) {
-	newMsg(chatID: $chatID, fromNickName: $fromNickName, fromUserID: $fromUserID, text: $text, timeStamp: $timeStamp) {
-		chatID
-	}
-}`
+// NewBasicChatBot - new BasicChatBot
+func NewBasicChatBot() *BasicChatBot {
+	return &BasicChatBot{}
+}
 
 // Init - init
-func (base *BaseChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
+func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 	cfg, err := LoadConfig(cfgfilename)
 	if err != nil {
 		return err
 	}
 
-	db, err := chatbotdb.NewChatBotDB(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
+	db, err := newChatDB(cfg)
 	if err != nil {
 		return err
 	}
 
-	base.ChatBotDB = db
+	base.DB = db
 	base.MgrPlugins = mgr
-	base.cfg = cfg
+	base.Config = cfg
 
 	return nil
 }
 
 // SaveMsg - save message
-func (base *BaseChatBot) SaveMsg(msg Message) error {
-	if base.ChatBotDB == nil {
-		return ErrChatBotDBNil
-	}
-
-	params := make(map[string]interface{})
-	params["chatID"] = msg.GetChatID()
-	params["fromNickName"] = msg.GetFrom().GetNickName()
-	params["fromUserID"] = msg.GetFrom().GetUserID()
-	params["text"] = msg.GetText()
-	params["timeStamp"] = msg.GetTimeStamp()
-
-	result, err := base.ChatBotDB.LocalQuery(context.Background(), querySaveMsg, params)
-	if err != nil {
-		return err
-	}
-
-	Info("BaseChatBot.SaveMsg",
-		JSON("result", result))
-
-	return nil
+func (base *BasicChatBot) SaveMsg(msg Message) error {
+	return base.DB.saveMsg(msg)
 }
 
 // Start - start chatbot
-func (base *BaseChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
+func (base *BasicChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
 	base.Node = node
 
 	go base.MgrPlugins.OnStart(ctx)
@@ -97,16 +81,26 @@ func (base *BaseChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) 
 }
 
 // GetJarvisNodeCoreDB - get jarvis node coredb
-func (base *BaseChatBot) GetJarvisNodeCoreDB() *jarviscore.CoreDB {
+func (base *BasicChatBot) GetJarvisNodeCoreDB() *jarviscore.CoreDB {
 	return base.Node.GetCoreDB()
 }
 
 // GetJarvisNode - get jarvis node
-func (base *BaseChatBot) GetJarvisNode() jarviscore.JarvisNode {
+func (base *BasicChatBot) GetJarvisNode() jarviscore.JarvisNode {
 	return base.Node
 }
 
 // GetConfig - get Config
-func (base *BaseChatBot) GetConfig() *Config {
-	return base.cfg
+func (base *BasicChatBot) GetConfig() *Config {
+	return base.Config
+}
+
+// IsMaster - is master
+func (base *BasicChatBot) IsMaster(user User) bool {
+	return base.MgrUser.IsMaster(user)
+}
+
+// GetUserMgr - get user manager
+func (base *BasicChatBot) GetUserMgr() UserMgr {
+	return base.MgrUser
 }

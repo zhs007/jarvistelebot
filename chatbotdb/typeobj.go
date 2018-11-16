@@ -17,6 +17,9 @@ var typeUser = graphql.NewObject(
 			"userID": &graphql.Field{
 				Type: graphql.ID,
 			},
+			"lastMsgID": &graphql.Field{
+				Type: graphqlext.Int64,
+			},
 		},
 	},
 )

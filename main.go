@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	err := telebot.InitTeleBot("./cfg/config.yaml")
+	cfg, err := telebot.InitTeleBot("./cfg/config.yaml")
 	if err != nil {
 		chatbot.Error("InitTeleBot err.", zap.Error(err))
 	}
@@ -25,5 +25,5 @@ func main() {
 	node := jarvisnode.NewNode(myni)
 	go node.Start(context.Background())
 
-	telebot.StartTeleBot(context.Background(), node)
+	telebot.StartTeleBot(context.Background(), cfg, node)
 }

@@ -26,7 +26,7 @@ func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePar
 		return false, chatbot.ErrMsgNoFrom
 	}
 
-	if from.IsMaster() {
+	if params.ChatBot.IsMaster(from) {
 		// arr := strings.Fields(params.Msg.GetText())
 		if params.LstStr[0] == "comein" {
 			p := params.MgrPlugins.GetComeInPlugin(params.LstStr[1])

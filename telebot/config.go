@@ -3,7 +3,6 @@ package telebot
 import (
 	"io/ioutil"
 	"os"
-	"sync"
 
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/yaml.v2"
@@ -41,32 +40,38 @@ type Config struct {
 	lvl zapcore.Level
 }
 
-var cfg Config
-var onceCfg sync.Once
+// var cfg Config
+// var onceCfg sync.Once
 
 // LoadConfig - load config
-func loadConfig(filename string) error {
+func LoadConfig(filename string) (*Config, error) {
 	fi, err := os.Open(filename)
 	if err != nil {
-		return ErrConfigFile
+		return nil, err
 	}
 
 	defer fi.Close()
 	fd, err := ioutil.ReadAll(fi)
 	if err != nil {
-		return ErrConfigFile
+		return nil, err
 	}
 
-	err = yaml.Unmarshal(fd, &cfg)
+	cfg := &Config{}
+	err = yaml.Unmarshal(fd, cfg)
 	if err != nil {
-		return ErrInvalidConfigFile
+		return nil, err
 	}
 
-	return checkConfig()
+	err = checkConfig(cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
 }
 
 // checkConfig - check config file
-func checkConfig() error {
+func checkConfig(cfg *Config) error {
 	if cfg.TeleBotToken == "" {
 		return ErrCfgTeleBotToken
 	}
@@ -96,16 +101,16 @@ func checkConfig() error {
 	return nil
 }
 
-// LoadConfig - load config
-func LoadConfig(filename string) (err error) {
-	onceCfg.Do(func() {
-		err = loadConfig(filename)
-	})
+// // LoadConfig - load config
+// func LoadConfig(filename string) (err error) {
+// 	onceCfg.Do(func() {
+// 		err = loadConfig(filename)
+// 	})
 
-	return
-}
+// 	return
+// }
 
-// GetConfig - get Config
-func GetConfig() *Config {
-	return &cfg
-}
+// // GetConfig - get Config
+// func GetConfig() *Config {
+// 	return &cfg
+// }

@@ -5,6 +5,8 @@ package chatbotdbpb;
 message User {
     string nickName = 1;
     string userID = 2;
+    string userName = 3;
+    int64 lastMsgID = 4;
 }
 
 message Message {

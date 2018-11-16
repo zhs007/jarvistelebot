@@ -51,7 +51,7 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		return false, chatbot.ErrMsgNoFrom
 	}
 
-	if from.IsMaster() {
+	if params.ChatBot.IsMaster(from) {
 		ip := p.parseInput(params)
 
 		if ip != nil {

@@ -11,7 +11,7 @@ import (
 
 // startWithGetUpdate - start tele bot with getupdate mode
 func startWithGetUpdate(ctx context.Context, cfg *Config, node jarviscore.JarvisNode) {
-	bot, err := NewTeleChatBot(cfg.TeleBotToken, cfg.DebugMode)
+	bot, err := NewTeleChatBot(cfg)
 	if err != nil {
 		chatbot.Fatal("NewTeleChatBot", zap.Error(err))
 	}
@@ -57,8 +57,8 @@ func startWithGetUpdate(ctx context.Context, cfg *Config, node jarviscore.Jarvis
 }
 
 // StartTeleBot - start tele bot
-func StartTeleBot(ctx context.Context, node jarviscore.JarvisNode) {
-	cfg := GetConfig()
+func StartTeleBot(ctx context.Context, cfg *Config, node jarviscore.JarvisNode) {
+	// cfg := GetConfig()
 
 	if cfg.TeleBotType == TBTGetUpdate {
 		chatbot.Info("tele bot type is " + TBTGetUpdate)
@@ -68,10 +68,10 @@ func StartTeleBot(ctx context.Context, node jarviscore.JarvisNode) {
 }
 
 // InitTeleBot - init telebot
-func InitTeleBot(filename string) error {
-	err := LoadConfig(filename)
+func InitTeleBot(filename string) (*Config, error) {
+	cfg, err := LoadConfig(filename)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	chatbot.InitLogger(cfg.lvl, cfg.LogPath == LOGPATHConsole, cfg.LogPath)
@@ -80,7 +80,7 @@ func InitTeleBot(filename string) error {
 
 	chatbot.Info("tele bot start")
 
-	return nil
+	return cfg, nil
 }
 
 // ReleaseTeleBot - release telebot

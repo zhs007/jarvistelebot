@@ -1,6 +1,8 @@
 type User {
     nickName: String!
     userID: ID!
+    userName: ID!
+    lastMsgID: Int64!
 }
 
 type Message {
@@ -18,8 +20,12 @@ type UserMessageChunk {
 
 type Query {
     msg(chatID: ID!): Message!
+
+    users(): [User]!
 }
 
 type Mutation {
     newMsg(chatID: ID!, fromNickName: String!, fromUserID: ID!, text: String!, timeStamp: Timestamp!): Message!
+
+    updUser(nickName: String!, userID: ID!, userName: ID!, lastMsgID: Int64!): User!
 }

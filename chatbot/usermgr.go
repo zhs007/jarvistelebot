@@ -6,22 +6,24 @@ type UserMgr interface {
 	GetUser(uid string) User
 	// AddUser - add user
 	AddUser(user User) error
+	// IsMaster - is master
+	IsMaster(user User) bool
 }
 
-// NewUserMgr - new default user mgr
-func NewUserMgr() UserMgr {
-	return &userMgr{
+// NewBasicUserMgr - new BasicUserMgr
+func NewBasicUserMgr() *BasicUserMgr {
+	return &BasicUserMgr{
 		mapUser: make(map[string]User),
 	}
 }
 
-// userMgr - default UserMgr
-type userMgr struct {
+// BasicUserMgr - default UserMgr
+type BasicUserMgr struct {
 	mapUser map[string]User
 }
 
 // GetUser - get user with userid
-func (mgr *userMgr) GetUser(uid string) User {
+func (mgr *BasicUserMgr) GetUser(uid string) User {
 	if user, ok := mgr.mapUser[uid]; ok {
 		return user
 	}
@@ -30,7 +32,7 @@ func (mgr *userMgr) GetUser(uid string) User {
 }
 
 // AddUser - add user
-func (mgr *userMgr) AddUser(user User) error {
+func (mgr *BasicUserMgr) AddUser(user User) error {
 	if _, ok := mgr.mapUser[user.GetUserID()]; ok {
 		return ErrRepeatUserID
 	}
@@ -39,3 +41,8 @@ func (mgr *userMgr) AddUser(user User) error {
 
 	return nil
 }
+
+// // IsMaster - is master
+// func (mgr *BasicUserMgr) IsMaster(user User) bool {
+
+// }
