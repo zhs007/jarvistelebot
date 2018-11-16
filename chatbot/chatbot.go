@@ -23,6 +23,8 @@ type ChatBot interface {
 	GetJarvisNode() jarviscore.JarvisNode
 	// GetConfig - get Config
 	GetConfig() *Config
+	// GetChatBotDB - get ChatBotDB
+	GetChatBotDB() *ChatBotDB
 
 	// IsMaster - is master
 	IsMaster(user User) bool
@@ -35,7 +37,7 @@ type ChatBot interface {
 
 // BasicChatBot - base chatbot
 type BasicChatBot struct {
-	DB         *chatBotDB
+	DB         *ChatBotDB
 	Node       jarviscore.JarvisNode
 	MgrPlugins PluginsMgr
 	Config     *Config
@@ -68,7 +70,7 @@ func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 
 // SaveMsg - save message
 func (base *BasicChatBot) SaveMsg(msg Message) error {
-	return base.DB.saveMsg(msg)
+	return base.DB.SaveMsg(msg)
 }
 
 // Start - start chatbot
@@ -103,4 +105,9 @@ func (base *BasicChatBot) IsMaster(user User) bool {
 // GetUserMgr - get user manager
 func (base *BasicChatBot) GetUserMgr() UserMgr {
 	return base.MgrUser
+}
+
+// GetChatBotDB - get ChatBotDB
+func (base *BasicChatBot) GetChatBotDB() *ChatBotDB {
+	return base.DB
 }

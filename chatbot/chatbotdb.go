@@ -22,24 +22,24 @@ const queryUpdUser = `mutation UpdUser($nickName: String!, $userID: ID!, userNam
 	}
 }`
 
-// chatBotDB - chatbotdb
-type chatBotDB struct {
+// ChatBotDB - chatbotdb
+type ChatBotDB struct {
 	db *ankadb.AnkaDB
 }
 
-func newChatDB(cfg *Config) (*chatBotDB, error) {
+func newChatDB(cfg *Config) (*ChatBotDB, error) {
 	db, err := chatbotdb.NewChatBotDB(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
 	if err != nil {
 		return nil, err
 	}
 
-	return &chatBotDB{
+	return &ChatBotDB{
 		db: db,
 	}, nil
 }
 
-// saveMsg - save message
-func (db *chatBotDB) saveMsg(msg Message) error {
+// SaveMsg - save message
+func (db *ChatBotDB) SaveMsg(msg Message) error {
 	if db.db == nil {
 		return ErrChatBotDBNil
 	}
@@ -62,8 +62,8 @@ func (db *chatBotDB) saveMsg(msg Message) error {
 	return nil
 }
 
-// updUser - update user
-func (db *chatBotDB) updUser(user User) error {
+// UpdUser - update user
+func (db *ChatBotDB) UpdUser(user User) error {
 	if db.db == nil {
 		return ErrChatBotDBNil
 	}

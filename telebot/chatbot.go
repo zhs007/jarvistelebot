@@ -3,6 +3,7 @@ package telebot
 import (
 	"context"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -136,16 +137,16 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 	}
 	io.Copy(f, res.Body)
 
-	// dat, err := ioutil.ReadFile(localfn)
-	// if err != nil {
-	// 	jarvisbase.Warn("load script file", zap.Error(err))
+	dat, err := ioutil.ReadFile(localfn)
+	if err != nil {
+		jarvisbase.Warn("load script file", zap.Error(err))
 
-	// 	return err
-	// }
+		return err
+	}
 
-	// ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, doc.FileName, dat, "")
+	ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, doc.FileName, dat, "")
 
-	// cb.Node.SendCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
+	cb.Node.SendCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
 
 	return nil
 }
@@ -180,6 +181,15 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 				update.Message.From.FirstName+" "+update.Message.From.LastName, int64(update.Message.MessageID))
 
 			cb.MgrUser.AddUser(user)
+			cb.GetChatBotDB().UpdUser(user)
+		} else {
+			lastmsgid := int64(update.Message.MessageID)
+
+			if lastmsgid <= user.GetLastMsgID() {
+				continue
+			}
+			user.UpdLastMsgID(lastmsgid)
+			cb.GetChatBotDB().UpdUser(user)
 		}
 
 		if update.Message.Document != nil {
