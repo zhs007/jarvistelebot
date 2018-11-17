@@ -43,4 +43,4 @@
 
 [[constraint]]
   name = "github.com/zhs007/jarviscore"
-  version = "0.6.3"
+  version = "0.6.8"
