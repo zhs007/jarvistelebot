@@ -146,7 +146,7 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 
 	ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, doc.FileName, dat, "")
 
-	cb.Node.SendCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
+	cb.Node.RequestCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
 
 	return nil
 }

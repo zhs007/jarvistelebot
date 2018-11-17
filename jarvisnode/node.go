@@ -5,21 +5,21 @@ import (
 )
 
 // Init - init node module
-func Init(filename string) (*jarviscore.BaseInfo, error) {
+func Init(filename string) (*jarviscore.Config, error) {
 	cfg, err := jarviscore.LoadConfig(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	jarviscore.InitJarvisCore(*cfg)
+	jarviscore.InitJarvisCore(cfg)
 
-	bi := &jarviscore.BaseInfo{
-		Name:     cfg.BaseNodeInfo.NodeName,
-		BindAddr: cfg.BaseNodeInfo.BindAddr,
-		ServAddr: cfg.BaseNodeInfo.ServAddr,
-	}
+	// bi := &jarviscore.BaseInfo{
+	// 	Name:     cfg.BaseNodeInfo.NodeName,
+	// 	BindAddr: cfg.BaseNodeInfo.BindAddr,
+	// 	ServAddr: cfg.BaseNodeInfo.ServAddr,
+	// }
 
-	return bi, nil
+	return cfg, nil
 }
 
 // Release - release node module
@@ -28,6 +28,6 @@ func Release() {
 }
 
 // NewNode - new node
-func NewNode(myinfo *jarviscore.BaseInfo) jarviscore.JarvisNode {
-	return jarviscore.NewNode(*myinfo)
+func NewNode(cfg *jarviscore.Config) jarviscore.JarvisNode {
+	return jarviscore.NewNode(cfg)
 }
