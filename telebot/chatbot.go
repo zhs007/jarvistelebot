@@ -101,6 +101,15 @@ func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
 
 	telemsg := tgbotapi.NewMessage(chatid, text)
 
+	var arr []tgbotapi.InlineKeyboardButton
+
+	arr = append(arr, tgbotapi.NewInlineKeyboardButtonData("yes", "yes, i am."))
+	arr = append(arr, tgbotapi.NewInlineKeyboardButtonData("no", "no, i am not"))
+
+	var numericKeyboard = tgbotapi.NewInlineKeyboardMarkup(arr)
+
+	telemsg.ReplyMarkup = numericKeyboard
+
 	cb.teleBotAPI.Send(telemsg)
 
 	return nil
