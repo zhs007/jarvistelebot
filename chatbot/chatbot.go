@@ -12,18 +12,20 @@ import (
 
 // ChatBot - chat bot interface
 type ChatBot interface {
-	// Init
+	// Init -
 	Init(cfgfilename string, mgr PluginsMgr) error
-	// Start
+	// Start -
 	Start(ctx context.Context, node jarviscore.JarvisNode) error
-	// SendMsg
+	// SendMsg -
 	SendMsg(msg Message) error
-	// SaveMsg
+	// SaveMsg -
 	SaveMsg(msg Message) error
-	// NewMsg
+	// NewMsg -
 	NewMsg(chatid string, msgid string, from User, to User, text string, curtime int64) Message
-	// NewMsgFromProto
+	// NewMsgFromProto -
 	NewMsgFromProto(msg *chatbotdbpb.Message) Message
+	// GetMsg -
+	GetMsg(chatid string) (Message, error)
 
 	// GetJarvisNodeCoreDB - get jarvis node coredb
 	GetJarvisNodeCoreDB() *jarviscore.CoreDB
@@ -41,6 +43,8 @@ type ChatBot interface {
 	GetUserMgr() UserMgr
 	// NewUserFromProto - new user from proto
 	NewUserFromProto(user *chatbotdbpb.User) User
+	// GetUser -
+	GetUser(userid string) (User, error)
 
 	// OnJarvisCtrlResult - event handle
 	OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error
@@ -138,4 +142,14 @@ func (base *BasicChatBot) NewUserFromProto(user *chatbotdbpb.User) User {
 	}
 
 	return NewBasicUser(user.UserName, user.UserID, user.NickName, user.LastMsgID)
+}
+
+// GetUser -
+func (base *BasicChatBot) GetUser(userid string) (User, error) {
+	u, err := base.DB.GetUser(userid)
+	if err != nil {
+		return nil, err
+	}
+
+	return base.NewUserFromProto(u), nil
 }

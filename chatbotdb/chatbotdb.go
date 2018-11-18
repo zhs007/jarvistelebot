@@ -25,16 +25,35 @@ const queryUpdUser = `mutation UpdUser($nickName: String!, $userID: ID!, userNam
 	}
 }`
 
-const queryGetMsg = `mutation Msg($chatID: Int64!) {
+const queryGetMsg = `mutation Msg($chatID: String!) {
 	msg(chatID: $chatID) {
 		chatID
-		from
-		to
+		from {		
+			nickName
+			userID
+			userName
+			lastMsgID
+		}
+		to {
+			nickName
+			userID
+			userName
+			lastMsgID
+		}
 		text
 		timeStamp
 		msgID
 		options
 		selected
+	}
+}`
+
+const queryGetUser = `mutation User($uerID: String!) {
+	user(uerID: $uerID) {
+		nickName
+		userID
+		userName
+		lastMsgID
 	}
 }`
 
@@ -95,7 +114,7 @@ func (db *ChatBotDB) SaveMsg(msg *pb.Message) error {
 		return err
 	}
 
-	jarvisbase.Info("chatbot.CoreDB.saveMsg",
+	jarvisbase.Info("ChatBotDB.saveMsg",
 		jarvisbase.JSON("result", result))
 
 	return nil
@@ -121,7 +140,7 @@ func (db *ChatBotDB) GetMsg(chatid string) (*pb.Message, error) {
 		return nil, err
 	}
 
-	jarvisbase.Info("chatbot.CoreDB.GetMsg", jarvisbase.JSON("result", result))
+	jarvisbase.Info("ChatBotDB.GetMsg", jarvisbase.JSON("result", result))
 
 	return &rmsg.Msg, nil
 }
@@ -143,84 +162,33 @@ func (db *ChatBotDB) UpdUser(user *pb.User) error {
 		return err
 	}
 
-	jarvisbase.Info("chatbot.CoreDB.updUser",
+	jarvisbase.Info("ChatBotDB.updUser",
 		jarvisbase.JSON("result", result))
 
 	return nil
 }
 
-// import (
-// 	"context"
-// 	"path"
+// GetUser - get user
+func (db *ChatBotDB) GetUser(userid string) (*pb.User, error) {
+	if db.db == nil {
+		return nil, ErrChatBotDBNil
+	}
 
-// 	"github.com/graphql-go/graphql"
-// 	"go.uber.org/zap"
+	params := make(map[string]interface{})
+	params["userID"] = userid
 
-// 	"github.com/zhs007/ankadb"
-// 	"github.com/zhs007/jarviscore/base"
-// )
+	result, err := db.db.LocalQuery(context.Background(), queryGetUser, params)
+	if err != nil {
+		return nil, err
+	}
 
-// // NewChatBotDB - new chatbot db
-// func NewChatBotDB(dbpath string, httpAddr string, engine string) (*ankadb.AnkaDB, error) {
-// 	cfg := ankadb.NewConfig()
+	ruser := &ResultUser{}
+	err = ankadb.MakeObjFromResult(result, ruser)
+	if err != nil {
+		return nil, err
+	}
 
-// 	cfg.AddrHTTP = httpAddr
-// 	cfg.PathDBRoot = dbpath
-// 	cfg.ListDB = append(cfg.ListDB, ankadb.DBConfig{
-// 		Name:   "chatbotdb",
-// 		Engine: engine,
-// 		PathDB: path.Join(dbpath, "chatbotdb"),
-// 	})
+	jarvisbase.Info("ChatBotDB.GetUser", jarvisbase.JSON("result", result))
 
-// 	ankaDB, err := ankadb.NewAnkaDB(cfg, newDBLogic())
-// 	if ankaDB == nil {
-// 		jarvisbase.Error("NewChatBotDB", zap.Error(err))
-
-// 		return nil, err
-// 	}
-
-// 	jarvisbase.Info("NewChatBotDB", zap.String("dbpath", dbpath),
-// 		zap.String("httpAddr", httpAddr), zap.String("engine", engine))
-
-// 	return ankaDB, err
-// }
-
-// // chatbotDB -
-// type chatbotDB struct {
-// 	schema graphql.Schema
-// }
-
-// // newDBLogic -
-// func newDBLogic() ankadb.DBLogic {
-// 	var schema, _ = graphql.NewSchema(
-// 		graphql.SchemaConfig{
-// 			Query:    typeQuery,
-// 			Mutation: typeMutation,
-// 			// Types:    curTypes,
-// 		},
-// 	)
-
-// 	return &chatbotDB{
-// 		schema: schema,
-// 	}
-// }
-
-// // OnQuery -
-// func (logic *chatbotDB) OnQuery(ctx context.Context, request string, values map[string]interface{}) (*graphql.Result, error) {
-// 	result := graphql.Do(graphql.Params{
-// 		Schema:         logic.schema,
-// 		RequestString:  request,
-// 		VariableValues: values,
-// 		Context:        ctx,
-// 	})
-// 	// if len(result.Errors) > 0 {
-// 	// 	fmt.Printf("wrong result, unexpected errors: %v", result.Errors)
-// 	// }
-
-// 	return result, nil
-// }
-
-// // OnQueryStream -
-// func (logic *chatbotDB) OnQueryStream(ctx context.Context, request string, values map[string]interface{}, funcOnQueryStream ankadb.FuncOnQueryStream) error {
-// 	return nil
-// }
+	return &ruser.User, nil
+}

@@ -39,6 +39,35 @@ var typeQuery = graphql.NewObject(
 					return msg, nil
 				},
 			},
+			"user": &graphql.Field{
+				Type: typeUser,
+				Args: graphql.FieldConfigArgument{
+					"userID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.ID),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+					if anka == nil {
+						return nil, ankadb.ErrCtxAnkaDB
+					}
+
+					curdb := anka.MgrDB.GetDB("chatbotdb")
+					if curdb == nil {
+						return nil, ankadb.ErrCtxCurDB
+					}
+
+					userID := params.Args["userID"].(string)
+
+					user := &pb.User{}
+					err := ankadb.GetMsgFromDB(curdb, []byte(makeUserKey(userID)), user)
+					if err != nil {
+						return nil, err
+					}
+
+					return user, nil
+				},
+			},
 		},
 	},
 )

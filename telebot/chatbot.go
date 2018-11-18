@@ -334,16 +334,20 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) error {
 
 // NewMsgFromProto
 func (cb *teleChatBot) NewMsgFromProto(msg *chatbotdbpb.Message) chatbot.Message {
-	from := cb.NewUserFromProto(msg.GetFrom())
-	to := cb.NewUserFromProto(msg.GetTo())
 
 	cmsg := &teleMsg{
 		chatID:    msg.GetChatID(),
 		msgID:     msg.GetMsgID(),
-		from:      from,
-		to:        to,
 		text:      msg.GetText(),
 		timeStamp: msg.GetTimeStamp(),
+	}
+
+	if msg.GetFrom() != nil {
+		cmsg.from = cb.NewUserFromProto(msg.GetFrom())
+	}
+
+	if msg.GetTo() != nil {
+		cmsg.to = cb.NewUserFromProto(msg.GetTo())
 	}
 
 	for _, v := range msg.Options {
@@ -351,4 +355,14 @@ func (cb *teleChatBot) NewMsgFromProto(msg *chatbotdbpb.Message) chatbot.Message
 	}
 
 	return cmsg
+}
+
+// GetMsg -
+func (cb *teleChatBot) GetMsg(chatid string) (chatbot.Message, error) {
+	msg, err := cb.DB.GetMsg(chatid)
+	if err != nil {
+		return nil, err
+	}
+
+	return cb.NewMsgFromProto(msg), nil
 }

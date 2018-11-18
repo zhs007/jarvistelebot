@@ -32,3 +32,8 @@ type ResultMsg struct {
 	// 	Selected  int      `json:"selected"`
 	// } `json:"msg"`
 }
+
+// ResultUser -
+type ResultUser struct {
+	User pb.User `json:"user"`
+}
