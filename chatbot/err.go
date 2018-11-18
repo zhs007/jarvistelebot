@@ -31,4 +31,8 @@ var (
 	ErrInvalidOption = errors.New("invalid option")
 	// ErrInvalidMessageTo - invalid Message.To
 	ErrInvalidMessageTo = errors.New("invalid Message.To")
+	// ErrSameMsgCallback - same msgcallback
+	ErrSameMsgCallback = errors.New("same msgcallback")
+	// ErrNoMsgCallback - can't find msgcallback
+	ErrNoMsgCallback = errors.New("can't find msgcallback")
 )

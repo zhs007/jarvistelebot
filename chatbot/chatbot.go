@@ -2,7 +2,6 @@ package chatbot
 
 import (
 	"context"
-	"time"
 
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/proto"
@@ -17,7 +16,7 @@ type ChatBot interface {
 	// Start -
 	Start(ctx context.Context, node jarviscore.JarvisNode) error
 	// SendMsg -
-	SendMsg(msg Message) error
+	SendMsg(msg Message) (Message, error)
 	// SaveMsg -
 	SaveMsg(msg Message) error
 	// NewMsg -
@@ -48,15 +47,23 @@ type ChatBot interface {
 
 	// OnJarvisCtrlResult - event handle
 	OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error
+
+	// AddMsgCallback - add msgCallback
+	AddMsgCallback(msg Message, callback FuncMsgCallback) error
+	// ProcMsgCallback - proc msgCallback
+	ProcMsgCallback(ctx context.Context, msg Message, id int) error
+	// DelMsgCallback - del msgCallback
+	DelMsgCallback(chatid string) error
 }
 
 // BasicChatBot - base chatbot
 type BasicChatBot struct {
-	DB         *chatbotdb.ChatBotDB
-	Node       jarviscore.JarvisNode
-	MgrPlugins PluginsMgr
-	Config     *Config
-	MgrUser    UserMgr
+	DB             *chatbotdb.ChatBotDB
+	Node           jarviscore.JarvisNode
+	MgrPlugins     PluginsMgr
+	Config         *Config
+	MgrUser        UserMgr
+	mgrMsgCallback *msgCallbackMgr
 }
 
 // NewBasicChatBot - new BasicChatBot
@@ -79,6 +86,7 @@ func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 	base.DB = db
 	base.MgrPlugins = mgr
 	base.Config = cfg
+	base.mgrMsgCallback = newMsgCallbackMgr()
 
 	return nil
 }
@@ -127,13 +135,6 @@ func (base *BasicChatBot) GetChatBotDB() *chatbotdb.ChatBotDB {
 	return base.DB
 }
 
-// SendTextMsg - sendmsg
-func SendTextMsg(bot ChatBot, user User, text string) error {
-	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
-
-	return bot.SendMsg(msg)
-}
-
 // NewUserFromProto - new user from proto
 func (base *BasicChatBot) NewUserFromProto(user *chatbotdbpb.User) User {
 	u := base.MgrUser.GetUser(user.UserID)
@@ -152,4 +153,19 @@ func (base *BasicChatBot) GetUser(userid string) (User, error) {
 	}
 
 	return base.NewUserFromProto(u), nil
+}
+
+// AddMsgCallback - add msgCallback
+func (base *BasicChatBot) AddMsgCallback(msg Message, callback FuncMsgCallback) error {
+	return base.mgrMsgCallback.addMsgCallback(msg, callback)
+}
+
+// ProcMsgCallback - proc msgCallback
+func (base *BasicChatBot) ProcMsgCallback(ctx context.Context, msg Message, id int) error {
+	return base.mgrMsgCallback.procMsgCallback(ctx, msg, id)
+}
+
+// DelMsgCallback - del msgCallback
+func (base *BasicChatBot) DelMsgCallback(chatid string) error {
+	return base.mgrMsgCallback.delMsgCallback(chatid)
 }

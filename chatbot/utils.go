@@ -1,6 +1,9 @@
 package chatbot
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"time"
+)
 
 // FormatJSON - format JSON string
 func FormatJSON(str string) (string, error) {
@@ -26,4 +29,34 @@ func FormatJSONObj(obj interface{}) (string, error) {
 	}
 
 	return string(jsonStr), nil
+}
+
+// SendTextMsg - sendmsg
+func SendTextMsg(bot ChatBot, user User, text string) error {
+	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
+
+	_, err := bot.SendMsg(msg)
+
+	return err
+}
+
+// SendMsgWithOptions - send msg with options
+func SendMsgWithOptions(bot ChatBot, user User, text string, options []string, callback FuncMsgCallback) error {
+	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
+
+	for _, v := range options {
+		msg.AddOption(v)
+	}
+
+	nmsg, err := bot.SendMsg(msg)
+	if err != nil {
+		return err
+	}
+
+	err = bot.AddMsgCallback(nmsg, callback)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

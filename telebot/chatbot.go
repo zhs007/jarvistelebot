@@ -162,8 +162,65 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 	return nil
 }
 
+// procMessageUser
+func (cb *teleChatBot) procMessageUser(msg *tgbotapi.Message) (chatbot.User, error) {
+	userid := strconv.Itoa(msg.From.ID)
+	user := cb.MgrUser.GetUser(userid)
+	if user == nil {
+		user = chatbot.NewBasicUser(msg.From.UserName, userid,
+			msg.From.FirstName+" "+msg.From.LastName, int64(msg.MessageID))
+
+		cb.MgrUser.AddUser(user)
+		cb.GetChatBotDB().UpdUser(user.ToProto())
+	}
+
+	return user, nil
+}
+
 // procCallbackQuery
 func (cb *teleChatBot) procCallbackQuery(ctx context.Context, query *tgbotapi.CallbackQuery) error {
+	if query.Message != nil {
+		msgid := strconv.Itoa(query.Message.MessageID)
+
+		user, err := cb.procMessageUser(query.Message)
+		if err != nil {
+			chatbot.Warn("teleChatBot.procCallbackQuery:procMessageUser", zap.Error(err))
+
+			return err
+		}
+
+		msg, err := cb.GetMsg(makeChatID(user.GetUserID(), msgid))
+		if err != nil {
+			chatbot.Warn("teleChatBot.procCallbackQuery:GetMsg", zap.Error(err))
+
+			return err
+		}
+
+		if msg.GetSelected() > 0 {
+			chatbot.SendTextMsg(cb, user, "Sorry, you have made a choice.")
+
+			return nil
+		}
+
+		id, err := strconv.Atoi(query.Data)
+		if err != nil {
+			chatbot.Warn("teleChatBot.procCallbackQuery:GetID", zap.Error(err))
+
+			return err
+		}
+
+		err = cb.ProcMsgCallback(ctx, msg, id)
+		if err != nil {
+			chatbot.Warn("teleChatBot.procCallbackQuery:ProcMsgCallback", zap.Error(err))
+
+			chatbot.SendTextMsg(cb, user, "Sorry, I found some problems, please start over.")
+
+			return err
+		}
+
+		cb.DelMsgCallback(msg.GetChatID())
+	}
+
 	return nil
 }
 
@@ -195,24 +252,20 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			continue
 		}
 
-		user := cb.MgrUser.GetUser(update.Message.From.UserName)
-		if user == nil {
-			userid := strconv.Itoa(update.Message.From.ID)
+		user, err := cb.procMessageUser(update.Message)
+		if err != nil {
+			chatbot.Warn("teleChatBot.Start:procMessageUser", zap.Error(err))
 
-			user = chatbot.NewBasicUser(update.Message.From.UserName, userid,
-				update.Message.From.FirstName+" "+update.Message.From.LastName, int64(update.Message.MessageID))
-
-			cb.MgrUser.AddUser(user)
-			cb.GetChatBotDB().UpdUser(user.ToProto())
-		} else {
-			lastmsgid := int64(update.Message.MessageID)
-
-			if lastmsgid <= user.GetLastMsgID() {
-				continue
-			}
-			user.UpdLastMsgID(lastmsgid)
-			cb.GetChatBotDB().UpdUser(user.ToProto())
+			continue
 		}
+
+		lastmsgid := int64(update.Message.MessageID)
+		if lastmsgid <= user.GetLastMsgID() {
+			continue
+		}
+
+		user.UpdLastMsgID(lastmsgid)
+		cb.GetChatBotDB().UpdUser(user.ToProto())
 
 		if update.Message.Document != nil {
 			err = cb.procDocument(ctx, node, update.Message.Document)
@@ -229,10 +282,13 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			continue
 		}
 
-		msg := newMsg(strconv.Itoa(update.Message.MessageID),
-			user, update.Message.Text, update.Message.Date)
+		msgid := strconv.Itoa(update.Message.MessageID)
+		msg := cb.NewMsg(makeChatID(user.GetUserID(), msgid), msgid, user, nil,
+			update.Message.Text, int64(update.Message.Date))
+		// msg := newMsg(strconv.Itoa(update.Message.MessageID),
+		// 	user, update.Message.Text, update.Message.Date)
 
-		err := cb.SaveMsg(msg)
+		err = cb.SaveMsg(msg)
 		if err != nil {
 			chatbot.Warn("teleChatBot.Start", zap.Error(err))
 		}
@@ -295,17 +351,17 @@ func (cb *teleChatBot) NewMsg(chatid string, msgid string, from chatbot.User, to
 }
 
 // SendMsg
-func (cb *teleChatBot) SendMsg(msg chatbot.Message) error {
+func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 	tgmsg := msg.(*teleMsg)
 
 	to := msg.GetTo()
 	if to == nil {
-		return chatbot.ErrInvalidMessageTo
+		return nil, chatbot.ErrInvalidMessageTo
 	}
 
 	chatid, err := strconv.ParseInt(to.GetUserID(), 10, 64)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	telemsg := tgbotapi.NewMessage(chatid, msg.GetText())
@@ -324,12 +380,12 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) error {
 
 	destmsg, err := cb.teleBotAPI.Send(telemsg)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	msg.SetMsgID(fmt.Sprintf("%v", destmsg.MessageID))
 
-	return nil
+	return msg, nil
 }
 
 // NewMsgFromProto

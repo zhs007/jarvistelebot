@@ -17,15 +17,15 @@ type teleMsg struct {
 	timeStamp int64
 }
 
-func newMsg(msgID string, from chatbot.User, text string, date int) *teleMsg {
-	return &teleMsg{
-		chatID:    from.GetUserID() + ":" + msgID,
-		msgID:     msgID,
-		from:      from,
-		text:      text,
-		timeStamp: int64(date),
-	}
-}
+// func newMsg(msgID string, from chatbot.User, text string, date int) *teleMsg {
+// 	return &teleMsg{
+// 		chatID:    from.GetUserID() + ":" + msgID,
+// 		msgID:     msgID,
+// 		from:      from,
+// 		text:      text,
+// 		timeStamp: int64(date),
+// 	}
+// }
 
 // GetFrom - get message sender
 func (msg *teleMsg) GetFrom() chatbot.User {
@@ -44,12 +44,20 @@ func (msg *teleMsg) GetText() string {
 
 // ToProto - ToProto - to proto message
 func (msg *teleMsg) ToProto() *chatbotdbpb.Message {
-	return &chatbotdbpb.Message{
+	pbmsg := &chatbotdbpb.Message{
 		From:      msg.from.ToProto(),
 		To:        msg.to.ToProto(),
 		Text:      msg.text,
 		TimeStamp: msg.timeStamp,
+		MsgID:     msg.GetMsgID(),
+		Selected:  int32(msg.GetSelected()),
 	}
+
+	for _, v := range msg.Options {
+		pbmsg.Options = append(pbmsg.Options, v.Text)
+	}
+
+	return pbmsg
 }
 
 // GetTimeStamp - get timestamp

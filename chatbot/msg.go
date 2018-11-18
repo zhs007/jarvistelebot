@@ -33,6 +33,8 @@ type Message interface {
 	HasOptions() bool
 	// SelectOption - select option
 	SelectOption(id int) error
+	// GetSelected - get selected
+	GetSelected() int
 
 	// ToProto - to proto message
 	ToProto() *chatbotdbpb.Message
@@ -40,8 +42,8 @@ type Message interface {
 
 // BasicMessage - basic Message
 type BasicMessage struct {
-	Options  []*MsgOption
-	Selected int
+	Options    []*MsgOption
+	IDSelected int
 }
 
 // AddOption - add option
@@ -73,7 +75,7 @@ func (msg *BasicMessage) HasOptions() bool {
 
 // SelectOption - select option
 func (msg *BasicMessage) SelectOption(id int) error {
-	if msg.Selected > 0 {
+	if msg.IDSelected > 0 {
 		return ErrAlreadySelected
 	}
 
@@ -81,7 +83,12 @@ func (msg *BasicMessage) SelectOption(id int) error {
 		return ErrInvalidOption
 	}
 
-	msg.Selected = id
+	msg.IDSelected = id
 
 	return nil
+}
+
+// GetSelected - get selected
+func (msg *BasicMessage) GetSelected() int {
+	return msg.IDSelected
 }
