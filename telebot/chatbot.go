@@ -17,6 +17,7 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 
 	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 	"github.com/zhs007/jarvistelebot/plugins/assistant"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
@@ -161,6 +162,11 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 	return nil
 }
 
+// procCallbackQuery
+func (cb *teleChatBot) procCallbackQuery(ctx context.Context, query *tgbotapi.CallbackQuery) error {
+	return nil
+}
+
 // Start
 func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) error {
 	cb.BasicChatBot.Start(ctx, node)
@@ -179,6 +185,12 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 	}
 
 	for update := range updates {
+		if update.CallbackQuery != nil {
+			cb.procCallbackQuery(ctx, update.CallbackQuery)
+
+			continue
+		}
+
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
 		}
@@ -191,7 +203,7 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 				update.Message.From.FirstName+" "+update.Message.From.LastName, int64(update.Message.MessageID))
 
 			cb.MgrUser.AddUser(user)
-			cb.GetChatBotDB().UpdUser(user)
+			cb.GetChatBotDB().UpdUser(user.ToProto())
 		} else {
 			lastmsgid := int64(update.Message.MessageID)
 
@@ -199,7 +211,7 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 				continue
 			}
 			user.UpdLastMsgID(lastmsgid)
-			cb.GetChatBotDB().UpdUser(user)
+			cb.GetChatBotDB().UpdUser(user.ToProto())
 		}
 
 		if update.Message.Document != nil {
@@ -318,4 +330,25 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) error {
 	msg.SetMsgID(fmt.Sprintf("%v", destmsg.MessageID))
 
 	return nil
+}
+
+// NewMsgFromProto
+func (cb *teleChatBot) NewMsgFromProto(msg *chatbotdbpb.Message) chatbot.Message {
+	from := cb.NewUserFromProto(msg.GetFrom())
+	to := cb.NewUserFromProto(msg.GetTo())
+
+	cmsg := &teleMsg{
+		chatID:    msg.GetChatID(),
+		msgID:     msg.GetMsgID(),
+		from:      from,
+		to:        to,
+		text:      msg.GetText(),
+		timeStamp: msg.GetTimeStamp(),
+	}
+
+	for _, v := range msg.Options {
+		cmsg.AddOption(v)
+	}
+
+	return cmsg
 }

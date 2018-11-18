@@ -11,6 +11,9 @@ type Message {
     to: User
     text: String
     timeStamp: Timestamp
+    msgID: String
+    options: [String]
+    selected: Int
 }
 
 type UserMessageChunk {

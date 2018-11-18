@@ -6,6 +6,8 @@ import (
 
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/proto"
+	"github.com/zhs007/jarvistelebot/chatbotdb"
+	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
 
 // ChatBot - chat bot interface
@@ -20,6 +22,8 @@ type ChatBot interface {
 	SaveMsg(msg Message) error
 	// NewMsg
 	NewMsg(chatid string, msgid string, from User, to User, text string, curtime int64) Message
+	// NewMsgFromProto
+	NewMsgFromProto(msg *chatbotdbpb.Message) Message
 
 	// GetJarvisNodeCoreDB - get jarvis node coredb
 	GetJarvisNodeCoreDB() *jarviscore.CoreDB
@@ -29,12 +33,14 @@ type ChatBot interface {
 	// GetConfig - get Config
 	GetConfig() *Config
 	// GetChatBotDB - get ChatBotDB
-	GetChatBotDB() *CoreDB
+	GetChatBotDB() *chatbotdb.ChatBotDB
 
 	// IsMaster - is master
 	IsMaster(user User) bool
 	// GetUserMgr - get user manager
 	GetUserMgr() UserMgr
+	// NewUserFromProto - new user from proto
+	NewUserFromProto(user *chatbotdbpb.User) User
 
 	// OnJarvisCtrlResult - event handle
 	OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error
@@ -42,7 +48,7 @@ type ChatBot interface {
 
 // BasicChatBot - base chatbot
 type BasicChatBot struct {
-	DB         *CoreDB
+	DB         *chatbotdb.ChatBotDB
 	Node       jarviscore.JarvisNode
 	MgrPlugins PluginsMgr
 	Config     *Config
@@ -61,7 +67,7 @@ func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 		return err
 	}
 
-	db, err := newChatDB(cfg)
+	db, err := chatbotdb.NewChatBotDB(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
 	if err != nil {
 		return err
 	}
@@ -75,7 +81,7 @@ func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 
 // SaveMsg - save message
 func (base *BasicChatBot) SaveMsg(msg Message) error {
-	return base.DB.SaveMsg(msg)
+	return base.DB.SaveMsg(msg.ToProto())
 }
 
 // Start - start chatbot
@@ -113,7 +119,7 @@ func (base *BasicChatBot) GetUserMgr() UserMgr {
 }
 
 // GetChatBotDB - get ChatBotDB
-func (base *BasicChatBot) GetChatBotDB() *CoreDB {
+func (base *BasicChatBot) GetChatBotDB() *chatbotdb.ChatBotDB {
 	return base.DB
 }
 
@@ -122,4 +128,14 @@ func SendTextMsg(bot ChatBot, user User, text string) error {
 	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
 
 	return bot.SendMsg(msg)
+}
+
+// NewUserFromProto - new user from proto
+func (base *BasicChatBot) NewUserFromProto(user *chatbotdbpb.User) User {
+	u := base.MgrUser.GetUser(user.UserID)
+	if u != nil {
+		return u
+	}
+
+	return NewBasicUser(user.UserName, user.UserID, user.NickName, user.LastMsgID)
 }
