@@ -38,15 +38,19 @@ func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePar
 		} else if params.LstStr[0] == "getmystate" {
 			p := params.MgrPlugins.GetCurPlugin()
 			if p != nil {
-				params.ChatBot.SendMsg(from, "Your are in "+p.GetComeInCode())
+				chatbot.SendTextMsg(params.ChatBot, from, "Your are in "+p.GetComeInCode())
+				// params.ChatBot.SendMsg(from, "Your are in "+p.GetComeInCode())
 			} else {
-				params.ChatBot.SendMsg(from, "nil.")
+				chatbot.SendTextMsg(params.ChatBot, from, "nil.")
+				// params.ChatBot.SendMsg(from, "nil.")
 			}
 		} else {
-			params.ChatBot.SendMsg(from, "Yes, master.")
+			chatbot.SendTextMsg(params.ChatBot, from, "Yes, master.")
+			// params.ChatBot.SendMsg(from, "Yes, master.")
 		}
 	} else {
-		params.ChatBot.SendMsg(from, "sorry, you are not my master.")
+		chatbot.SendTextMsg(params.ChatBot, from, "sorry, you are not my master.")
+		// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 	}
 
 	return true, nil

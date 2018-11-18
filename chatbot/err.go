@@ -22,5 +22,15 @@ var (
 	// ErrInvalidConfigDownloadPath - invalid config downloadpath
 	ErrInvalidConfigDownloadPath = errors.New("invalid config downloadpath")
 	// ErrInvalidConfigAnkaDB - invalid config ankaDB
-	ErrInvalidConfigAnkaDB = errors.New("invalid config ankaDB ")
+	ErrInvalidConfigAnkaDB = errors.New("invalid config ankaDB")
+	// ErrSameOption - same option
+	ErrSameOption = errors.New("same option")
+	// ErrEmptyOption - empty option
+	ErrEmptyOption = errors.New("empty option")
+	// ErrAlreadySelected - already selected
+	ErrAlreadySelected = errors.New("already selected")
+	// ErrInvalidOption - invalid option
+	ErrInvalidOption = errors.New("invalid option")
+	// ErrInvalidMessageTo - invalid Message.To
+	ErrInvalidMessageTo = errors.New("invalid Message.To")
 )

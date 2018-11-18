@@ -7,16 +7,20 @@ import (
 
 // teleMsg - telegram msg
 type teleMsg struct {
+	chatbot.BasicMessage
+
 	chatID    string
+	msgID     string
 	from      chatbot.User
 	to        chatbot.User
 	text      string
 	timeStamp int64
 }
 
-func newMsg(chatID string, from chatbot.User, text string, date int) *teleMsg {
+func newMsg(msgID string, from chatbot.User, text string, date int) *teleMsg {
 	return &teleMsg{
-		chatID:    chatID,
+		chatID:    from.GetUserID() + ":" + msgID,
+		msgID:     msgID,
 		from:      from,
 		text:      text,
 		timeStamp: int64(date),
@@ -56,4 +60,21 @@ func (msg *teleMsg) GetTimeStamp() int64 {
 // GetChatID - get chatID
 func (msg *teleMsg) GetChatID() string {
 	return msg.chatID
+}
+
+// GetMsgID - get message id
+func (msg *teleMsg) GetMsgID() string {
+	return msg.msgID
+}
+
+// SetMsgID - set message id
+func (msg *teleMsg) SetMsgID(msgid string) {
+	if msg.from == nil {
+		msg.chatID = ":" + msgid
+		msg.msgID = msgid
+
+		return
+	}
+	msg.chatID = msg.from.GetUserID() + ":" + msgid
+	msg.msgID = msgid
 }

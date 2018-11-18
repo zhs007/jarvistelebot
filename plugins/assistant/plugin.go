@@ -66,7 +66,8 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 					return false, err
 				}
 
-				params.ChatBot.SendMsg(from, fmt.Sprintf("ok. current msg is %+v", msg))
+				chatbot.SendTextMsg(params.ChatBot, from, fmt.Sprintf("ok. current msg is %+v", msg))
+				// params.ChatBot.SendMsg(from, fmt.Sprintf("ok. current msg is %+v", msg))
 
 				return true, nil
 			}
@@ -78,13 +79,15 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 				return false, err
 			}
 
-			params.ChatBot.SendMsg(from, fmt.Sprintf("ok. msg is %+v", msg))
+			chatbot.SendTextMsg(params.ChatBot, from, fmt.Sprintf("ok. msg is %+v", msg))
+			// params.ChatBot.SendMsg(from, fmt.Sprintf("ok. msg is %+v", msg))
 
 			return true, nil
 
 		}
 	} else {
-		params.ChatBot.SendMsg(from, "sorry, you are not my master.")
+		chatbot.SendTextMsg(params.ChatBot, from, "sorry, you are not my master.")
+		// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 	}
 
 	return false, nil

@@ -4,6 +4,12 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
 
+// MsgOption - option
+type MsgOption struct {
+	Text string
+	ID   int
+}
+
 // Message - other user info
 type Message interface {
 	// GetFrom - get message sender
@@ -16,6 +22,66 @@ type Message interface {
 	GetTimeStamp() int64
 	// GetChatID - get chatID
 	GetChatID() string
+	// GetMsgID - get message id
+	GetMsgID() string
+	// SetMsgID - set message id
+	SetMsgID(msgid string)
+
+	// AddOption - add option
+	AddOption(text string) (int, error)
+	// HasOptions - has any options
+	HasOptions() bool
+	// SelectOption - select option
+	SelectOption(id int) error
+
 	// ToProto - to proto message
 	ToProto() *chatbotdbpb.Message
+}
+
+// BasicMessage - basic Message
+type BasicMessage struct {
+	Options  []*MsgOption
+	Selected int
+}
+
+// AddOption - add option
+func (msg *BasicMessage) AddOption(text string) (int, error) {
+	if text == "" {
+		return -1, ErrEmptyOption
+	}
+
+	for _, v := range msg.Options {
+		if text == v.Text {
+			return -1, ErrSameOption
+		}
+	}
+
+	op := &MsgOption{
+		Text: text,
+		ID:   len(msg.Options) + 1,
+	}
+
+	msg.Options = append(msg.Options, op)
+
+	return op.ID, nil
+}
+
+// HasOptions - has any options
+func (msg *BasicMessage) HasOptions() bool {
+	return len(msg.Options) > 0
+}
+
+// SelectOption - select option
+func (msg *BasicMessage) SelectOption(id int) error {
+	if msg.Selected > 0 {
+		return ErrAlreadySelected
+	}
+
+	if id <= 0 || id > len(msg.Options) {
+		return ErrInvalidOption
+	}
+
+	msg.Selected = id
+
+	return nil
 }

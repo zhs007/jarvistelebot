@@ -10,6 +10,8 @@ import (
 
 // testMessage - test Message
 type testMessage struct {
+	chatbot.BasicMessage
+
 	strText string
 }
 
@@ -41,6 +43,15 @@ func (msg *testMessage) GetChatID() string {
 // ToProto - to proto message
 func (msg *testMessage) ToProto() *chatbotdbpb.Message {
 	return nil
+}
+
+// GetMsgID - get message id
+func (msg *testMessage) GetMsgID() string {
+	return ""
+}
+
+// SetMsgID - set message id
+func (msg *testMessage) SetMsgID(msgid string) {
 }
 
 func Test_IsMyMessage(t *testing.T) {

@@ -2,6 +2,7 @@ package telebot
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -88,32 +89,32 @@ func NewTeleChatBot(cfg *Config) (chatbot.ChatBot, error) {
 }
 
 // SendMsg -
-func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
-	// u, ok := (user).(*teleUser)
-	// if !ok {
-	// 	return ErrInvalidUser
-	// }
+// func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
+// 	// u, ok := (user).(*teleUser)
+// 	// if !ok {
+// 	// 	return ErrInvalidUser
+// 	// }
 
-	chatid, err := strconv.ParseInt(user.GetUserID(), 10, 64)
-	if err != nil {
-		return err
-	}
+// 	// chatid, err := strconv.ParseInt(user.GetUserID(), 10, 64)
+// 	// if err != nil {
+// 	// 	return err
+// 	// }
 
-	telemsg := tgbotapi.NewMessage(chatid, text)
+// 	// telemsg := tgbotapi.NewMessage(chatid, text)
 
-	var arr []tgbotapi.InlineKeyboardButton
+// 	// var arr []tgbotapi.InlineKeyboardButton
 
-	arr = append(arr, tgbotapi.NewInlineKeyboardButtonData("yes", "yes, i am."))
-	arr = append(arr, tgbotapi.NewInlineKeyboardButtonData("no", "no, i am not"))
+// 	// arr = append(arr, tgbotapi.NewInlineKeyboardButtonData("yes", "yes, i am."))
+// 	// arr = append(arr, tgbotapi.NewInlineKeyboardButtonData("no", "no, i am not"))
 
-	var numericKeyboard = tgbotapi.NewInlineKeyboardMarkup(arr)
+// 	// var numericKeyboard = tgbotapi.NewInlineKeyboardMarkup(arr)
 
-	telemsg.ReplyMarkup = numericKeyboard
+// 	// telemsg.ReplyMarkup = numericKeyboard
 
-	cb.teleBotAPI.Send(telemsg)
+// 	// cb.teleBotAPI.Send(telemsg)
 
-	return nil
-}
+// 	return nil
+// }
 
 func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisNode, doc *tgbotapi.Document) error {
 	jarvisbase.Debug("teleChatBot.procDocument")
@@ -216,7 +217,7 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			continue
 		}
 
-		msg := newMsg(user.GetUserID()+":"+strconv.Itoa(update.Message.MessageID),
+		msg := newMsg(strconv.Itoa(update.Message.MessageID),
 			user, update.Message.Text, update.Message.Date)
 
 		err := cb.SaveMsg(msg)
@@ -260,7 +261,61 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 // OnJarvisCtrlResult - event handle
 func (cb *teleChatBot) OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 	cr := msg.GetCtrlResult()
-	cb.SendMsg(cb.scriptUser, cr.CtrlResult)
+
+	chatbot.SendTextMsg(cb, cb.scriptUser, cr.CtrlResult)
+	// cb.SendMsg(cb.scriptUser, cr.CtrlResult)
+
+	return nil
+}
+
+// NewMsg
+func (cb *teleChatBot) NewMsg(chatid string, msgid string, from chatbot.User, to chatbot.User,
+	text string, curtime int64) chatbot.Message {
+
+	return &teleMsg{
+		chatID:    from.GetUserID() + ":" + msgid,
+		msgID:     msgid,
+		from:      from,
+		to:        to,
+		text:      text,
+		timeStamp: int64(curtime),
+	}
+}
+
+// SendMsg
+func (cb *teleChatBot) SendMsg(msg chatbot.Message) error {
+	tgmsg := msg.(*teleMsg)
+
+	to := msg.GetTo()
+	if to == nil {
+		return chatbot.ErrInvalidMessageTo
+	}
+
+	chatid, err := strconv.ParseInt(to.GetUserID(), 10, 64)
+	if err != nil {
+		return err
+	}
+
+	telemsg := tgbotapi.NewMessage(chatid, msg.GetText())
+
+	if msg.HasOptions() {
+		var lst []tgbotapi.InlineKeyboardButton
+
+		for _, v := range tgmsg.Options {
+			lst = append(lst, tgbotapi.NewInlineKeyboardButtonData(v.Text, fmt.Sprintf("%v", v.ID)))
+		}
+
+		reply := tgbotapi.NewInlineKeyboardMarkup(lst)
+
+		telemsg.ReplyMarkup = reply
+	}
+
+	destmsg, err := cb.teleBotAPI.Send(telemsg)
+	if err != nil {
+		return err
+	}
+
+	msg.SetMsgID(fmt.Sprintf("%v", destmsg.MessageID))
 
 	return nil
 }

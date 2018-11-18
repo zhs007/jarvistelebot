@@ -11,7 +11,8 @@ import (
 
 // cmdHelp - help
 func cmdHelp(ctx context.Context, params *chatbot.MessageParams) bool {
-	params.ChatBot.SendMsg(params.Msg.GetFrom(), "This is jarvisnode plugin help.")
+	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "This is jarvisnode plugin help.")
+	// params.ChatBot.SendMsg(params.Msg.GetFrom(), "This is jarvisnode plugin help.")
 
 	return true
 }
@@ -23,9 +24,11 @@ func cmdMyState(ctx context.Context, params *chatbot.MessageParams) bool {
 	str, _ := coredb.GetMyState()
 	strret, err := chatbot.FormatJSON(str)
 	if err != nil {
-		params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
+		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
 	} else {
-		params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
 	}
 
 	return true
@@ -52,9 +55,11 @@ func cmdNodes(ctx context.Context, params *chatbot.MessageParams) bool {
 	str, _ := coredb.GetNodes(100)
 	strret, err := chatbot.FormatJSON(str)
 	if err != nil {
-		params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
+		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
 	} else {
-		params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
 	}
 
 	return true
@@ -67,9 +72,11 @@ func cmdScripts(ctx context.Context, params *chatbot.MessageParams) bool {
 	strret, err := chatbot.FormatJSONObj(files)
 	if err != nil {
 		str := fmt.Sprintf("%+v", files)
-		params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
+		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
 	} else {
-		params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
 	}
 
 	return true

@@ -2,6 +2,7 @@ package chatbot
 
 import (
 	"context"
+	"time"
 
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/proto"
@@ -14,17 +15,21 @@ type ChatBot interface {
 	// Start
 	Start(ctx context.Context, node jarviscore.JarvisNode) error
 	// SendMsg
-	SendMsg(user User, text string) error
+	SendMsg(msg Message) error
 	// SaveMsg
 	SaveMsg(msg Message) error
+	// NewMsg
+	NewMsg(chatid string, msgid string, from User, to User, text string, curtime int64) Message
+
 	// GetJarvisNodeCoreDB - get jarvis node coredb
 	GetJarvisNodeCoreDB() *jarviscore.CoreDB
 	// GetJarvisNode - get jarvis node
 	GetJarvisNode() jarviscore.JarvisNode
+
 	// GetConfig - get Config
 	GetConfig() *Config
 	// GetChatBotDB - get ChatBotDB
-	GetChatBotDB() *ChatBotDB
+	GetChatBotDB() *CoreDB
 
 	// IsMaster - is master
 	IsMaster(user User) bool
@@ -37,7 +42,7 @@ type ChatBot interface {
 
 // BasicChatBot - base chatbot
 type BasicChatBot struct {
-	DB         *ChatBotDB
+	DB         *CoreDB
 	Node       jarviscore.JarvisNode
 	MgrPlugins PluginsMgr
 	Config     *Config
@@ -108,6 +113,13 @@ func (base *BasicChatBot) GetUserMgr() UserMgr {
 }
 
 // GetChatBotDB - get ChatBotDB
-func (base *BasicChatBot) GetChatBotDB() *ChatBotDB {
+func (base *BasicChatBot) GetChatBotDB() *CoreDB {
 	return base.DB
+}
+
+// SendTextMsg - sendmsg
+func SendTextMsg(bot ChatBot, user User, text string) error {
+	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
+
+	return bot.SendMsg(msg)
 }

@@ -15,4 +15,7 @@ message Message {
     User to = 3;
     string text = 4;
     int64 timeStamp = 5;
+    string msgID = 6;
+    repeated string options = 7;
+    int32 selected = 8;     // [1, len(options)]
 }
