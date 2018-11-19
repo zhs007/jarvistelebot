@@ -16,7 +16,7 @@ const querySaveMsg = `mutation NewMsg($chatID: ID!, $fromNickName: String!, $fro
 	}
 }`
 
-const queryUpdUser = `mutation UpdUser($nickName: String!, $userID: ID!, userName: ID!, $lastMsgID: Int64!) {
+const queryUpdUser = `mutation UpdUser($nickName: String!, $userID: ID!, $userName: ID!, $lastMsgID: Int64!) {
 	updUser(nickName: $nickName, userID: $userID, userName: $userName, lastMsgID: $lastMsgID) {
 		nickName
 		userID
