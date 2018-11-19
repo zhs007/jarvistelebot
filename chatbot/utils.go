@@ -3,6 +3,9 @@ package chatbot
 import (
 	"encoding/json"
 	"time"
+
+	"github.com/zhs007/jarviscore/base"
+	"go.uber.org/zap"
 )
 
 // FormatJSON - format JSON string
@@ -53,8 +56,17 @@ func SendMsgWithOptions(bot ChatBot, user User, text string, options []string, c
 		return err
 	}
 
+	err = bot.SaveMsg(nmsg)
+	if err != nil {
+		jarvisbase.Warn("SendMsgWithOptions:SaveMsg", zap.Error(err))
+
+		return err
+	}
+
 	err = bot.AddMsgCallback(nmsg, callback)
 	if err != nil {
+		jarvisbase.Warn("SendMsgWithOptions:AddMsgCallback", zap.Error(err))
+
 		return err
 	}
 
