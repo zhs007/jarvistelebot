@@ -45,13 +45,13 @@ func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePar
 				// params.ChatBot.SendMsg(from, "nil.")
 			}
 		} else {
-			// lstOp := []string{"yes", "no"}
-			// chatbot.SendMsgWithOptions(params.ChatBot, from, "Yes, master.", lstOp,
-			// 	func(ctx context.Context, msg chatbot.Message, id int) error {
-			// 		chatbot.SendTextMsg(params.ChatBot, from, "you choice.")
-			// 		return nil
-			// 	})
-			chatbot.SendTextMsg(params.ChatBot, from, "Yes, master.")
+			lstOp := []string{"yes", "no"}
+			chatbot.SendMsgWithOptions(params.ChatBot, from, "Yes, master.", lstOp,
+				func(ctx context.Context, msg chatbot.Message, id int) error {
+					chatbot.SendTextMsg(params.ChatBot, from, "you choice.")
+					return nil
+				})
+			// chatbot.SendTextMsg(params.ChatBot, from, "Yes, master.")
 			// params.ChatBot.SendMsg(from, "Yes, master.")
 		}
 	} else {
