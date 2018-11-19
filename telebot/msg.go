@@ -45,6 +45,7 @@ func (msg *teleMsg) GetText() string {
 // ToProto - ToProto - to proto message
 func (msg *teleMsg) ToProto() *chatbotdbpb.Message {
 	pbmsg := &chatbotdbpb.Message{
+		ChatID:    msg.chatID,
 		Text:      msg.text,
 		TimeStamp: msg.timeStamp,
 		MsgID:     msg.GetMsgID(),
