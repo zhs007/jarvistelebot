@@ -14,20 +14,8 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 			Type:        typeMessage,
 			Description: "new message",
 			Args: graphql.FieldConfigArgument{
-				"chatID": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.ID),
-				},
-				"fromNickName": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.String),
-				},
-				"fromUserID": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.ID),
-				},
-				"text": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.String),
-				},
-				"timeStamp": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphqlext.Timestamp),
+				"msg": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(inputTypeMessage),
 				},
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
@@ -41,23 +29,29 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxCurDB
 				}
 
-				chatID := params.Args["chatID"].(string)
-				fromNickName := params.Args["fromNickName"].(string)
-				fromUserID := params.Args["fromUserID"].(string)
-				text := params.Args["text"].(string)
-				timeStamp := params.Args["timeStamp"].(int64)
-
-				msg := &pb.Message{
-					ChatID: chatID,
-					From: &pb.User{
-						NickName: fromNickName,
-						UserID:   fromUserID,
-					},
-					Text:      text,
-					TimeStamp: timeStamp,
+				msg := &pb.Message{}
+				err := ankadb.GetMsgFromParam(params, "msg", msg)
+				if err != nil {
+					return nil, err
 				}
 
-				err := ankadb.PutMsg2DB(curdb, []byte(makeMessageKey(chatID)), msg)
+				// chatID := params.Args["chatID"].(string)
+				// fromNickName := params.Args["fromNickName"].(string)
+				// fromUserID := params.Args["fromUserID"].(string)
+				// text := params.Args["text"].(string)
+				// timeStamp := params.Args["timeStamp"].(int64)
+
+				// msg := &pb.Message{
+				// 	ChatID: chatID,
+				// 	From: &pb.User{
+				// 		NickName: fromNickName,
+				// 		UserID:   fromUserID,
+				// 	},
+				// 	Text:      text,
+				// 	TimeStamp: timeStamp,
+				// }
+
+				err = ankadb.PutMsg2DB(curdb, []byte(makeMessageKey(msg.ChatID)), msg)
 				if err != nil {
 					return nil, err
 				}

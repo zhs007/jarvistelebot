@@ -60,3 +60,8 @@ func SendMsgWithOptions(bot ChatBot, user User, text string, options []string, c
 
 	return nil
 }
+
+// MakeChatID - make chatid
+func MakeChatID(userid string, msgid string) string {
+	return userid + ":" + msgid
+}

@@ -1,6 +1,8 @@
 package chatbot
 
-import "context"
+import (
+	"context"
+)
 
 // FuncMsgCallback - func(ctx, msg, id) error
 type FuncMsgCallback func(ctx context.Context, msg Message, id int) error
@@ -23,12 +25,19 @@ func newMsgCallbackMgr() *msgCallbackMgr {
 
 // addMsgCallback - add msgCallback
 func (mgr *msgCallbackMgr) addMsgCallback(msg Message, callback FuncMsgCallback) error {
-	_, ok := mgr.mapCallback[msg.GetChatID()]
+	to := msg.GetTo()
+	if to == nil {
+		return ErrInvalidMessageTo
+	}
+
+	chatid := MakeChatID(to.GetUserID(), msg.GetMsgID())
+
+	_, ok := mgr.mapCallback[chatid]
 	if ok {
 		return ErrSameMsgCallback
 	}
 
-	mgr.mapCallback[msg.GetChatID()] = &msgCallback{
+	mgr.mapCallback[chatid] = &msgCallback{
 		msg:      msg,
 		callback: callback,
 	}

@@ -10,8 +10,8 @@ import (
 	"go.uber.org/zap"
 )
 
-const querySaveMsg = `mutation NewMsg($chatID: ID!, $fromNickName: String!, $fromUserID: ID!, $text: String!, $timeStamp: Timestamp!) {
-	newMsg(chatID: $chatID, fromNickName: $fromNickName, fromUserID: $fromUserID, text: $text, timeStamp: $timeStamp) {
+const querySaveMsg = `mutation NewMsg($msg: Message!) {
+	newMsg(msg: $msg) {
 		chatID
 	}
 }`
@@ -103,11 +103,15 @@ func (db *ChatBotDB) SaveMsg(msg *pb.Message) error {
 	}
 
 	params := make(map[string]interface{})
-	params["chatID"] = msg.GetChatID()
-	params["fromNickName"] = msg.GetFrom().GetNickName()
-	params["fromUserID"] = msg.GetFrom().GetUserID()
-	params["text"] = msg.GetText()
-	params["timeStamp"] = msg.GetTimeStamp()
+	err := ankadb.MakeParamsFromMsg(params, "msg", msg)
+	if err != nil {
+		return err
+	}
+	// params["chatID"] = msg.GetChatID()
+	// params["fromNickName"] = msg.GetFrom().GetNickName()
+	// params["fromUserID"] = msg.GetFrom().GetUserID()
+	// params["text"] = msg.GetText()
+	// params["timeStamp"] = msg.GetTimeStamp()
 
 	result, err := db.db.LocalQuery(context.Background(), querySaveMsg, params)
 	if err != nil {

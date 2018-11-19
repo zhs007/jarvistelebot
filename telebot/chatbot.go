@@ -189,7 +189,7 @@ func (cb *teleChatBot) procCallbackQuery(ctx context.Context, query *tgbotapi.Ca
 			return err
 		}
 
-		msg, err := cb.GetMsg(makeChatID(user.GetUserID(), msgid))
+		msg, err := cb.GetMsg(chatbot.MakeChatID(user.GetUserID(), msgid))
 		if err != nil {
 			chatbot.Warn("teleChatBot.procCallbackQuery:GetMsg", zap.Error(err))
 
@@ -283,7 +283,7 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 		}
 
 		msgid := strconv.Itoa(update.Message.MessageID)
-		msg := cb.NewMsg(makeChatID(user.GetUserID(), msgid), msgid, user, nil,
+		msg := cb.NewMsg(chatbot.MakeChatID(user.GetUserID(), msgid), msgid, user, nil,
 			update.Message.Text, int64(update.Message.Date))
 		// msg := newMsg(strconv.Itoa(update.Message.MessageID),
 		// 	user, update.Message.Text, update.Message.Date)
