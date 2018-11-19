@@ -93,3 +93,8 @@ func (msg *teleMsg) SetMsgID(msgid string) {
 	msg.chatID = msg.from.GetUserID() + ":" + msgid
 	msg.msgID = msgid
 }
+
+// SetChatID - set chat id
+func (msg *teleMsg) SetChatID(chatid string) {
+	msg.chatID = chatid
+}

@@ -56,6 +56,7 @@ func SendMsgWithOptions(bot ChatBot, user User, text string, options []string, c
 		return err
 	}
 
+	nmsg.SetChatID(MakeChatID(user.GetUserID(), nmsg.GetMsgID()))
 	err = bot.SaveMsg(nmsg)
 	if err != nil {
 		jarvisbase.Warn("SendMsgWithOptions:SaveMsg", zap.Error(err))

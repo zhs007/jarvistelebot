@@ -26,6 +26,8 @@ type Message interface {
 	GetMsgID() string
 	// SetMsgID - set message id
 	SetMsgID(msgid string)
+	// SetChatID - set chat id
+	SetChatID(chatid string)
 
 	// AddOption - add option
 	AddOption(text string) (int, error)
