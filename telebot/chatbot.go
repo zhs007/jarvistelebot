@@ -234,6 +234,14 @@ func (cb *teleChatBot) procCallbackQuery(ctx context.Context, query *tgbotapi.Ca
 			return err
 		}
 
+		editText := tgbotapi.NewEditMessageText(
+			query.Message.Chat.ID,
+			query.Message.MessageID,
+			query.Message.Text+fmt.Sprintf(" (you choice %v)", msg.GetOption(id)),
+		)
+
+		cb.teleBotAPI.Send(editText)
+
 		configAlert := tgbotapi.NewCallback(query.ID, "")
 		cb.teleBotAPI.AnswerCallbackQuery(configAlert)
 	}
