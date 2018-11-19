@@ -54,6 +54,16 @@ func (msg *testMessage) GetMsgID() string {
 func (msg *testMessage) SetMsgID(msgid string) {
 }
 
+// SetChatID - set chat id
+func (msg *testMessage) SetChatID(chatid string) {
+
+}
+
+// GetOption - get option
+func (msg *testMessage) GetOption(id int) string {
+	return ""
+}
+
 func Test_IsMyMessage(t *testing.T) {
 	p := newPlugin()
 
