@@ -168,7 +168,7 @@ func (cb *teleChatBot) procMessageUser(msg *tgbotapi.Message) (chatbot.User, err
 	user := cb.MgrUser.GetUser(userid)
 	if user == nil {
 		user = chatbot.NewBasicUser(msg.From.UserName, userid,
-			msg.From.FirstName+" "+msg.From.LastName, int64(msg.MessageID))
+			msg.From.FirstName+" "+msg.From.LastName, 0)
 
 		cb.MgrUser.AddUser(user)
 		cb.GetChatBotDB().UpdUser(user.ToProto())
