@@ -218,6 +218,13 @@ func (cb *teleChatBot) procCallbackQuery(ctx context.Context, query *tgbotapi.Ca
 			return err
 		}
 
+		err = msg.SelectOption(id)
+		if err != nil {
+			chatbot.Warn("teleChatBot.procCallbackQuery:SelectOption", zap.Error(err))
+
+			return err
+		}
+
 		cb.DelMsgCallback(msg.GetChatID())
 
 		err = cb.SaveMsg(msg)
