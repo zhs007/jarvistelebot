@@ -424,6 +424,8 @@ func (cb *teleChatBot) NewMsgFromProto(msg *chatbotdbpb.Message) chatbot.Message
 		cmsg.AddOption(v)
 	}
 
+	cmsg.SelectOption(int(msg.GetSelected()))
+
 	return cmsg
 }
 
