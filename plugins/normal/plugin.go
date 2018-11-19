@@ -48,7 +48,7 @@ func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePar
 			lstOp := []string{"yes", "no"}
 			chatbot.SendMsgWithOptions(params.ChatBot, from, "Yes, master.", lstOp,
 				func(ctx context.Context, msg chatbot.Message, id int) error {
-					chatbot.SendTextMsg(params.ChatBot, from, "you choice.")
+					chatbot.SendTextMsg(params.ChatBot, from, "you choice."+msg.GetOption(id))
 					return nil
 				})
 			// chatbot.SendTextMsg(params.ChatBot, from, "Yes, master.")

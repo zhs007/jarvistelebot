@@ -37,6 +37,8 @@ type Message interface {
 	SelectOption(id int) error
 	// GetSelected - get selected
 	GetSelected() int
+	// GetOption - get option
+	GetOption(id int) string
 
 	// ToProto - to proto message
 	ToProto() *chatbotdbpb.Message
@@ -93,4 +95,13 @@ func (msg *BasicMessage) SelectOption(id int) error {
 // GetSelected - get selected
 func (msg *BasicMessage) GetSelected() int {
 	return msg.IDSelected
+}
+
+// GetOption - get option
+func (msg *BasicMessage) GetOption(id int) string {
+	if id <= 0 || id > len(msg.Options) {
+		return ""
+	}
+
+	return msg.Options[id-1].Text
 }
