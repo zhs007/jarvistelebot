@@ -25,7 +25,7 @@ const queryUpdUser = `mutation UpdUser($nickName: String!, $userID: ID!, $userNa
 	}
 }`
 
-const queryGetMsg = `query Msg($chatID: String!) {
+const queryGetMsg = `query Msg($chatID: ID!) {
 	msg(chatID: $chatID) {
 		chatID
 		from {		
@@ -48,7 +48,7 @@ const queryGetMsg = `query Msg($chatID: String!) {
 	}
 }`
 
-const queryGetUser = `query User($uerID: String!) {
+const queryGetUser = `query User($uerID: ID!) {
 	user(uerID: $uerID) {
 		nickName
 		userID
