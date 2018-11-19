@@ -163,18 +163,18 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 }
 
 // procMessageUser
-func (cb *teleChatBot) procMessageUser(msg *tgbotapi.Message) (chatbot.User, error) {
-	userid := strconv.Itoa(msg.From.ID)
-	user := cb.MgrUser.GetUser(userid)
-	if user == nil {
-		user = chatbot.NewBasicUser(msg.From.UserName, userid,
-			msg.From.FirstName+" "+msg.From.LastName, 0)
+func (cb *teleChatBot) procMessageUser(user *tgbotapi.User) (chatbot.User, error) {
+	userid := strconv.Itoa(user.ID)
+	curuser := cb.MgrUser.GetUser(userid)
+	if curuser == nil {
+		curuser = chatbot.NewBasicUser(user.UserName, userid,
+			user.FirstName+" "+user.LastName, 0)
 
-		cb.MgrUser.AddUser(user)
-		cb.GetChatBotDB().UpdUser(user.ToProto())
+		cb.MgrUser.AddUser(curuser)
+		cb.GetChatBotDB().UpdUser(curuser.ToProto())
 	}
 
-	return user, nil
+	return curuser, nil
 }
 
 // procCallbackQuery
@@ -182,7 +182,7 @@ func (cb *teleChatBot) procCallbackQuery(ctx context.Context, query *tgbotapi.Ca
 	if query.Message != nil {
 		msgid := strconv.Itoa(query.Message.MessageID)
 
-		user, err := cb.procMessageUser(query.Message)
+		user, err := cb.procMessageUser(query.From)
 		if err != nil {
 			chatbot.Warn("teleChatBot.procCallbackQuery:procMessageUser", zap.Error(err))
 
@@ -252,7 +252,7 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			continue
 		}
 
-		user, err := cb.procMessageUser(update.Message)
+		user, err := cb.procMessageUser(update.Message.From)
 		if err != nil {
 			chatbot.Warn("teleChatBot.Start:procMessageUser", zap.Error(err))
 
