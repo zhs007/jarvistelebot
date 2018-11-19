@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const querySaveMsg = `mutation NewMsg($msg: Message!) {
+const querySaveMsg = `mutation NewMsg($msg: MessageInput!) {
 	newMsg(msg: $msg) {
 		chatID
 	}
