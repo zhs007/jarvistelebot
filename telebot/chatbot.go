@@ -341,7 +341,7 @@ func (cb *teleChatBot) NewMsg(chatid string, msgid string, from chatbot.User, to
 	text string, curtime int64) chatbot.Message {
 
 	return &teleMsg{
-		chatID:    from.GetUserID() + ":" + msgid,
+		chatID:    chatid,
 		msgID:     msgid,
 		from:      from,
 		to:        to,
