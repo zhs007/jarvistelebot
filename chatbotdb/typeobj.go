@@ -17,6 +17,9 @@ var typeUser = graphql.NewObject(
 			"userID": &graphql.Field{
 				Type: graphql.ID,
 			},
+			"userName": &graphql.Field{
+				Type: graphql.ID,
+			},
 			"lastMsgID": &graphql.Field{
 				Type: graphqlext.Int64,
 			},
@@ -44,6 +47,15 @@ var typeMessage = graphql.NewObject(
 			},
 			"timeStamp": &graphql.Field{
 				Type: graphqlext.Int64,
+			},
+			"msgID": &graphql.Field{
+				Type: graphql.String,
+			},
+			"options": &graphql.Field{
+				Type: graphql.NewList(graphql.String),
+			},
+			"selected": &graphql.Field{
+				Type: graphql.Int,
 			},
 		},
 	},
