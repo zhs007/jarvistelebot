@@ -146,7 +146,7 @@ func (db *ChatBotDB) GetMsg(chatid string) (*pb.Message, error) {
 		return nil, err
 	}
 
-	return &rmsg.Msg, nil
+	return ResultMsg2Msg(rmsg), nil
 }
 
 // UpdUser - update user
