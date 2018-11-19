@@ -138,13 +138,13 @@ func (db *ChatBotDB) GetMsg(chatid string) (*pb.Message, error) {
 		return nil, err
 	}
 
+	jarvisbase.Info("ChatBotDB.GetMsg", jarvisbase.JSON("result", result))
+
 	rmsg := &ResultMsg{}
 	err = ankadb.MakeObjFromResult(result, rmsg)
 	if err != nil {
 		return nil, err
 	}
-
-	jarvisbase.Info("ChatBotDB.GetMsg", jarvisbase.JSON("result", result))
 
 	return &rmsg.Msg, nil
 }
