@@ -233,6 +233,9 @@ func (cb *teleChatBot) procCallbackQuery(ctx context.Context, query *tgbotapi.Ca
 
 			return err
 		}
+
+		configAlert := tgbotapi.NewCallback(query.ID, "")
+		cb.teleBotAPI.AnswerCallbackQuery(configAlert)
 	}
 
 	return nil
