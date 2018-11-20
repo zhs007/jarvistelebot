@@ -71,3 +71,8 @@ func (p *timestampPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
 func (p *timestampPlugin) OnStart(ctx context.Context) error {
 	return nil
 }
+
+// GetPluginType - get pluginType
+func (p *timestampPlugin) GetPluginType() int {
+	return chatbot.PluginTypeCommand
+}

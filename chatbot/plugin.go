@@ -12,4 +12,7 @@ type Plugin interface {
 	IsMyMessage(params *MessageParams) bool
 	// OnStart - on start
 	OnStart(ctx context.Context) error
+
+	// GetPluginType - get pluginType
+	GetPluginType() int
 }

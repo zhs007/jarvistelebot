@@ -4,6 +4,11 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
 
+const (
+	// FileTypeShellScript - shell script
+	FileTypeShellScript = "text/x-script.sh"
+)
+
 // MsgOption - option
 type MsgOption struct {
 	Text string

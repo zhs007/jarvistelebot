@@ -177,3 +177,8 @@ func (p *assistantPlugin) parseInput(params *chatbot.MessageParams) *inputParams
 func (p *assistantPlugin) OnStart(ctx context.Context) error {
 	return p.db.Start(ctx)
 }
+
+// GetPluginType - get pluginType
+func (p *assistantPlugin) GetPluginType() int {
+	return chatbot.PluginTypeCommand
+}

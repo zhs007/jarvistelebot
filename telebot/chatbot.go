@@ -360,9 +360,24 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 
 // OnJarvisCtrlResult - event handle
 func (cb *teleChatBot) OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-	cr := msg.GetCtrlResult()
 
-	chatbot.SendTextMsg(cb, cb.scriptUser, cr.CtrlResult)
+	err := cb.ProcJarvisMsgCallback(ctx, msg)
+	if err != nil {
+		jarvisbase.Warn("teleChatBot.OnJarvisCtrlResult:ProcJarvisMsgCallback", zap.Error(err))
+
+		return err
+	}
+
+	err = cb.DelJarvisMsgCallback(msg.SrcAddr, 0)
+	if err != nil {
+		jarvisbase.Warn("teleChatBot.OnJarvisCtrlResult:DelJarvisMsgCallback", zap.Error(err))
+
+		return err
+	}
+
+	// cr := msg.GetCtrlResult()
+
+	// chatbot.SendTextMsg(cb, cb.scriptUser, cr.CtrlResult)
 	// cb.SendMsg(cb.scriptUser, cr.CtrlResult)
 
 	return nil

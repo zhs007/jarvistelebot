@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+const (
+	// PluginTypeNormal - normal plugin
+	PluginTypeNormal = 0
+	// PluginTypeCommand - command plugin
+	PluginTypeCommand = 1
+)
+
 // PluginsMgr - chat bot plugins interface
 type PluginsMgr interface {
 	// RegPlugin - reg plugin
@@ -24,16 +31,18 @@ type PluginsMgr interface {
 // NewPluginsMgr - new default plugins mgr
 func NewPluginsMgr() PluginsMgr {
 	return &pluginsMgr{
-		plugins:   make([]Plugin, 0, 16),
-		lstComeIn: make([]Plugin, 0, 16),
+		lstNormal:  make([]Plugin, 0, 16),
+		lstCommand: make([]Plugin, 0, 16),
+		lstComeIn:  make([]Plugin, 0, 16),
 	}
 }
 
 // PluginsMgr - chat bot plugins
 type pluginsMgr struct {
-	plugins   []Plugin
-	lstComeIn []Plugin
-	curPlugin Plugin
+	lstNormal  []Plugin
+	lstCommand []Plugin
+	lstComeIn  []Plugin
+	curPlugin  Plugin
 }
 
 func (mgr *pluginsMgr) GetComeInPlugin(code string) Plugin {
@@ -47,13 +56,24 @@ func (mgr *pluginsMgr) GetComeInPlugin(code string) Plugin {
 }
 
 func (mgr *pluginsMgr) RegPlugin(plugin Plugin) error {
-	mgr.plugins = append(mgr.plugins, plugin)
+	pt := plugin.GetPluginType()
+	if pt == PluginTypeNormal {
+		mgr.lstNormal = append(mgr.lstNormal, plugin)
 
-	if plugin.GetComeInCode() != "" {
-		mgr.lstComeIn = append(mgr.lstComeIn, plugin)
+		return nil
+	} else if pt != PluginTypeCommand {
+		mgr.lstCommand = append(mgr.lstCommand, plugin)
+
+		return nil
 	}
 
-	return nil
+	return ErrInvalidPluginType
+
+	// if plugin.GetComeInCode() != "" {
+	// 	mgr.lstComeIn = append(mgr.lstComeIn, plugin)
+	// }
+
+	// return nil
 }
 
 func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) error {
@@ -77,7 +97,22 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 		}
 	}
 
-	for _, v := range mgr.plugins {
+	if mgr.isCommand(params) {
+		for _, v := range mgr.lstCommand {
+			r, err := v.OnMessage(ctx, params)
+			if err != nil {
+				return err
+			}
+
+			// if this plugins process current message
+			// then break
+			if r {
+				return nil
+			}
+		}
+	}
+
+	for _, v := range mgr.lstNormal {
 		r, err := v.OnMessage(ctx, params)
 		if err != nil {
 			return err
@@ -105,9 +140,22 @@ func (mgr *pluginsMgr) GetCurPlugin() Plugin {
 
 // OnStart - on start
 func (mgr *pluginsMgr) OnStart(ctx context.Context) error {
-	for _, v := range mgr.plugins {
+	for _, v := range mgr.lstCommand {
+		go v.OnStart(ctx)
+	}
+
+	for _, v := range mgr.lstNormal {
 		go v.OnStart(ctx)
 	}
 
 	return nil
+}
+
+// OnStart - on start
+func (mgr *pluginsMgr) isCommand(params *MessageParams) bool {
+	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
+		return true
+	}
+
+	return false
 }

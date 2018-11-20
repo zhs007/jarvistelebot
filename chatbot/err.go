@@ -35,4 +35,10 @@ var (
 	ErrSameMsgCallback = errors.New("same msgcallback")
 	// ErrNoMsgCallback - can't find msgcallback
 	ErrNoMsgCallback = errors.New("can't find msgcallback")
+	// ErrInvalidPluginType - invalid plugin type
+	ErrInvalidPluginType = errors.New("invalid plugin type")
+	// ErrSameJarvisMsgCallback - same jarvismsgcallback
+	ErrSameJarvisMsgCallback = errors.New("same jarvismsgcallback")
+	// ErrNoJarvisMsgCallback - can't find jarvismsgcallback
+	ErrNoJarvisMsgCallback = errors.New("can't find jarvismsgcallback")
 )

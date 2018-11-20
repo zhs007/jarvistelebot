@@ -3,6 +3,11 @@ package pluginjarvisnode
 import (
 	"context"
 
+	"github.com/zhs007/jarviscore/base"
+	"github.com/zhs007/jarviscore/proto"
+	"go.uber.org/zap"
+
+	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
@@ -43,6 +48,30 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 		return false, chatbot.ErrMsgNoFrom
 	}
 
+	file := params.Msg.GetFile()
+	if file != nil {
+		if file.FileType == chatbot.FileTypeShellScript {
+			ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, file.Filename, file.Data, "")
+			if err != nil {
+				jarvisbase.Warn("jarvisnodePlugin.OnMessage", zap.Error(err))
+
+				return false, err
+			}
+
+			params.ChatBot.GetJarvisNode().RequestCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
+
+			params.ChatBot.AddJarvisMsgCallback("1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+				cr := msg.GetCtrlResult()
+
+				chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)
+
+				return nil
+			})
+
+			return true, nil
+		}
+	}
+
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
 		p.cmd.Run(ctx, params.LstStr[1], params)
 
@@ -59,8 +88,11 @@ func (p *jarvisnodePlugin) GetComeInCode() string {
 
 // IsMyMessage
 func (p *jarvisnodePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-	if params.Msg.GetFile() != nil {
-
+	file := params.Msg.GetFile()
+	if file != nil {
+		if file.FileType == chatbot.FileTypeShellScript {
+			return true
+		}
 	}
 
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
@@ -73,4 +105,9 @@ func (p *jarvisnodePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
 // OnStart - on start
 func (p *jarvisnodePlugin) OnStart(ctx context.Context) error {
 	return nil
+}
+
+// GetPluginType - get pluginType
+func (p *jarvisnodePlugin) GetPluginType() int {
+	return chatbot.PluginTypeCommand
 }

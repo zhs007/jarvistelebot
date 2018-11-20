@@ -54,16 +54,24 @@ type ChatBot interface {
 	ProcMsgCallback(ctx context.Context, msg Message, id int) error
 	// DelMsgCallback - del msgCallback
 	DelMsgCallback(chatid string) error
+
+	// AddJarvisMsgCallback - add jarvisMsgCallback
+	AddJarvisMsgCallback(destAddr string, ctrlid int64, callback FuncJarvisMsgCallback) error
+	// ProcJarvisMsgCallback - proc jarvisMsgCallback
+	ProcJarvisMsgCallback(ctx context.Context, msg *jarviscorepb.JarvisMsg) error
+	// DelJarvisMsgCallback - del jarvisMsgCallback
+	DelJarvisMsgCallback(destAddr string, ctrlid int64) error
 }
 
 // BasicChatBot - base chatbot
 type BasicChatBot struct {
-	DB             *chatbotdb.ChatBotDB
-	Node           jarviscore.JarvisNode
-	MgrPlugins     PluginsMgr
-	Config         *Config
-	MgrUser        UserMgr
-	mgrMsgCallback *msgCallbackMgr
+	DB                   *chatbotdb.ChatBotDB
+	Node                 jarviscore.JarvisNode
+	MgrPlugins           PluginsMgr
+	Config               *Config
+	MgrUser              UserMgr
+	mgrMsgCallback       *msgCallbackMgr
+	mgrJsrvisMsgCallback *jarvisMsgCallbackMgr
 }
 
 // NewBasicChatBot - new BasicChatBot
@@ -87,6 +95,7 @@ func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 	base.MgrPlugins = mgr
 	base.Config = cfg
 	base.mgrMsgCallback = newMsgCallbackMgr()
+	base.mgrJsrvisMsgCallback = newJarvisMsgCallbackMgr()
 
 	return nil
 }
@@ -157,15 +166,30 @@ func (base *BasicChatBot) GetUser(userid string) (User, error) {
 
 // AddMsgCallback - add msgCallback
 func (base *BasicChatBot) AddMsgCallback(msg Message, callback FuncMsgCallback) error {
-	return base.mgrMsgCallback.addMsgCallback(msg, callback)
+	return base.mgrMsgCallback.addCallback(msg, callback)
 }
 
 // ProcMsgCallback - proc msgCallback
 func (base *BasicChatBot) ProcMsgCallback(ctx context.Context, msg Message, id int) error {
-	return base.mgrMsgCallback.procMsgCallback(ctx, msg, id)
+	return base.mgrMsgCallback.procCallback(ctx, msg, id)
 }
 
 // DelMsgCallback - del msgCallback
 func (base *BasicChatBot) DelMsgCallback(chatid string) error {
-	return base.mgrMsgCallback.delMsgCallback(chatid)
+	return base.mgrMsgCallback.delCallback(chatid)
+}
+
+// AddJarvisMsgCallback - add jarvisMsgCallback
+func (base *BasicChatBot) AddJarvisMsgCallback(destAddr string, ctrlid int64, callback FuncJarvisMsgCallback) error {
+	return base.mgrJsrvisMsgCallback.addCallback(destAddr, ctrlid, callback)
+}
+
+// ProcJarvisMsgCallback - proc jarvisMsgCallback
+func (base *BasicChatBot) ProcJarvisMsgCallback(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+	return base.mgrJsrvisMsgCallback.procCallback(ctx, msg)
+}
+
+// DelJarvisMsgCallback - del jarvisMsgCallback
+func (base *BasicChatBot) DelJarvisMsgCallback(destAddr string, ctrlid int64) error {
+	return base.mgrJsrvisMsgCallback.delCallback(destAddr, ctrlid)
 }

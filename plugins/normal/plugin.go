@@ -76,3 +76,8 @@ func (p *normalPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
 func (p *normalPlugin) OnStart(ctx context.Context) error {
 	return nil
 }
+
+// GetPluginType - get pluginType
+func (p *normalPlugin) GetPluginType() int {
+	return chatbot.PluginTypeNormal
+}

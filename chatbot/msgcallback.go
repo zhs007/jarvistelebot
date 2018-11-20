@@ -23,8 +23,8 @@ func newMsgCallbackMgr() *msgCallbackMgr {
 	}
 }
 
-// addMsgCallback - add msgCallback
-func (mgr *msgCallbackMgr) addMsgCallback(msg Message, callback FuncMsgCallback) error {
+// addCallback - add msgCallback
+func (mgr *msgCallbackMgr) addCallback(msg Message, callback FuncMsgCallback) error {
 	to := msg.GetTo()
 	if to == nil {
 		return ErrInvalidMessageTo
@@ -45,8 +45,8 @@ func (mgr *msgCallbackMgr) addMsgCallback(msg Message, callback FuncMsgCallback)
 	return nil
 }
 
-// procMsgCallback - proc msgCallback
-func (mgr *msgCallbackMgr) procMsgCallback(ctx context.Context, msg Message, id int) error {
+// procCallback - proc msgCallback
+func (mgr *msgCallbackMgr) procCallback(ctx context.Context, msg Message, id int) error {
 	cb, ok := mgr.mapCallback[msg.GetChatID()]
 	if !ok {
 		return ErrNoMsgCallback
@@ -55,8 +55,8 @@ func (mgr *msgCallbackMgr) procMsgCallback(ctx context.Context, msg Message, id 
 	return cb.callback(ctx, msg, id)
 }
 
-// procMsgCallback - proc msgCallback
-func (mgr *msgCallbackMgr) delMsgCallback(chatid string) error {
+// delCallback - proc msgCallback
+func (mgr *msgCallbackMgr) delCallback(chatid string) error {
 	_, ok := mgr.mapCallback[chatid]
 	if !ok {
 		return ErrNoMsgCallback
