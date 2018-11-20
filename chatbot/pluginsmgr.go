@@ -157,7 +157,14 @@ func (mgr *pluginsMgr) OnStart(ctx context.Context) error {
 
 // OnStart - on start
 func (mgr *pluginsMgr) isCommand(params *MessageParams) bool {
-	jarvisbase.Debug("pluginsMgr.isCommand", zap.String("params", fmt.Sprintf("%+v", params)))
+	jarvisbase.Debug("pluginsMgr.isCommand",
+		zap.String("params", fmt.Sprintf("%+v", params)),
+		zap.Int("len", len(params.LstStr)),
+		zap.String("LstStr[0]", params.LstStr[0]))
+
+	if params.Msg.GetFile() != nil {
+		return true
+	}
 
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
 		return true
