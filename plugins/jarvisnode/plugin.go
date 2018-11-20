@@ -62,7 +62,7 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 			}
 
 			curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(params.Msg.GetText())
-			if curnode != nil {
+			if curnode == nil {
 				return false, nil
 			}
 
