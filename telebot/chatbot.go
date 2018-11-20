@@ -315,6 +315,8 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 				chatbot.Warn("teleChatBot.Start:procDocumentWithMsg", zap.Error(err))
 			}
 
+			msg.SetText(update.Message.Caption)
+
 			// cb.scriptUser = user
 
 			// continue

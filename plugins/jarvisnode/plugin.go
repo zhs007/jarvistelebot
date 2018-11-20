@@ -61,9 +61,14 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 				return false, err
 			}
 
-			params.ChatBot.GetJarvisNode().RequestCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
+			curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(params.Msg.GetText())
+			if curnode != nil {
+				return false, nil
+			}
 
-			params.ChatBot.AddJarvisMsgCallback("1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+			params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
+
+			params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 				cr := msg.GetCtrlResult()
 
 				chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)

@@ -59,6 +59,11 @@ func (msg *testMessage) SetChatID(chatid string) {
 
 }
 
+// SetText - set text
+func (msg *testMessage) SetText(text string) {
+	// msg.text = text
+}
+
 // GetOption - get option
 func (msg *testMessage) GetOption(id int) string {
 	return ""

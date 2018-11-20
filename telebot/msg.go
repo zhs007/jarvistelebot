@@ -93,3 +93,8 @@ func (msg *teleMsg) SetMsgID(msgid string) {
 func (msg *teleMsg) SetChatID(chatid string) {
 	msg.chatID = chatid
 }
+
+// SetText - set text
+func (msg *teleMsg) SetText(text string) {
+	msg.text = text
+}
