@@ -1,12 +1,10 @@
 package telebot
 
 import (
+	"bytes"
 	"context"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"net/http"
-	"os"
 	"path"
 	"strconv"
 
@@ -117,7 +115,7 @@ func NewTeleChatBot(cfg *Config) (chatbot.ChatBot, error) {
 // 	return nil
 // }
 
-func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisNode, doc *tgbotapi.Document) error {
+func (cb *teleChatBot) procDocumentWithMsg(msg chatbot.Message, doc *tgbotapi.Document) error {
 	jarvisbase.Debug("teleChatBot.procDocument")
 
 	file, err := cb.teleBotAPI.GetFile(tgbotapi.FileConfig{
@@ -127,13 +125,13 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 		return err
 	}
 
-	localfn := path.Join(cb.GetConfig().DownloadPath, doc.FileName)
-	if doc.MimeType == "text/x-script.sh" {
-		localfn = path.Join(cb.GetConfig().DownloadPath, "scripts", doc.FileName)
-	}
+	// localfn := path.Join(cb.GetConfig().DownloadPath, doc.FileName)
+	// if doc.MimeType == "text/x-script.sh" {
+	// 	localfn = path.Join(cb.GetConfig().DownloadPath, "scripts", doc.FileName)
+	// }
 
-	jarvisbase.Info("teleChatBot.procDocument",
-		jarvisbase.JSON("file", file))
+	// jarvisbase.Info("teleChatBot.procDocument",
+	// 	jarvisbase.JSON("file", file))
 
 	url := file.Link(cb.teleBotAPI.Token)
 
@@ -142,22 +140,33 @@ func (cb *teleChatBot) procDocument(ctx context.Context, node jarviscore.JarvisN
 		return err
 	}
 
-	f, err := os.Create(localfn)
-	if err != nil {
-		return err
+	// f, err := os.Create(localfn)
+	// if err != nil {
+	// 	return err
+	// }
+	// io.Copy(f, res.Body)
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(res.Body)
+
+	fileobj := &chatbotdbpb.File{
+		Filename: doc.FileName,
+		Data:     buf.Bytes(),
+		FileType: doc.MimeType,
 	}
-	io.Copy(f, res.Body)
 
-	dat, err := ioutil.ReadFile(localfn)
-	if err != nil {
-		jarvisbase.Warn("load script file", zap.Error(err))
+	msg.SetFile(fileobj)
 
-		return err
-	}
+	// dat, err := ioutil.ReadFile(localfn)
+	// if err != nil {
+	// 	jarvisbase.Warn("load script file", zap.Error(err))
 
-	ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, doc.FileName, dat, "")
+	// 	return err
+	// }
 
-	cb.Node.RequestCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
+	// ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, doc.FileName, dat, "")
+
+	// cb.Node.RequestCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
 
 	return nil
 }
@@ -292,26 +301,24 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 		user.UpdLastMsgID(lastmsgid)
 		cb.GetChatBotDB().UpdUser(user.ToProto())
 
-		if update.Message.Document != nil {
-			err = cb.procDocument(ctx, node, update.Message.Document)
-			if err != nil {
-				chatbot.Warn("teleChatBot.Start:procDocument", zap.Error(err))
-			}
-
-			cb.scriptUser = user
-
-			continue
-		}
-
-		if update.Message.Text == "" {
+		if update.Message.Text == "" && update.Message.Document == nil {
 			continue
 		}
 
 		msgid := strconv.Itoa(update.Message.MessageID)
 		msg := cb.NewMsg(chatbot.MakeChatID(user.GetUserID(), msgid), msgid, user, nil,
 			update.Message.Text, int64(update.Message.Date))
-		// msg := newMsg(strconv.Itoa(update.Message.MessageID),
-		// 	user, update.Message.Text, update.Message.Date)
+
+		if update.Message.Document != nil {
+			err = cb.procDocumentWithMsg(msg, update.Message.Document)
+			if err != nil {
+				chatbot.Warn("teleChatBot.Start:procDocumentWithMsg", zap.Error(err))
+			}
+
+			// cb.scriptUser = user
+
+			// continue
+		}
 
 		err = cb.SaveMsg(msg)
 		if err != nil {
@@ -365,7 +372,7 @@ func (cb *teleChatBot) OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb
 func (cb *teleChatBot) NewMsg(chatid string, msgid string, from chatbot.User, to chatbot.User,
 	text string, curtime int64) chatbot.Message {
 
-	return &teleMsg{
+	msg := &teleMsg{
 		chatID:    chatid,
 		msgID:     msgid,
 		from:      from,
@@ -373,6 +380,8 @@ func (cb *teleChatBot) NewMsg(chatid string, msgid string, from chatbot.User, to
 		text:      text,
 		timeStamp: int64(curtime),
 	}
+
+	return msg
 }
 
 // SendMsg

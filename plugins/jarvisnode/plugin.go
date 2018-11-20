@@ -59,6 +59,10 @@ func (p *jarvisnodePlugin) GetComeInCode() string {
 
 // IsMyMessage
 func (p *jarvisnodePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
+	if params.Msg.GetFile() != nil {
+
+	}
+
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
 		return true
 	}
