@@ -2,7 +2,6 @@ package chatbot
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/zhs007/jarviscore/base"
@@ -102,6 +101,8 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 	}
 
 	if mgr.isCommand(params) {
+		jarvisbase.Debug("pluginsMgr.OnMessage:isCommand", zap.Int("command.len", len(mgr.lstCommand)))
+
 		for _, v := range mgr.lstCommand {
 			r, err := v.OnMessage(ctx, params)
 			if err != nil {
@@ -157,10 +158,10 @@ func (mgr *pluginsMgr) OnStart(ctx context.Context) error {
 
 // OnStart - on start
 func (mgr *pluginsMgr) isCommand(params *MessageParams) bool {
-	jarvisbase.Debug("pluginsMgr.isCommand",
-		zap.String("params", fmt.Sprintf("%+v", params)),
-		zap.Int("len", len(params.LstStr)),
-		zap.String("LstStr[0]", params.LstStr[0]))
+	// jarvisbase.Debug("pluginsMgr.isCommand",
+	// 	zap.String("params", fmt.Sprintf("%+v", params)),
+	// 	zap.Int("len", len(params.LstStr)),
+	// 	zap.String("LstStr[0]", params.LstStr[0]))
 
 	if params.Msg.GetFile() != nil {
 		return true
