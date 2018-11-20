@@ -3,9 +3,6 @@ package chatbot
 import (
 	"context"
 	"strings"
-
-	"github.com/zhs007/jarviscore/base"
-	"go.uber.org/zap"
 )
 
 const (
@@ -64,7 +61,7 @@ func (mgr *pluginsMgr) RegPlugin(plugin Plugin) error {
 		mgr.lstNormal = append(mgr.lstNormal, plugin)
 
 		return nil
-	} else if pt != PluginTypeCommand {
+	} else if pt == PluginTypeCommand {
 		mgr.lstCommand = append(mgr.lstCommand, plugin)
 
 		return nil
@@ -101,7 +98,7 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 	}
 
 	if mgr.isCommand(params) {
-		jarvisbase.Debug("pluginsMgr.OnMessage:isCommand", zap.Int("command.len", len(mgr.lstCommand)))
+		// jarvisbase.Debug("pluginsMgr.OnMessage:isCommand", zap.Int("command.len", len(mgr.lstCommand)))
 
 		for _, v := range mgr.lstCommand {
 			r, err := v.OnMessage(ctx, params)
