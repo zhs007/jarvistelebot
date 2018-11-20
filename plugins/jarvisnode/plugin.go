@@ -2,6 +2,7 @@ package pluginjarvisnode
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarviscore/proto"
@@ -43,6 +44,8 @@ func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
 
 // OnMessage - get message
 func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
+	jarvisbase.Debug("jarvisnodePlugin.OnMessage", zap.String("params", fmt.Sprintf("%+v", params)))
+
 	from := params.Msg.GetFrom()
 	if from == nil {
 		return false, chatbot.ErrMsgNoFrom

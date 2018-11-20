@@ -2,7 +2,11 @@ package chatbot
 
 import (
 	"context"
+	"fmt"
 	"strings"
+
+	"github.com/zhs007/jarviscore/base"
+	"go.uber.org/zap"
 )
 
 const (
@@ -153,6 +157,8 @@ func (mgr *pluginsMgr) OnStart(ctx context.Context) error {
 
 // OnStart - on start
 func (mgr *pluginsMgr) isCommand(params *MessageParams) bool {
+	jarvisbase.Debug("pluginsMgr.isCommand", zap.String("params", fmt.Sprintf("%+v", params)))
+
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
 		return true
 	}
