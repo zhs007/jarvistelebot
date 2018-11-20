@@ -1,6 +1,8 @@
 package chatbotdb
 
 import (
+	"encoding/base64"
+
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
 	"github.com/zhs007/ankadb/graphqlext"
@@ -35,21 +37,15 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, err
 				}
 
-				// chatID := params.Args["chatID"].(string)
-				// fromNickName := params.Args["fromNickName"].(string)
-				// fromUserID := params.Args["fromUserID"].(string)
-				// text := params.Args["text"].(string)
-				// timeStamp := params.Args["timeStamp"].(int64)
+				if msg.File != nil && msg.File.StrData != "" {
+					data, err := base64.StdEncoding.DecodeString(msg.File.StrData)
+					if err != nil {
+						return nil, err
+					}
 
-				// msg := &pb.Message{
-				// 	ChatID: chatID,
-				// 	From: &pb.User{
-				// 		NickName: fromNickName,
-				// 		UserID:   fromUserID,
-				// 	},
-				// 	Text:      text,
-				// 	TimeStamp: timeStamp,
-				// }
+					msg.File.Data = data
+					msg.File.StrData = ""
+				}
 
 				err = ankadb.PutMsg2DB(curdb, []byte(makeMessageKey(msg.ChatID)), msg)
 				if err != nil {

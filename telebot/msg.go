@@ -44,13 +44,12 @@ func (msg *teleMsg) GetText() string {
 
 // ToProto - ToProto - to proto message
 func (msg *teleMsg) ToProto() *chatbotdbpb.Message {
-	pbmsg := &chatbotdbpb.Message{
-		ChatID:    msg.chatID,
-		Text:      msg.text,
-		TimeStamp: msg.timeStamp,
-		MsgID:     msg.GetMsgID(),
-		Selected:  int32(msg.GetSelected()),
-	}
+	pbmsg := msg.BasicMessage.ToProto()
+
+	pbmsg.ChatID = msg.chatID
+	pbmsg.MsgID = msg.msgID
+	pbmsg.Text = msg.text
+	pbmsg.TimeStamp = msg.timeStamp
 
 	if msg.from != nil {
 		pbmsg.From = msg.from.ToProto()
@@ -58,10 +57,6 @@ func (msg *teleMsg) ToProto() *chatbotdbpb.Message {
 
 	if msg.to != nil {
 		pbmsg.To = msg.to.ToProto()
-	}
-
-	for _, v := range msg.Options {
-		pbmsg.Options = append(pbmsg.Options, v.Text)
 	}
 
 	return pbmsg

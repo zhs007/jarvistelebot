@@ -35,6 +35,9 @@ var inputTypeMessage = graphql.NewInputObject(
 			"selected": &graphql.InputObjectFieldConfig{
 				Type: graphql.Int,
 			},
+			"file": &graphql.InputObjectFieldConfig{
+				Type: typeFile,
+			},
 		},
 	},
 )

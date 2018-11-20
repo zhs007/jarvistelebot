@@ -40,6 +40,11 @@ type Message interface {
 	// GetOption - get option
 	GetOption(id int) string
 
+	// GetFile - get file
+	GetFile() *chatbotdbpb.File
+	// SetFile - set file
+	SetFile(file *chatbotdbpb.File)
+
 	// ToProto - to proto message
 	ToProto() *chatbotdbpb.Message
 }
@@ -48,6 +53,7 @@ type Message interface {
 type BasicMessage struct {
 	Options    []*MsgOption
 	IDSelected int
+	File       *chatbotdbpb.File
 }
 
 // AddOption - add option
@@ -104,4 +110,28 @@ func (msg *BasicMessage) GetOption(id int) string {
 	}
 
 	return msg.Options[id-1].Text
+}
+
+// GetFile - get file
+func (msg *BasicMessage) GetFile() *chatbotdbpb.File {
+	return msg.File
+}
+
+// SetFile - set file
+func (msg *BasicMessage) SetFile(file *chatbotdbpb.File) {
+	msg.File = file
+}
+
+// ToProto - to proto message
+func (msg *BasicMessage) ToProto() *chatbotdbpb.Message {
+	pbmsg := &chatbotdbpb.Message{
+		Selected: int32(msg.GetSelected()),
+		File:     msg.File,
+	}
+
+	for _, v := range msg.Options {
+		pbmsg.Options = append(pbmsg.Options, v.Text)
+	}
+
+	return pbmsg
 }

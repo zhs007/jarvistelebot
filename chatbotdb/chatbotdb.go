@@ -2,6 +2,7 @@ package chatbotdb
 
 import (
 	"context"
+	"encoding/base64"
 	"path"
 
 	"github.com/zhs007/ankadb"
@@ -102,11 +103,16 @@ func (db *ChatBotDB) SaveMsg(msg *pb.Message) error {
 		return ErrChatBotDBNil
 	}
 
+	if msg.File != nil && msg.File.Data != nil {
+		msg.File.StrData = base64.StdEncoding.EncodeToString(msg.File.Data)
+	}
+
 	params := make(map[string]interface{})
 	err := ankadb.MakeParamsFromMsg(params, "msg", msg)
 	if err != nil {
 		return err
 	}
+
 	// params["chatID"] = msg.GetChatID()
 	// params["fromNickName"] = msg.GetFrom().GetNickName()
 	// params["fromUserID"] = msg.GetFrom().GetUserID()
@@ -146,7 +152,12 @@ func (db *ChatBotDB) GetMsg(chatid string) (*pb.Message, error) {
 		return nil, err
 	}
 
-	return ResultMsg2Msg(rmsg), nil
+	pbmsg, err := ResultMsg2Msg(rmsg)
+	if err != nil {
+		return nil, err
+	}
+
+	return pbmsg, nil
 }
 
 // UpdUser - update user

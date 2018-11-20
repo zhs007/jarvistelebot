@@ -1,6 +1,8 @@
 package chatbotdb
 
 import (
+	"encoding/base64"
+
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
 	pb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
@@ -34,6 +36,11 @@ var typeQuery = graphql.NewObject(
 					err := ankadb.GetMsgFromDB(curdb, []byte(makeMessageKey(chatID)), msg)
 					if err != nil {
 						return nil, err
+					}
+
+					if msg.File != nil && msg.File.Data != nil {
+						msg.File.StrData = base64.StdEncoding.EncodeToString(msg.File.Data)
+						// msg.File.Data = nil
 					}
 
 					return msg, nil

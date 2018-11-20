@@ -5,6 +5,12 @@ type User {
     lastMsgID: Int64!
 }
 
+type File {
+    filename: String!
+    strData: String!
+    fileType: String!
+}
+
 type Message {
     chatID: ID!
     from: User
@@ -14,6 +20,7 @@ type Message {
     msgID: String
     options: [String]
     selected: Int
+    file: File
 }
 
 type UserMessageChunk {
