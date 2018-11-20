@@ -41,4 +41,6 @@ var (
 	ErrSameJarvisMsgCallback = errors.New("same jarvismsgcallback")
 	// ErrNoJarvisMsgCallback - can't find jarvismsgcallback
 	ErrNoJarvisMsgCallback = errors.New("can't find jarvismsgcallback")
+	// ErrEmptyMsgText - empty message text
+	ErrEmptyMsgText = errors.New("empty message text")
 )
