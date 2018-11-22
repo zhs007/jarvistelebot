@@ -51,6 +51,10 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 		return false, chatbot.ErrMsgNoFrom
 	}
 
+	if !params.ChatBot.IsMaster(from) {
+		return false, nil
+	}
+
 	file := params.Msg.GetFile()
 	if file != nil {
 		if file.FileType == chatbot.FileTypeShellScript {
@@ -78,6 +82,8 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 
 			return true, nil
 		}
+
+		return false, nil
 	}
 
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {

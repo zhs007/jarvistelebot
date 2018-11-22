@@ -17,6 +17,7 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 	"github.com/zhs007/jarvistelebot/plugins/assistant"
+	"github.com/zhs007/jarvistelebot/plugins/filetransfer"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
 	"github.com/zhs007/jarvistelebot/plugins/timestamp"
@@ -50,6 +51,11 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	err = plugintimestamp.RegPlugin(cfg.CfgPath, mgrPlugins)
 	if err != nil {
 		jarvisbase.Warn("telbot.regPlugins:plugintimestamp.RegPlugin", zap.Error(err))
+	}
+
+	err = pluginfiletransfer.RegPlugin(cfg.CfgPath, mgrPlugins)
+	if err != nil {
+		jarvisbase.Warn("telbot.regPlugins:pluginfiletransfer.RegPlugin", zap.Error(err))
 	}
 
 	err = pluginnormal.RegPlugin(cfg.CfgPath, mgrPlugins)
