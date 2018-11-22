@@ -61,6 +61,9 @@ type ChatBot interface {
 	ProcJarvisMsgCallback(ctx context.Context, msg *jarviscorepb.JarvisMsg) error
 	// DelJarvisMsgCallback - del jarvisMsgCallback
 	DelJarvisMsgCallback(destAddr string, ctrlid int64) error
+
+	// GetVersion - get version
+	GetVersion() string
 }
 
 // BasicChatBot - base chatbot
@@ -192,4 +195,9 @@ func (base *BasicChatBot) ProcJarvisMsgCallback(ctx context.Context, msg *jarvis
 // DelJarvisMsgCallback - del jarvisMsgCallback
 func (base *BasicChatBot) DelJarvisMsgCallback(destAddr string, ctrlid int64) error {
 	return base.mgrJsrvisMsgCallback.delCallback(destAddr, ctrlid)
+}
+
+// GetVersion - get version
+func (base *BasicChatBot) GetVersion() string {
+	return "v0.1.0"
 }
