@@ -214,7 +214,7 @@ func (db *ChatBotDB) GetUser(userid string) (*pb.User, error) {
 
 	jarvisbase.Debug("ChatBotDB.GetUser", jarvisbase.JSON("result", result))
 
-	return &ruser.User, nil
+	return ResultUser2User(ruser)
 }
 
 // GetUserWithUserName - get user with username
@@ -231,7 +231,7 @@ func (db *ChatBotDB) GetUserWithUserName(username string) (*pb.User, error) {
 		return nil, err
 	}
 
-	ruser := &ResultUser{}
+	ruser := &ResultUserWithUserName{}
 	err = ankadb.MakeObjFromResult(result, ruser)
 	if err != nil {
 		return nil, err
@@ -239,5 +239,5 @@ func (db *ChatBotDB) GetUserWithUserName(username string) (*pb.User, error) {
 
 	jarvisbase.Debug("ChatBotDB.GetUserWithUserName", jarvisbase.JSON("result", result))
 
-	return &ruser.User, nil
+	return ResultUserWithUserName2User(ruser)
 }

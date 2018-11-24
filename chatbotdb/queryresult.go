@@ -39,9 +39,24 @@ type ResultMsg struct {
 	} `json:"msg"`
 }
 
-// ResultUser -
+// ResultUser - user
 type ResultUser struct {
-	User pb.User `json:"user"`
+	User struct {
+		NickName  string `json:"nickName"`
+		UserID    string `json:"userID"`
+		UserName  string `json:"userName"`
+		LastMsgID int64  `json:"lastMsgID"`
+	} `json:"user"`
+}
+
+// ResultUserWithUserName - userWithUserName
+type ResultUserWithUserName struct {
+	UserWithUserName struct {
+		NickName  string `json:"nickName"`
+		UserID    string `json:"userID"`
+		UserName  string `json:"userName"`
+		LastMsgID int64  `json:"lastMsgID"`
+	} `json:"userWithUserName"`
 }
 
 // ResultMsg2Msg - ResultMsg -> Message
@@ -98,4 +113,24 @@ func ResultMsg2Msg(result *ResultMsg) (*pb.Message, error) {
 	}
 
 	return msg, nil
+}
+
+// ResultUser2User - ResultUser -> User
+func ResultUser2User(result *ResultUser) (*pb.User, error) {
+	return &pb.User{
+		NickName:  result.User.NickName,
+		UserID:    result.User.UserID,
+		UserName:  result.User.UserName,
+		LastMsgID: result.User.LastMsgID,
+	}, nil
+}
+
+// ResultUserWithUserName2User - ResultUserWithUserName -> User
+func ResultUserWithUserName2User(result *ResultUserWithUserName) (*pb.User, error) {
+	return &pb.User{
+		NickName:  result.UserWithUserName.NickName,
+		UserID:    result.UserWithUserName.UserID,
+		UserName:  result.UserWithUserName.UserName,
+		LastMsgID: result.UserWithUserName.LastMsgID,
+	}, nil
 }
