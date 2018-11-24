@@ -58,8 +58,8 @@ const queryGetUser = `query User($uerID: ID!) {
 	}
 }`
 
-const queryGetUserWithUserName = `query UserWithUserName($uerName: ID!) {
-	userWithUserName(uerName: $uerName) {
+const queryGetUserWithUserName = `query UserWithUserName($userName: ID!) {
+	userWithUserName(userName: $userName) {
 		nickName
 		userID
 		userName
