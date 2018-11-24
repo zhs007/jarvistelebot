@@ -7,6 +7,8 @@ import (
 const (
 	// FileTypeShellScript - shell script
 	FileTypeShellScript = "text/x-script.sh"
+	// FileTypePhoto - photo
+	FileTypePhoto = "photo/jpeg"
 )
 
 // MsgOption - option

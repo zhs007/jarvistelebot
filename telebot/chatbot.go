@@ -177,6 +177,37 @@ func (cb *teleChatBot) procDocumentWithMsg(msg chatbot.Message, doc *tgbotapi.Do
 	return nil
 }
 
+func (cb *teleChatBot) procPhotoWithMsg(msg chatbot.Message, photo *tgbotapi.PhotoSize) error {
+	jarvisbase.Debug("teleChatBot.procPhotoWithMsg")
+
+	file, err := cb.teleBotAPI.GetFile(tgbotapi.FileConfig{
+		FileID: photo.FileID,
+	})
+	if err != nil {
+		return err
+	}
+
+	url := file.Link(cb.teleBotAPI.Token)
+
+	res, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(res.Body)
+
+	fileobj := &chatbotdbpb.File{
+		Filename: photo.FileID,
+		Data:     buf.Bytes(),
+		FileType: chatbot.FileTypePhoto,
+	}
+
+	msg.SetFile(fileobj)
+
+	return nil
+}
+
 // procMessageUser
 func (cb *teleChatBot) procMessageUser(user *tgbotapi.User) (chatbot.User, error) {
 	userid := strconv.Itoa(user.ID)
@@ -307,7 +338,7 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 		user.UpdLastMsgID(lastmsgid)
 		cb.GetChatBotDB().UpdUser(user.ToProto())
 
-		if update.Message.Text == "" && update.Message.Document == nil {
+		if update.Message.Text == "" && update.Message.Document == nil && update.Message.Photo == nil {
 			continue
 		}
 
@@ -322,10 +353,13 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			}
 
 			msg.SetText(update.Message.Caption)
+		} else if update.Message.Photo != nil && len(*update.Message.Photo) > 0 {
+			err = cb.procPhotoWithMsg(msg, &(*update.Message.Photo)[0])
+			if err != nil {
+				chatbot.Warn("teleChatBot.Start:procPhotoWithMsg", zap.Error(err))
+			}
 
-			// cb.scriptUser = user
-
-			// continue
+			msg.SetText(update.Message.Caption)
 		}
 
 		err = cb.SaveMsg(msg)
