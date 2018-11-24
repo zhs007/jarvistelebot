@@ -275,5 +275,5 @@ func (base *BasicChatBot) GetMaster() User {
 
 // SetMaster - set master, you can only set userid or username
 func (base *BasicChatBot) SetMaster(userid string, username string) {
-	base.SetMaster(userid, username)
+	base.MgrUser.SetMaster(userid, username)
 }
