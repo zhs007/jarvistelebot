@@ -8,6 +8,12 @@ type UserMgr interface {
 	AddUser(user User) error
 	// IsMaster - is master
 	IsMaster(user User) bool
+	// SetMaster - set master, you can only set userid or username
+	SetMaster(userid string, username string)
+	// GetMasterUserID - get master userid
+	GetMasterUserID() string
+	// GetMasterUserName - get master username
+	GetMasterUserName() string
 }
 
 // NewBasicUserMgr - new BasicUserMgr
@@ -19,7 +25,9 @@ func NewBasicUserMgr() *BasicUserMgr {
 
 // BasicUserMgr - default UserMgr
 type BasicUserMgr struct {
-	mapUser map[string]User
+	mapUser        map[string]User
+	masterUserID   string
+	masterUserName string
 }
 
 // GetUser - get user with userid
@@ -42,7 +50,23 @@ func (mgr *BasicUserMgr) AddUser(user User) error {
 	return nil
 }
 
-// // IsMaster - is master
-// func (mgr *BasicUserMgr) IsMaster(user User) bool {
+// GetMasterUserID - get master userid
+func (mgr *BasicUserMgr) GetMasterUserID() string {
+	return mgr.masterUserID
+}
 
-// }
+// GetMasterUserName - get master username
+func (mgr *BasicUserMgr) GetMasterUserName() string {
+	return mgr.masterUserName
+}
+
+// SetMaster - set master, you can only set userid or username
+func (mgr *BasicUserMgr) SetMaster(userid string, username string) {
+	mgr.masterUserID = userid
+	mgr.masterUserName = username
+}
+
+// IsMaster - is master
+func (mgr *BasicUserMgr) IsMaster(user User) bool {
+	return user.GetUserName() == mgr.masterUserName || user.GetUserID() == mgr.masterUserID
+}

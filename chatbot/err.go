@@ -43,4 +43,6 @@ var (
 	ErrNoJarvisMsgCallback = errors.New("can't find jarvismsgcallback")
 	// ErrEmptyMsgText - empty message text
 	ErrEmptyMsgText = errors.New("empty message text")
+	// ErrInvalidEventID - invalid eventid
+	ErrInvalidEventID = errors.New("invalid eventid")
 )

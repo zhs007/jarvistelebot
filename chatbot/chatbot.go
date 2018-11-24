@@ -3,6 +3,9 @@ package chatbot
 import (
 	"context"
 
+	"github.com/zhs007/jarviscore/base"
+	"go.uber.org/zap"
+
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbotdb"
@@ -46,6 +49,10 @@ type ChatBot interface {
 	GetUser(userid string) (User, error)
 	// GetUserWithUserName - get user with user name
 	GetUserWithUserName(username string) (User, error)
+	// GetMaster - get master
+	GetMaster() User
+	// SetMaster - set master, you can only set userid or username
+	SetMaster(userid string, username string)
 
 	// OnJarvisCtrlResult - event handle
 	OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error
@@ -66,6 +73,13 @@ type ChatBot interface {
 
 	// GetVersion - get version
 	GetVersion() string
+
+	// NewEventMgr - new EventMgr
+	NewEventMgr(chatbot ChatBot)
+	// RegEventFunc - reg event
+	RegEventFunc(eventid string, eventfunc FuncEvent) error
+	// OnEvent - on event
+	OnEvent(ctx context.Context, eventid string) error
 }
 
 // BasicChatBot - base chatbot
@@ -77,6 +91,8 @@ type BasicChatBot struct {
 	MgrUser              UserMgr
 	mgrMsgCallback       *msgCallbackMgr
 	mgrJsrvisMsgCallback *jarvisMsgCallbackMgr
+	mgrEvent             *eventMgr
+	// mgrUser              UserMgr
 }
 
 // NewBasicChatBot - new BasicChatBot
@@ -101,6 +117,7 @@ func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 	base.Config = cfg
 	base.mgrMsgCallback = newMsgCallbackMgr()
 	base.mgrJsrvisMsgCallback = newJarvisMsgCallbackMgr()
+	base.MgrUser = NewBasicUserMgr()
 
 	return nil
 }
@@ -211,5 +228,52 @@ func (base *BasicChatBot) DelJarvisMsgCallback(destAddr string, ctrlid int64) er
 
 // GetVersion - get version
 func (base *BasicChatBot) GetVersion() string {
-	return "v0.1.1"
+	return "v0.1.2"
+}
+
+// NewEventMgr - new EventMgr
+func (base *BasicChatBot) NewEventMgr(chatbot ChatBot) {
+	base.mgrEvent = newEventMgr(chatbot)
+
+	base.RegEventFunc(EventOnStarted, onEventStarted)
+}
+
+// RegEventFunc - reg event
+func (base *BasicChatBot) RegEventFunc(eventid string, eventfunc FuncEvent) error {
+	return base.mgrEvent.regEventFunc(eventid, eventfunc)
+}
+
+// OnEvent - on event
+func (base *BasicChatBot) OnEvent(ctx context.Context, eventid string) error {
+	return base.mgrEvent.onEvent(ctx, eventid)
+}
+
+// GetMaster - get master
+func (base *BasicChatBot) GetMaster() User {
+	if base.MgrUser.GetMasterUserID() != "" {
+		user, err := base.DB.GetUser(base.MgrUser.GetMasterUserID())
+		if err != nil {
+			jarvisbase.Warn("BasicChatBot:GetMaster:GetUser", zap.Error(err))
+
+			return nil
+		}
+
+		return base.NewUserFromProto(user)
+	} else if base.MgrUser.GetMasterUserName() != "" {
+		user, err := base.DB.GetUserWithUserName(base.MgrUser.GetMasterUserName())
+		if err != nil {
+			jarvisbase.Warn("BasicChatBot:GetMaster:GetUserWithUserName", zap.Error(err))
+
+			return nil
+		}
+
+		return base.NewUserFromProto(user)
+	}
+
+	return nil
+}
+
+// SetMaster - set master, you can only set userid or username
+func (base *BasicChatBot) SetMaster(userid string, username string) {
+	base.SetMaster(userid, username)
 }
