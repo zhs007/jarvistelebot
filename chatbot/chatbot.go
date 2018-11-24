@@ -42,8 +42,10 @@ type ChatBot interface {
 	GetUserMgr() UserMgr
 	// NewUserFromProto - new user from proto
 	NewUserFromProto(user *chatbotdbpb.User) User
-	// GetUser -
+	// GetUser - get user with userid
 	GetUser(userid string) (User, error)
+	// GetUserWithUserName - get user with user name
+	GetUserWithUserName(username string) (User, error)
 
 	// OnJarvisCtrlResult - event handle
 	OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error
@@ -157,9 +159,19 @@ func (base *BasicChatBot) NewUserFromProto(user *chatbotdbpb.User) User {
 	return NewBasicUser(user.UserName, user.UserID, user.NickName, user.LastMsgID)
 }
 
-// GetUser -
+// GetUser - get user with userid
 func (base *BasicChatBot) GetUser(userid string) (User, error) {
 	u, err := base.DB.GetUser(userid)
+	if err != nil {
+		return nil, err
+	}
+
+	return base.NewUserFromProto(u), nil
+}
+
+// GetUserWithUserName - get user with user name
+func (base *BasicChatBot) GetUserWithUserName(username string) (User, error) {
+	u, err := base.DB.GetUserWithUserName(username)
 	if err != nil {
 		return nil, err
 	}

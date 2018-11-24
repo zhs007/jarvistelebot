@@ -49,17 +49,20 @@ func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePar
 				// params.ChatBot.SendMsg(from, "nil.")
 			}
 		} else {
-			lstOp := []string{"yes", "no"}
-			chatbot.SendMsgWithOptions(params.ChatBot, from, "Yes, master.", lstOp,
-				func(ctx context.Context, msg chatbot.Message, id int) error {
-					chatbot.SendTextMsg(params.ChatBot, from, "you choice."+msg.GetOption(id))
-					return nil
-				})
+			chatbot.SendTextMsg(params.ChatBot, from, "Sorry, I can't understand, I am an assistant.")
+
+			// lstOp := []string{"yes", "no"}
+			// chatbot.SendMsgWithOptions(params.ChatBot, from, "Yes, master.", lstOp,
+			// 	func(ctx context.Context, msg chatbot.Message, id int) error {
+			// 		chatbot.SendTextMsg(params.ChatBot, from, "you choice."+msg.GetOption(id))
+			// 		return nil
+			// 	})
+
 			// chatbot.SendTextMsg(params.ChatBot, from, "Yes, master.")
 			// params.ChatBot.SendMsg(from, "Yes, master.")
 		}
 	} else {
-		chatbot.SendTextMsg(params.ChatBot, from, "sorry, you are not my master.")
+		chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.")
 		// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 	}
 

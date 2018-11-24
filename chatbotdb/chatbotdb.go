@@ -58,6 +58,15 @@ const queryGetUser = `query User($uerID: ID!) {
 	}
 }`
 
+const queryGetUserWithUserName = `query UserWithUserName($uerName: ID!) {
+	userWithUserName(uerName: $uerName) {
+		nickName
+		userID
+		userName
+		lastMsgID
+	}
+}`
+
 // ChatBotDB - chatbotdb
 type ChatBotDB struct {
 	db *ankadb.AnkaDB
@@ -82,7 +91,7 @@ func NewChatBotDB(dbpath string, httpAddr string, engine string) (*ChatBotDB, er
 		return nil, err
 	}
 
-	jarvisbase.Info("NewChatBotDB", zap.String("dbpath", dbpath),
+	jarvisbase.Debug("NewChatBotDB", zap.String("dbpath", dbpath),
 		zap.String("httpAddr", httpAddr), zap.String("engine", engine))
 
 	// return ankaDB, err
@@ -124,7 +133,7 @@ func (db *ChatBotDB) SaveMsg(msg *pb.Message) error {
 		return err
 	}
 
-	jarvisbase.Info("ChatBotDB.saveMsg",
+	jarvisbase.Debug("ChatBotDB.saveMsg",
 		jarvisbase.JSON("result", result))
 
 	return nil
@@ -144,7 +153,7 @@ func (db *ChatBotDB) GetMsg(chatid string) (*pb.Message, error) {
 		return nil, err
 	}
 
-	jarvisbase.Info("ChatBotDB.GetMsg", jarvisbase.JSON("result", result))
+	jarvisbase.Debug("ChatBotDB.GetMsg", jarvisbase.JSON("result", result))
 
 	rmsg := &ResultMsg{}
 	err = ankadb.MakeObjFromResult(result, rmsg)
@@ -177,7 +186,7 @@ func (db *ChatBotDB) UpdUser(user *pb.User) error {
 		return err
 	}
 
-	jarvisbase.Info("ChatBotDB.updUser",
+	jarvisbase.Debug("ChatBotDB.updUser",
 		jarvisbase.JSON("result", result))
 
 	return nil
@@ -203,7 +212,32 @@ func (db *ChatBotDB) GetUser(userid string) (*pb.User, error) {
 		return nil, err
 	}
 
-	jarvisbase.Info("ChatBotDB.GetUser", jarvisbase.JSON("result", result))
+	jarvisbase.Debug("ChatBotDB.GetUser", jarvisbase.JSON("result", result))
+
+	return &ruser.User, nil
+}
+
+// GetUserWithUserName - get user with username
+func (db *ChatBotDB) GetUserWithUserName(username string) (*pb.User, error) {
+	if db.db == nil {
+		return nil, ErrChatBotDBNil
+	}
+
+	params := make(map[string]interface{})
+	params["userName"] = username
+
+	result, err := db.db.LocalQuery(context.Background(), queryGetUserWithUserName, params)
+	if err != nil {
+		return nil, err
+	}
+
+	ruser := &ResultUser{}
+	err = ankadb.MakeObjFromResult(result, ruser)
+	if err != nil {
+		return nil, err
+	}
+
+	jarvisbase.Debug("ChatBotDB.GetUserWithUserName", jarvisbase.JSON("result", result))
 
 	return &ruser.User, nil
 }

@@ -100,6 +100,11 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, err
 				}
 
+				err = curdb.Put([]byte(makeUserNameKey(userName)), []byte(userID))
+				if err != nil {
+					return nil, err
+				}
+
 				return user, nil
 			},
 		},

@@ -32,7 +32,7 @@ type Query {
     msg(chatID: ID!): Message!
 
     user(userID: ID!): User!
-    users(): [User]!
+    userWithUserName(userName: ID!): User!
 }
 
 type Mutation {
