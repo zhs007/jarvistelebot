@@ -86,6 +86,7 @@ func NewTeleChatBot(cfg *Config) (chatbot.ChatBot, error) {
 		// MgrPlugins: mgrPlugins,
 	}
 
+	tcb.SetMaster("", cfg.TeleBotMaster)
 	tcb.NewEventMgr(tcb)
 
 	// tcb.MgrUser = newTeleUserMgr(cfg.TeleBotMaster)
