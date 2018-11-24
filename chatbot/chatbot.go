@@ -199,5 +199,5 @@ func (base *BasicChatBot) DelJarvisMsgCallback(destAddr string, ctrlid int64) er
 
 // GetVersion - get version
 func (base *BasicChatBot) GetVersion() string {
-	return "v0.1.0"
+	return "v0.1.1"
 }
