@@ -354,12 +354,14 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 
 			msg.SetText(update.Message.Caption)
 		} else if update.Message.Photo != nil && len(*update.Message.Photo) > 0 {
-			err = cb.procPhotoWithMsg(msg, &(*update.Message.Photo)[0])
-			if err != nil {
-				chatbot.Warn("teleChatBot.Start:procPhotoWithMsg", zap.Error(err))
-			}
+			if len(*update.Message.Photo) == 2 {
+				err = cb.procPhotoWithMsg(msg, &(*update.Message.Photo)[1])
+				if err != nil {
+					chatbot.Warn("teleChatBot.Start:procPhotoWithMsg", zap.Error(err))
+				}
 
-			msg.SetText(update.Message.Caption)
+				msg.SetText(update.Message.Caption)
+			}
 		}
 
 		err = cb.SaveMsg(msg)
