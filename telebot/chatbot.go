@@ -474,10 +474,16 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 			Bytes: fd.Data,
 		}
 
+		jarvisbase.Debug("teleChatBot.SendMsg:file",
+			zap.String("filename", fb.Name),
+			zap.Int("datalen", len(fb.Bytes)))
+
 		telemsg := tgbotapi.NewDocumentUpload(chatid, fb)
 
 		destmsg, err := cb.teleBotAPI.Send(telemsg)
 		if err != nil {
+			jarvisbase.Warn("teleChatBot.SendMsg:sendfile", zap.Error(err))
+
 			return nil, err
 		}
 
