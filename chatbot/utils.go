@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/zhs007/jarviscore/base"
+	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 	"go.uber.org/zap"
 )
 
@@ -77,4 +78,14 @@ func SendMsgWithOptions(bot ChatBot, user User, text string, options []string, c
 // MakeChatID - make chatid
 func MakeChatID(userid string, msgid string) string {
 	return userid + ":" + msgid
+}
+
+// SendFileMsg - sendmsg
+func SendFileMsg(bot ChatBot, user User, fd *chatbotdbpb.File) error {
+	msg := bot.NewMsg("", "", nil, user, "", time.Now().Unix())
+	msg.SetFile(fd)
+
+	_, err := bot.SendMsg(msg)
+
+	return err
 }

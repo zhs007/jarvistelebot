@@ -2,6 +2,7 @@ package jarvisnode
 
 import (
 	"github.com/zhs007/jarviscore"
+	"github.com/zhs007/jarvistelebot/basedef"
 )
 
 // Init - init node module
@@ -29,5 +30,9 @@ func Release() {
 
 // NewNode - new node
 func NewNode(cfg *jarviscore.Config) jarviscore.JarvisNode {
-	return jarviscore.NewNode(cfg)
+	node := jarviscore.NewNode(cfg)
+
+	node.SetNodeTypeInfo(basedef.JARVISNODETYPE, basedef.VERSION)
+
+	return node
 }

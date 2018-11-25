@@ -8,6 +8,7 @@ import (
 
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/proto"
+	"github.com/zhs007/jarvistelebot/basedef"
 	"github.com/zhs007/jarvistelebot/chatbotdb"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
@@ -228,7 +229,7 @@ func (base *BasicChatBot) DelJarvisMsgCallback(destAddr string, ctrlid int64) er
 
 // GetVersion - get version
 func (base *BasicChatBot) GetVersion() string {
-	return "v0.1.2"
+	return basedef.VERSION
 }
 
 // NewEventMgr - new EventMgr

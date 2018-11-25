@@ -307,6 +307,11 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			return cb.OnJarvisCtrlResult(curctx, msg)
 		})
 
+	node.RegMsgEventFunc(jarviscore.EventOnReplyRequestFile,
+		func(curctx context.Context, jarvisnode jarviscore.JarvisNode, msg *jarviscorepb.JarvisMsg) error {
+			return cb.OnJarvisCtrlResult(curctx, msg)
+		})
+
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
@@ -462,6 +467,20 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 		return nil, err
 	}
 
+	fd := msg.GetFile()
+	if fd != nil {
+		telemsg := tgbotapi.NewDocumentUpload(chatid, fd.Data)
+
+		destmsg, err := cb.teleBotAPI.Send(telemsg)
+		if err != nil {
+			return nil, err
+		}
+
+		msg.SetMsgID(fmt.Sprintf("%v", destmsg.MessageID))
+
+		return msg, nil
+	}
+
 	telemsg := tgbotapi.NewMessage(chatid, msg.GetText())
 
 	if msg.HasOptions() {
@@ -494,6 +513,10 @@ func (cb *teleChatBot) NewMsgFromProto(msg *chatbotdbpb.Message) chatbot.Message
 		msgID:     msg.GetMsgID(),
 		text:      msg.GetText(),
 		timeStamp: msg.GetTimeStamp(),
+	}
+
+	if msg.GetFile() != nil {
+		cmsg.SetFile(msg.GetFile())
 	}
 
 	if msg.GetFrom() != nil {

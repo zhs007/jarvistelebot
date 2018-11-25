@@ -26,6 +26,7 @@ func newPlugin() *jarvisnodePlugin {
 	cmd.RegFunc("nodes", cmdNodes)
 	cmd.RegFunc("scripts", cmdScripts)
 	cmd.RegFunc("version", cmdVersion)
+	cmd.RegFunc("requestfile", cmdRequestFile)
 
 	p := &jarvisnodePlugin{
 		cmd: cmd,
