@@ -469,7 +469,7 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 
 	fd := msg.GetFile()
 	if fd != nil {
-		fb := &tgbotapi.FileBytes{
+		fb := tgbotapi.FileBytes{
 			Name:  fd.Filename,
 			Bytes: fd.Data,
 		}
