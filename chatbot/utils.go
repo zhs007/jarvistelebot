@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/zhs007/jarviscore/base"
+	"github.com/zhs007/jarvistelebot/basedef"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 	"go.uber.org/zap"
 )
@@ -37,6 +38,12 @@ func FormatJSONObj(obj interface{}) (string, error) {
 
 // SendTextMsg - sendmsg
 func SendTextMsg(bot ChatBot, user User, text string) error {
+	if len(text) >= basedef.MaxTextMessageSize {
+		return SendFileMsg(bot, user, &chatbotdbpb.File{
+			Data: []byte(text),
+		})
+	}
+
 	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
 
 	_, err := bot.SendMsg(msg)
