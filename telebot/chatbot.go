@@ -469,7 +469,12 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 
 	fd := msg.GetFile()
 	if fd != nil {
-		telemsg := tgbotapi.NewDocumentUpload(chatid, fd.Data)
+		fb := &tgbotapi.FileBytes{
+			Name:  fd.Filename,
+			Bytes: fd.Data,
+		}
+
+		telemsg := tgbotapi.NewDocumentUpload(chatid, fb)
 
 		destmsg, err := cb.teleBotAPI.Send(telemsg)
 		if err != nil {

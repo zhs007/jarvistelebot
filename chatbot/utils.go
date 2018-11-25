@@ -1,7 +1,9 @@
 package chatbot
 
 import (
+	"crypto/md5"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/zhs007/jarviscore/base"
@@ -40,7 +42,8 @@ func FormatJSONObj(obj interface{}) (string, error) {
 func SendTextMsg(bot ChatBot, user User, text string) error {
 	if len(text) >= basedef.MaxTextMessageSize {
 		return SendFileMsg(bot, user, &chatbotdbpb.File{
-			Data: []byte(text),
+			Filename: GetMD5String([]byte(text)) + ".txt",
+			Data:     []byte(text),
 		})
 	}
 
@@ -95,4 +98,9 @@ func SendFileMsg(bot ChatBot, user User, fd *chatbotdbpb.File) error {
 	_, err := bot.SendMsg(msg)
 
 	return err
+}
+
+// GetMD5String - md5 buf and return string
+func GetMD5String(buf []byte) string {
+	return fmt.Sprintf("%x", md5.Sum(buf))
 }
