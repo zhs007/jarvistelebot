@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/zhs007/jarviscore/base"
@@ -103,4 +104,14 @@ func SendFileMsg(bot ChatBot, user User, fd *chatbotdbpb.File) error {
 // GetMD5String - md5 buf and return string
 func GetMD5String(buf []byte) string {
 	return fmt.Sprintf("%x", md5.Sum(buf))
+}
+
+// GetFileNameFromFullPath - get filename from fullpathfilname
+func GetFileNameFromFullPath(fullname string) string {
+	arr := strings.Split(fullname, "/")
+	if len(arr) <= 1 {
+		return fullname
+	}
+
+	return arr[len(arr)-1]
 }

@@ -117,7 +117,7 @@ func cmdRequestFile(ctx context.Context, params *chatbot.MessageParams) bool {
 			fd := msg.GetFile()
 
 			chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-				Filename: fd.Filename,
+				Filename: chatbot.GetFileNameFromFullPath(fd.Filename),
 				Data:     fd.File,
 			})
 		}
