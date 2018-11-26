@@ -9,6 +9,8 @@ const (
 	FileTypeShellScript = "text/x-script.sh"
 	// FileTypePhoto - photo
 	FileTypePhoto = "photo/jpeg"
+	// FileExcel - excel
+	FileExcel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
 // MsgOption - option

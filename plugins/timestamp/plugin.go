@@ -29,6 +29,10 @@ func (p *timestampPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		return false, chatbot.ErrMsgNoFrom
 	}
 
+	if params.Msg.GetText() == "" {
+		return false, nil
+	}
+
 	if params.ChatBot.IsMaster(from) {
 		arr := strings.Fields(params.Msg.GetText())
 
