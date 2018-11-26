@@ -21,6 +21,7 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
 	"github.com/zhs007/jarvistelebot/plugins/timestamp"
+	"github.com/zhs007/jarvistelebot/plugins/xlsx2json"
 
 	"go.uber.org/zap"
 )
@@ -51,6 +52,11 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	err = plugintimestamp.RegPlugin(cfg.CfgPath, mgrPlugins)
 	if err != nil {
 		jarvisbase.Warn("telbot.regPlugins:plugintimestamp.RegPlugin", zap.Error(err))
+	}
+
+	err = pluginxlsx2json.RegPlugin(cfg.CfgPath, mgrPlugins)
+	if err != nil {
+		jarvisbase.Warn("telbot.regPlugins:pluginxlsx2json.RegPlugin", zap.Error(err))
 	}
 
 	err = pluginfiletransfer.RegPlugin(cfg.CfgPath, mgrPlugins)

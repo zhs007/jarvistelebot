@@ -2,10 +2,9 @@ package pluginxlsx2json
 
 import (
 	"context"
-	"strings"
 
-	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
 
 // xlsx2jsonPlugin - xlsx2json plugin
@@ -34,31 +33,32 @@ func (p *xlsx2jsonPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 
 	file := params.Msg.GetFile()
 	if file != nil {
-		if file.FileType != chatbot.FileTypeShellScript {
-			arr := strings.Split(params.Msg.GetText(), ":")
-			if len(arr) < 2 {
-				return false, nil
+		if file.FileType == chatbot.FileExcel {
+			str, err := toJSON(file.Data)
+			if err == nil {
+				fd := &chatbotdbpb.File{
+					Filename: chatbot.GetMD5String([]byte(str)) + ".json",
+					Data:     []byte(str),
+				}
+
+				chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), fd)
 			}
+			// arr := strings.Split(params.Msg.GetText(), ":")
+			// if len(arr) < 2 {
+			// 	return false, nil
+			// }
 
-			curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
-			if curnode == nil {
-				return false, nil
-			}
+			// curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
+			// if curnode == nil {
+			// 	return false, nil
+			// }
 
-			fd := &jarviscorepb.FileData{
-				File:     file.Data,
-				Filename: strings.Join(arr[1:], ":"),
-			}
+			// fd := &jarviscorepb.FileData{
+			// 	File:     file.Data,
+			// 	Filename: strings.Join(arr[1:], ":"),
+			// }
 
-			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd)
-
-			// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-			// 	cr := msg.GetCtrlResult()
-
-			// 	chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)
-
-			// 	return nil
-			// })
+			// params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd)
 
 			return true, nil
 		}
