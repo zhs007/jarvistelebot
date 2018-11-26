@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/360EntSecGroup-Skylar/excelize"
+  packages = ["."]
+  revision = "3e004d900b103379c2d62657a3070de4a2e8585a"
+  version = "v1.4.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/fomichev/secp256k1"
   packages = ["."]
@@ -54,6 +60,12 @@
   ]
   revision = "5c1be0872a56fba73b279434ea95dfda735abedd"
   version = "v0.7.6"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/mohae/deepcopy"
+  packages = ["."]
+  revision = "c48cc78d482608239f6c4c92a4abd87eb8761c90"
 
 [[projects]]
   branch = "master"
@@ -133,7 +145,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ripemd160"]
-  revision = "3d3f9f413869b949e48070b5bc593aa22cc2b8f2"
+  revision = "9eb0be3963eaeb646c9a9b6d11f3da2b249bb2ca"
 
 [[projects]]
   branch = "master"
@@ -224,6 +236,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8e76456a9bc43948e74fcc73eb5ec0e58a8a36feeb642fda629e89d3066380b1"
+  inputs-digest = "5d57186a5ea8ea993838df818ea0dfd84cf8e4495878b4c993003c4fbeb4f671"
   solver-name = "gps-cdcl"
   solver-version = 1

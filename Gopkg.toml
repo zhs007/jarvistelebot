@@ -44,3 +44,7 @@
 [[constraint]]
   name = "github.com/zhs007/jarviscore"
   version = "0.6.12"
+
+[[constraint]]
+  name = "github.com/360EntSecGroup-Skylar/excelize.git"
+  version = "1.4.0"  
