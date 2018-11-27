@@ -27,3 +27,12 @@ debugmode: true
 
 # cfgpath: 
 cfgpath: './cfg'
+
+# plugins
+plugins:
+  - 'assistant'
+  - 'jarvisnode'
+  - 'timestamp'
+  - 'xlsx2json'
+  - 'filetransfer'
+  - 'normal'

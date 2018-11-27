@@ -46,12 +46,16 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(pluginfiletransfer.PluginName, pluginfiletransfer.NewPlugin)
 	mgrPlugins.RegPlugin(pluginnormal.PluginName, pluginnormal.NewPlugin)
 
-	mgrPlugins.NewPlugin(pluginassistant.PluginName)
-	mgrPlugins.NewPlugin(pluginjarvisnode.PluginName)
-	mgrPlugins.NewPlugin(plugintimestamp.PluginName)
-	mgrPlugins.NewPlugin(pluginxlsx2json.PluginName)
-	mgrPlugins.NewPlugin(pluginfiletransfer.PluginName)
-	mgrPlugins.NewPlugin(pluginnormal.PluginName)
+	for _, v := range cfg.Plugins {
+		mgrPlugins.NewPlugin(v)
+	}
+
+	// mgrPlugins.NewPlugin(pluginassistant.PluginName)
+	// mgrPlugins.NewPlugin(pluginjarvisnode.PluginName)
+	// mgrPlugins.NewPlugin(plugintimestamp.PluginName)
+	// mgrPlugins.NewPlugin(pluginxlsx2json.PluginName)
+	// mgrPlugins.NewPlugin(pluginfiletransfer.PluginName)
+	// mgrPlugins.NewPlugin(pluginnormal.PluginName)
 
 	// err := pluginassistant.RegPlugin(cfg.CfgPath, mgrPlugins)
 	// if err != nil {
