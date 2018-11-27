@@ -108,5 +108,57 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				return user, nil
 			},
 		},
+		"updUserScript": &graphql.Field{
+			Type:        typeUserScript,
+			Description: "update user script",
+			Args: graphql.FieldConfigArgument{
+				"userID": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+				"scriptName": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+				"file": &graphql.ArgumentConfig{
+					Type: inputTypeFile,
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+				if anka == nil {
+					return nil, ankadb.ErrCtxAnkaDB
+				}
+
+				curdb := anka.MgrDB.GetDB("chatbotdb")
+				if curdb == nil {
+					return nil, ankadb.ErrCtxCurDB
+				}
+
+				userID := params.Args["userID"].(string)
+				scriptName := params.Args["scriptName"].(string)
+
+				file := &pb.File{}
+				err := ankadb.GetMsgFromParam(params, "file", file)
+				if err != nil {
+					return nil, err
+				}
+
+				if file.StrData != "" {
+					file.Data = []byte(file.StrData)
+					file.StrData = ""
+				}
+
+				userScript := &pb.UserScript{
+					ScriptName: scriptName,
+					File:       file,
+				}
+
+				err = ankadb.PutMsg2DB(curdb, []byte(makeUserScriptKey(userID, scriptName)), userScript)
+				if err != nil {
+					return nil, err
+				}
+
+				return userScript, nil
+			},
+		},
 	},
 })

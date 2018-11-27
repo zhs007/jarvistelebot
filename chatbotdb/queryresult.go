@@ -59,6 +59,19 @@ type ResultUserWithUserName struct {
 	} `json:"userWithUserName"`
 }
 
+// ResultUserScript -
+type ResultUserScript struct {
+	UserScript struct {
+		ScriptName string `json:"scriptName"`
+
+		File struct {
+			Filename string `json:"filename"`
+			StrData  string `json:"strData"`
+			FileType string `json:"fileType"`
+		} `json:"file"`
+	} `json:"userScript"`
+}
+
 // ResultMsg2Msg - ResultMsg -> Message
 func ResultMsg2Msg(result *ResultMsg) (*pb.Message, error) {
 	msg := &pb.Message{
@@ -133,4 +146,23 @@ func ResultUserWithUserName2User(result *ResultUserWithUserName) (*pb.User, erro
 		UserName:  result.UserWithUserName.UserName,
 		LastMsgID: result.UserWithUserName.LastMsgID,
 	}, nil
+}
+
+// ResultUserScript2UserScript - ResultUserScript -> UserScript
+func ResultUserScript2UserScript(result *ResultUserScript) (*pb.UserScript, error) {
+	userScript := &pb.UserScript{
+		ScriptName: result.UserScript.ScriptName,
+	}
+
+	if result.UserScript.File.Filename != "" {
+		if result.UserScript.File.StrData != "" {
+			userScript.File = &pb.File{
+				Filename: result.UserScript.File.Filename,
+				Data:     []byte(result.UserScript.File.StrData),
+				FileType: result.UserScript.File.FileType,
+			}
+		}
+	}
+
+	return userScript, nil
 }

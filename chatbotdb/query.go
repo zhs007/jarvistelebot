@@ -108,6 +108,43 @@ var typeQuery = graphql.NewObject(
 					return user, nil
 				},
 			},
+			"userScript": &graphql.Field{
+				Type: typeUserScript,
+				Args: graphql.FieldConfigArgument{
+					"userID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.ID),
+					},
+					"scriptName": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.ID),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+					if anka == nil {
+						return nil, ankadb.ErrCtxAnkaDB
+					}
+
+					curdb := anka.MgrDB.GetDB("chatbotdb")
+					if curdb == nil {
+						return nil, ankadb.ErrCtxCurDB
+					}
+
+					userID := params.Args["userID"].(string)
+					scriptName := params.Args["scriptName"].(string)
+
+					userScript := &pb.UserScript{}
+					err := ankadb.GetMsgFromDB(curdb, []byte(makeUserScriptKey(userID, scriptName)), userScript)
+					if err != nil {
+						return nil, err
+					}
+
+					if userScript.File != nil && userScript.File.Data != nil {
+						userScript.File.StrData = string(userScript.File.Data)
+					}
+
+					return userScript, nil
+				},
+			},
 		},
 	},
 )

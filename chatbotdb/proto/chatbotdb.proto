@@ -12,6 +12,10 @@ message User {
     string userName = 3;
     // lastMsgID - The last msgid that has been processed
     int64 lastMsgID = 4;
+    // scripts - user's scripts
+    repeated string scripts = 5;
+    // fileTemplates - user's file templates
+    repeated string fileTemplates = 6;
 }
 
 // File - file info
@@ -46,4 +50,12 @@ message Message {
     int32 selected = 8;     // [1, len(options)]
     // file - File in the message
     File file = 9;
+}
+
+// UserScript - user's script
+message UserScript {
+    // scriptName - UserScript's name
+    string scriptName = 1;
+    // file - file data
+    File file = 2;
 }

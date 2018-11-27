@@ -17,6 +17,12 @@ const querySaveMsg = `mutation NewMsg($msg: MessageInput!) {
 	}
 }`
 
+const querySaveUserScript = `mutation UpdUserScript(userID: ID!, scriptName: ID!, file: FileInput!) {
+	updUserScript(userID: $userID, scriptName: $scriptName, file: $file) {
+		scriptName
+	}
+}`
+
 const queryUpdUser = `mutation UpdUser($nickName: String!, $userID: ID!, $userName: ID!, $lastMsgID: Int64!) {
 	updUser(nickName: $nickName, userID: $userID, userName: $userName, lastMsgID: $lastMsgID) {
 		nickName
@@ -46,6 +52,11 @@ const queryGetMsg = `query Msg($chatID: ID!) {
 		msgID
 		options
 		selected
+		file {
+			filename
+			strData
+			fileType
+		}
 	}
 }`
 
@@ -64,6 +75,16 @@ const queryGetUserWithUserName = `query UserWithUserName($userName: ID!) {
 		userID
 		userName
 		lastMsgID
+	}
+}`
+
+const queryGetUserScript = `query UserScript($userID: ID!, $scriptName: ID!) {
+	userScript(userID: $userID, scriptName: $scriptName) {
+		file {
+			filename
+			strData
+			fileType
+		}
 	}
 }`
 
@@ -240,4 +261,65 @@ func (db *ChatBotDB) GetUserWithUserName(username string) (*pb.User, error) {
 	jarvisbase.Debug("ChatBotDB.GetUserWithUserName", jarvisbase.JSON("result", result))
 
 	return ResultUserWithUserName2User(ruser)
+}
+
+// SaveUserScript - save user script
+func (db *ChatBotDB) SaveUserScript(userID string, userScript *pb.UserScript) error {
+	if db.db == nil {
+		return ErrChatBotDBNil
+	}
+
+	if userScript.File != nil && userScript.File.Data != nil {
+		userScript.File.StrData = string(userScript.File.Data)
+	}
+
+	params := make(map[string]interface{})
+	err := ankadb.MakeParamsFromMsg(params, "file", userScript.File)
+	if err != nil {
+		return err
+	}
+
+	params["userID"] = userID
+	params["scriptName"] = userScript.ScriptName
+
+	result, err := db.db.LocalQuery(context.Background(), querySaveUserScript, params)
+	if err != nil {
+		return err
+	}
+
+	jarvisbase.Debug("ChatBotDB.SaveUserScript",
+		jarvisbase.JSON("result", result))
+
+	return nil
+}
+
+// GetUserScript - get user script
+func (db *ChatBotDB) GetUserScript(userID string, scriptName string) (*pb.UserScript, error) {
+	if db.db == nil {
+		return nil, ErrChatBotDBNil
+	}
+
+	params := make(map[string]interface{})
+	params["userID"] = userID
+	params["scriptName"] = scriptName
+
+	result, err := db.db.LocalQuery(context.Background(), queryGetUserScript, params)
+	if err != nil {
+		return nil, err
+	}
+
+	jarvisbase.Debug("ChatBotDB.GetUserScript", jarvisbase.JSON("result", result))
+
+	rus := &ResultUserScript{}
+	err = ankadb.MakeObjFromResult(result, rus)
+	if err != nil {
+		return nil, err
+	}
+
+	userScript, err := ResultUserScript2UserScript(rus)
+	if err != nil {
+		return nil, err
+	}
+
+	return userScript, nil
 }

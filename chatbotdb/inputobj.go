@@ -41,3 +41,22 @@ var inputTypeMessage = graphql.NewInputObject(
 		},
 	},
 )
+
+// inputTypeFile - File
+//		you can see chatbotdb.graphql
+var inputTypeFile = graphql.NewInputObject(
+	graphql.InputObjectConfig{
+		Name: "FileInput",
+		Fields: graphql.InputObjectConfigFieldMap{
+			"filename": &graphql.InputObjectFieldConfig{
+				Type: graphql.String,
+			},
+			"strData": &graphql.InputObjectFieldConfig{
+				Type: graphql.String,
+			},
+			"fileType": &graphql.InputObjectFieldConfig{
+				Type: graphql.String,
+			},
+		},
+	},
+)

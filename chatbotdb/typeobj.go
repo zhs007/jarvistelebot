@@ -82,3 +82,19 @@ var typeMessage = graphql.NewObject(
 		},
 	},
 )
+
+// typeUserScript - UserScript
+//		you can see chatbotdb.graphql
+var typeUserScript = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "UserScript",
+		Fields: graphql.Fields{
+			"scriptName": &graphql.Field{
+				Type: graphql.NewNonNull(graphql.ID),
+			},
+			"file": &graphql.Field{
+				Type: typeFile,
+			},
+		},
+	},
+)

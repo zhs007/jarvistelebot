@@ -23,6 +23,11 @@ type Message {
     file: File
 }
 
+type UserScript {
+    scriptName: ID!
+    file: File
+}
+
 type UserMessageChunk {
     from: User
     msgs: [Message]
@@ -33,10 +38,14 @@ type Query {
 
     user(userID: ID!): User!
     userWithUserName(userName: ID!): User!
+
+    userScript(userID: ID!, scriptName: ID!): UserScript!
 }
 
 type Mutation {
-    newMsg(chatID: ID!, fromNickName: String!, fromUserID: ID!, text: String!, timeStamp: Timestamp!): Message!
+    newMsg(msg: Message!): Message!
 
     updUser(nickName: String!, userID: ID!, userName: ID!, lastMsgID: Int64!): User!
+
+    updUserScript(userID: ID!, scriptName: ID!, file: File!): UserScript!
 }
