@@ -37,7 +37,7 @@ func (p *xlsx2jsonPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 			str, err := toJSON(file.Data)
 			if err == nil {
 				fd := &chatbotdbpb.File{
-					Filename: chatbot.GetMD5String([]byte(str)) + ".json",
+					Filename: chatbot.GetFileNameFromFullPathNoExt(file.Filename) + ".json",
 					Data:     []byte(str),
 				}
 

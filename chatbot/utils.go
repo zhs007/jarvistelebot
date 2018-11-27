@@ -115,3 +115,15 @@ func GetFileNameFromFullPath(fullname string) string {
 
 	return arr[len(arr)-1]
 }
+
+// GetFileNameFromFullPathNoExt - get filename from fullpathfilname
+func GetFileNameFromFullPathNoExt(fullname string) string {
+	fn := GetFileNameFromFullPath(fullname)
+
+	arr := strings.Split(fn, ".")
+	if len(arr) <= 1 {
+		return fn
+	}
+
+	return strings.Join(arr[:len(arr)-1], ".")
+}
