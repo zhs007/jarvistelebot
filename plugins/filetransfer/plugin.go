@@ -8,18 +8,28 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
+// PluginName - plugin name
+const PluginName = "filetransfer"
+
 // filetransferPlugin - timestamp plugin
 type filetransferPlugin struct {
 }
 
-// RegPlugin - reg timestamp plugin
-func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
-	chatbot.Info("RegPlugin - filetransferPlugin")
+// NewPlugin - new file transfer plugin
+func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
+	chatbot.Info("NewPlugin - filetransferPlugin")
 
-	mgr.RegPlugin(&filetransferPlugin{})
-
-	return nil
+	return &filetransferPlugin{}, nil
 }
+
+// // RegPlugin - reg timestamp plugin
+// func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
+// 	chatbot.Info("RegPlugin - filetransferPlugin")
+
+// 	mgr.RegPlugin(&filetransferPlugin{})
+
+// 	return nil
+// }
 
 // OnMessage - get message
 func (p *filetransferPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
@@ -71,7 +81,7 @@ func (p *filetransferPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 
 // GetComeInCode - if return is empty string, it means not comein
 func (p *filetransferPlugin) GetComeInCode() string {
-	return "filetransfer"
+	return PluginName
 }
 
 // IsMyMessage

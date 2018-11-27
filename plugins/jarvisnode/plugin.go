@@ -12,12 +12,18 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
+// PluginName - plugin name
+const PluginName = "jarvisnode"
+
 // jarvisnodePlugin - jarvisnode plugin
 type jarvisnodePlugin struct {
 	cmd *chatbot.CommandMap
 }
 
-func newPlugin() *jarvisnodePlugin {
+// NewPlugin - new jarvisnode plugin
+func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
+	chatbot.Info("NewPlugin - jarvisnodePlugin")
+
 	cmd := chatbot.NewCommandMap()
 
 	cmd.RegFunc("help", cmdHelp)
@@ -32,17 +38,17 @@ func newPlugin() *jarvisnodePlugin {
 		cmd: cmd,
 	}
 
-	return p
+	return p, nil
 }
 
-// RegPlugin - reg timestamp plugin
-func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
-	chatbot.Info("RegPlugin - jarvisnodePlugin")
+// // RegPlugin - reg timestamp plugin
+// func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
+// 	chatbot.Info("RegPlugin - jarvisnodePlugin")
 
-	mgr.RegPlugin(newPlugin())
+// 	mgr.RegPlugin(newPlugin())
 
-	return nil
-}
+// 	return nil
+// }
 
 // OnMessage - get message
 func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
@@ -99,7 +105,7 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 
 // GetComeInCode - if return is empty string, it means not comein
 func (p *jarvisnodePlugin) GetComeInCode() string {
-	return "jarvisnode"
+	return PluginName
 }
 
 // IsMyMessage

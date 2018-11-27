@@ -13,6 +13,9 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
+// PluginName - plugin name
+const PluginName = "assistant"
+
 // inputParams - parse input string to inputParams
 type inputParams struct {
 	isSave bool
@@ -26,23 +29,39 @@ type assistantPlugin struct {
 	db *assistantdb.AssistantDB
 }
 
-// RegPlugin - reg assistant plugin
-func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
-	chatbot.Info("RegPlugin - assistantPlugin")
+// NewPlugin - reg assistant plugin
+func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
+	chatbot.Info("NewPlugin - assistantPlugin")
 
 	cfg := loadConfig(path.Join(cfgPath, "assistant.yaml"))
 
 	db, err := assistantdb.NewAssistantDB(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	mgr.RegPlugin(&assistantPlugin{
+	return &assistantPlugin{
 		db: db,
-	})
-
-	return nil
+	}, nil
 }
+
+// // RegPlugin - reg assistant plugin
+// func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
+// 	chatbot.Info("RegPlugin - assistantPlugin")
+
+// 	cfg := loadConfig(path.Join(cfgPath, "assistant.yaml"))
+
+// 	db, err := assistantdb.NewAssistantDB(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	mgr.RegPlugin(&assistantPlugin{
+// 		db: db,
+// 	})
+
+// 	return nil
+// }
 
 // OnMessage - get message
 func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
@@ -95,7 +114,7 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 
 // GetComeInCode - if return is empty string, it means not comein
 func (p *assistantPlugin) GetComeInCode() string {
-	return "assistant"
+	return PluginName
 }
 
 // IsMyMessage

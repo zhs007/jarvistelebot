@@ -70,7 +70,10 @@ func (msg *testMessage) GetOption(id int) string {
 }
 
 func Test_IsMyMessage(t *testing.T) {
-	p := newPlugin()
+	p, err := NewPlugin("")
+	if err != nil {
+		t.Fatalf("Test_IsMyMessage NewPlugin Err")
+	}
 
 	arrOK := []string{"> 123", "> haha", "   > haha    ", "> >haha"}
 	for i := range arrOK {

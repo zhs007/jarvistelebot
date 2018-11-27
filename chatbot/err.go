@@ -45,4 +45,8 @@ var (
 	ErrEmptyMsgText = errors.New("empty message text")
 	// ErrInvalidEventID - invalid eventid
 	ErrInvalidEventID = errors.New("invalid eventid")
+	// ErrSamePluginName - same plugin name
+	ErrSamePluginName = errors.New("same plugin name")
+	// ErrNoPluginName - no plugin name
+	ErrNoPluginName = errors.New("no plugin name")
 )

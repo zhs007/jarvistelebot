@@ -5,6 +5,9 @@ import (
 	"strings"
 )
 
+// FuncNewPlugin - func newPlugin(cfgPath string) (Plugin, error)
+type FuncNewPlugin func(cfgPath string) (Plugin, error)
+
 const (
 	// PluginTypeNormal - normal plugin
 	PluginTypeNormal = 0
@@ -14,8 +17,8 @@ const (
 
 // PluginsMgr - chat bot plugins interface
 type PluginsMgr interface {
-	// RegPlugin - reg plugin
-	RegPlugin(plugin Plugin) error
+	// NewPlugin - New a plugin
+	NewPlugin(pluginName string) error
 	// OnMessage
 	OnMessage(ctx context.Context, bot ChatBot, msg Message) error
 	// GetComeInPlugin
@@ -26,14 +29,18 @@ type PluginsMgr interface {
 	GetCurPlugin() Plugin
 	// OnStart - on start
 	OnStart(ctx context.Context) error
+	// RegPlugin - Registered a new plugin
+	RegPlugin(pluginName string, funcNewPlugin FuncNewPlugin) error
 }
 
 // NewPluginsMgr - new default plugins mgr
-func NewPluginsMgr() PluginsMgr {
+func NewPluginsMgr(cfgPath string) PluginsMgr {
 	return &pluginsMgr{
 		lstNormal:  make([]Plugin, 0, 16),
 		lstCommand: make([]Plugin, 0, 16),
 		lstComeIn:  make([]Plugin, 0, 16),
+		mapPlugin:  make(map[string]FuncNewPlugin),
+		cfgPath:    cfgPath,
 	}
 }
 
@@ -43,6 +50,8 @@ type pluginsMgr struct {
 	lstCommand []Plugin
 	lstComeIn  []Plugin
 	curPlugin  Plugin
+	mapPlugin  map[string]FuncNewPlugin
+	cfgPath    string
 }
 
 func (mgr *pluginsMgr) GetComeInPlugin(code string) Plugin {
@@ -55,7 +64,18 @@ func (mgr *pluginsMgr) GetComeInPlugin(code string) Plugin {
 	return nil
 }
 
-func (mgr *pluginsMgr) RegPlugin(plugin Plugin) error {
+// NewPlugin - New a plugin
+func (mgr *pluginsMgr) NewPlugin(pluginName string) error {
+	funcNewPlugin, ok := mgr.mapPlugin[pluginName]
+	if !ok {
+		return ErrNoPluginName
+	}
+
+	plugin, err := funcNewPlugin(mgr.cfgPath)
+	if err != nil {
+		return err
+	}
+
 	pt := plugin.GetPluginType()
 	if pt == PluginTypeNormal {
 		mgr.lstNormal = append(mgr.lstNormal, plugin)
@@ -169,4 +189,16 @@ func (mgr *pluginsMgr) isCommand(params *MessageParams) bool {
 	}
 
 	return false
+}
+
+// RegPlugin - Registered a new plugin
+func (mgr *pluginsMgr) RegPlugin(pluginName string, funcNewPlugin FuncNewPlugin) error {
+	_, ok := mgr.mapPlugin[pluginName]
+	if ok {
+		return ErrSamePluginName
+	}
+
+	mgr.mapPlugin[pluginName] = funcNewPlugin
+
+	return nil
 }

@@ -7,18 +7,28 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
 
+// PluginName - plugin name
+const PluginName = "xlsx2json"
+
 // xlsx2jsonPlugin - xlsx2json plugin
 type xlsx2jsonPlugin struct {
 }
 
-// RegPlugin - reg xlsx2json plugin
-func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
-	chatbot.Info("RegPlugin - xlsx2jsonPlugin")
+// NewPlugin - new xlsx2json plugin
+func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
+	chatbot.Info("NewPlugin - xlsx2jsonPlugin")
 
-	mgr.RegPlugin(&xlsx2jsonPlugin{})
-
-	return nil
+	return &xlsx2jsonPlugin{}, nil
 }
+
+// // RegPlugin - reg xlsx2json plugin
+// func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
+// 	chatbot.Info("RegPlugin - xlsx2jsonPlugin")
+
+// 	mgr.RegPlugin(&xlsx2jsonPlugin{})
+
+// 	return nil
+// }
 
 // OnMessage - get message
 func (p *xlsx2jsonPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
@@ -71,7 +81,7 @@ func (p *xlsx2jsonPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 
 // GetComeInCode - if return is empty string, it means not comein
 func (p *xlsx2jsonPlugin) GetComeInCode() string {
-	return "xlsx2json"
+	return PluginName
 }
 
 // IsMyMessage

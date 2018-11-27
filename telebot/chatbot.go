@@ -39,35 +39,49 @@ type teleChatBot struct {
 }
 
 func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
-	err := pluginassistant.RegPlugin(cfg.CfgPath, mgrPlugins)
-	if err != nil {
-		jarvisbase.Warn("telbot.regPlugins:pluginassistant.RegPlugin", zap.Error(err))
-	}
+	mgrPlugins.RegPlugin(pluginassistant.PluginName, pluginassistant.NewPlugin)
+	mgrPlugins.RegPlugin(pluginjarvisnode.PluginName, pluginjarvisnode.NewPlugin)
+	mgrPlugins.RegPlugin(plugintimestamp.PluginName, plugintimestamp.NewPlugin)
+	mgrPlugins.RegPlugin(pluginxlsx2json.PluginName, pluginxlsx2json.NewPlugin)
+	mgrPlugins.RegPlugin(pluginfiletransfer.PluginName, pluginfiletransfer.NewPlugin)
+	mgrPlugins.RegPlugin(pluginnormal.PluginName, pluginnormal.NewPlugin)
 
-	err = pluginjarvisnode.RegPlugin(cfg.CfgPath, mgrPlugins)
-	if err != nil {
-		jarvisbase.Warn("telbot.regPlugins:pluginjarvisnode.RegPlugin", zap.Error(err))
-	}
+	mgrPlugins.NewPlugin(pluginassistant.PluginName)
+	mgrPlugins.NewPlugin(pluginjarvisnode.PluginName)
+	mgrPlugins.NewPlugin(plugintimestamp.PluginName)
+	mgrPlugins.NewPlugin(pluginxlsx2json.PluginName)
+	mgrPlugins.NewPlugin(pluginfiletransfer.PluginName)
+	mgrPlugins.NewPlugin(pluginnormal.PluginName)
 
-	err = plugintimestamp.RegPlugin(cfg.CfgPath, mgrPlugins)
-	if err != nil {
-		jarvisbase.Warn("telbot.regPlugins:plugintimestamp.RegPlugin", zap.Error(err))
-	}
+	// err := pluginassistant.RegPlugin(cfg.CfgPath, mgrPlugins)
+	// if err != nil {
+	// 	jarvisbase.Warn("telbot.regPlugins:pluginassistant.RegPlugin", zap.Error(err))
+	// }
 
-	err = pluginxlsx2json.RegPlugin(cfg.CfgPath, mgrPlugins)
-	if err != nil {
-		jarvisbase.Warn("telbot.regPlugins:pluginxlsx2json.RegPlugin", zap.Error(err))
-	}
+	// err = pluginjarvisnode.RegPlugin(cfg.CfgPath, mgrPlugins)
+	// if err != nil {
+	// 	jarvisbase.Warn("telbot.regPlugins:pluginjarvisnode.RegPlugin", zap.Error(err))
+	// }
 
-	err = pluginfiletransfer.RegPlugin(cfg.CfgPath, mgrPlugins)
-	if err != nil {
-		jarvisbase.Warn("telbot.regPlugins:pluginfiletransfer.RegPlugin", zap.Error(err))
-	}
+	// err = plugintimestamp.RegPlugin(cfg.CfgPath, mgrPlugins)
+	// if err != nil {
+	// 	jarvisbase.Warn("telbot.regPlugins:plugintimestamp.RegPlugin", zap.Error(err))
+	// }
 
-	err = pluginnormal.RegPlugin(cfg.CfgPath, mgrPlugins)
-	if err != nil {
-		jarvisbase.Warn("telbot.regPlugins:pluginnormal.RegPlugin", zap.Error(err))
-	}
+	// err = pluginxlsx2json.RegPlugin(cfg.CfgPath, mgrPlugins)
+	// if err != nil {
+	// 	jarvisbase.Warn("telbot.regPlugins:pluginxlsx2json.RegPlugin", zap.Error(err))
+	// }
+
+	// err = pluginfiletransfer.RegPlugin(cfg.CfgPath, mgrPlugins)
+	// if err != nil {
+	// 	jarvisbase.Warn("telbot.regPlugins:pluginfiletransfer.RegPlugin", zap.Error(err))
+	// }
+
+	// err = pluginnormal.RegPlugin(cfg.CfgPath, mgrPlugins)
+	// if err != nil {
+	// 	jarvisbase.Warn("telbot.regPlugins:pluginnormal.RegPlugin", zap.Error(err))
+	// }
 }
 
 // NewTeleChatBot - new tele chat bot
@@ -81,7 +95,7 @@ func NewTeleChatBot(cfg *Config) (chatbot.ChatBot, error) {
 
 	chatbot.Info("Authorized on account " + bot.Self.UserName)
 
-	mgrPlugins := chatbot.NewPluginsMgr()
+	mgrPlugins := chatbot.NewPluginsMgr(cfg.CfgPath)
 
 	regPlugins(cfg, mgrPlugins)
 

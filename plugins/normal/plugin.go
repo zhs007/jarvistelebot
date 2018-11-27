@@ -6,18 +6,28 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
+// PluginName - plugin name
+const PluginName = "normal"
+
 // normalPlugin - normal plugin
 type normalPlugin struct {
 }
 
-// RegPlugin - reg normal plugin
-func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
-	chatbot.Info("RegPlugin - normalPlugin")
+// NewPlugin - new normal plugin
+func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
+	chatbot.Info("NewPlugin - normalPlugin")
 
-	mgr.RegPlugin(&normalPlugin{})
-
-	return nil
+	return &normalPlugin{}, nil
 }
+
+// // RegPlugin - reg normal plugin
+// func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
+// 	chatbot.Info("RegPlugin - normalPlugin")
+
+// 	mgr.RegPlugin(&normalPlugin{})
+
+// 	return nil
+// }
 
 // OnMessage - get message
 func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
@@ -71,7 +81,7 @@ func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePar
 
 // GetComeInCode - if return is empty string, it means not comein
 func (p *normalPlugin) GetComeInCode() string {
-	return ""
+	return PluginName
 }
 
 // IsMyMessage

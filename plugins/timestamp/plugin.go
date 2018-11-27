@@ -9,18 +9,28 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
+// PluginName - plugin name
+const PluginName = "timestamp"
+
 // timestampPlugin - timestamp plugin
 type timestampPlugin struct {
 }
 
-// RegPlugin - reg timestamp plugin
-func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
-	chatbot.Info("RegPlugin - timestampPlugin")
+// NewPlugin - new timestamp plugin
+func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
+	chatbot.Info("NewPlugin - timestampPlugin")
 
-	mgr.RegPlugin(&timestampPlugin{})
-
-	return nil
+	return &timestampPlugin{}, nil
 }
+
+// // RegPlugin - reg timestamp plugin
+// func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
+// 	chatbot.Info("RegPlugin - timestampPlugin")
+
+// 	mgr.RegPlugin(&timestampPlugin{})
+
+// 	return nil
+// }
 
 // OnMessage - get message
 func (p *timestampPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
@@ -63,7 +73,7 @@ func (p *timestampPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 
 // GetComeInCode - if return is empty string, it means not comein
 func (p *timestampPlugin) GetComeInCode() string {
-	return "timestamp"
+	return PluginName
 }
 
 // IsMyMessage
