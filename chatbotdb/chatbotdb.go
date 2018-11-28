@@ -60,8 +60,8 @@ const queryGetMsg = `query Msg($chatID: ID!) {
 	}
 }`
 
-const queryGetUser = `query User($uerID: ID!) {
-	user(uerID: $uerID) {
+const queryGetUser = `query User($userID: ID!) {
+	user(userID: $userID) {
 		nickName
 		userID
 		userName
