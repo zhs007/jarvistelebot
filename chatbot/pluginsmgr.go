@@ -17,14 +17,12 @@ const (
 
 // PluginsMgr - chat bot plugins interface
 type PluginsMgr interface {
+	// SetDefaultPlugin - set default plugin
+	SetDefaultPlugin(pluginName string) error
 	// NewPlugin - New a plugin
 	NewPlugin(pluginName string) error
 	// OnMessage
 	OnMessage(ctx context.Context, bot ChatBot, msg Message) error
-	// // GetComeInPlugin
-	// GetComeInPlugin(code string) Plugin
-	// // ComeInPlugin
-	// ComeInPlugin(plugin Plugin)
 	// GetCurPlugin
 	GetCurPlugin() Plugin
 	// OnStart - on start
@@ -46,23 +44,14 @@ func NewPluginsMgr(cfgPath string) PluginsMgr {
 
 // PluginsMgr - chat bot plugins
 type pluginsMgr struct {
-	lstNormal  []Plugin
-	lstCommand []Plugin
-	lstComeIn  []Plugin
-	curPlugin  Plugin
-	mapPlugin  map[string]FuncNewPlugin
-	cfgPath    string
+	lstNormal     []Plugin
+	lstCommand    []Plugin
+	lstComeIn     []Plugin
+	curPlugin     Plugin
+	mapPlugin     map[string]FuncNewPlugin
+	cfgPath       string
+	defaultPlugin Plugin
 }
-
-// func (mgr *pluginsMgr) GetComeInPlugin(code string) Plugin {
-// 	for _, v := range mgr.lstComeIn {
-// 		if v.GetComeInCode() == code {
-// 			return v
-// 		}
-// 	}
-
-// 	return nil
-// }
 
 // NewPlugin - New a plugin
 func (mgr *pluginsMgr) NewPlugin(pluginName string) error {
@@ -88,12 +77,6 @@ func (mgr *pluginsMgr) NewPlugin(pluginName string) error {
 	}
 
 	return ErrInvalidPluginType
-
-	// if plugin.GetComeInCode() != "" {
-	// 	mgr.lstComeIn = append(mgr.lstComeIn, plugin)
-	// }
-
-	// return nil
 }
 
 func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) error {
@@ -118,16 +101,19 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 	}
 
 	if mgr.isCommand(params) {
-		// jarvisbase.Debug("pluginsMgr.OnMessage:isCommand", zap.Int("command.len", len(mgr.lstCommand)))
-
+		var cp []Plugin
 		for _, v := range mgr.lstCommand {
-			r, err := v.OnMessage(ctx, params)
+			if v.IsMyMessage(params) {
+				cp = append(cp, v)
+			}
+		}
+
+		if len(cp) > 0 {
+			r, err := cp[0].OnMessage(ctx, params)
 			if err != nil {
 				return err
 			}
 
-			// if this plugins process current message
-			// then break
 			if r {
 				return nil
 			}
@@ -145,6 +131,15 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 		if r {
 			return nil
 		}
+	}
+
+	r, err := mgr.defaultPlugin.OnMessage(ctx, params)
+	if err != nil {
+		return err
+	}
+
+	if r {
+		return nil
 	}
 
 	return ErrPluginsEmpty
@@ -175,11 +170,6 @@ func (mgr *pluginsMgr) OnStart(ctx context.Context) error {
 
 // OnStart - on start
 func (mgr *pluginsMgr) isCommand(params *MessageParams) bool {
-	// jarvisbase.Debug("pluginsMgr.isCommand",
-	// 	zap.String("params", fmt.Sprintf("%+v", params)),
-	// 	zap.Int("len", len(params.LstStr)),
-	// 	zap.String("LstStr[0]", params.LstStr[0]))
-
 	if params.Msg.GetFile() != nil {
 		return true
 	}
@@ -199,6 +189,23 @@ func (mgr *pluginsMgr) RegPlugin(pluginName string, funcNewPlugin FuncNewPlugin)
 	}
 
 	mgr.mapPlugin[pluginName] = funcNewPlugin
+
+	return nil
+}
+
+// SetDefaultPlugin - set default plugin
+func (mgr *pluginsMgr) SetDefaultPlugin(pluginName string) error {
+	funcNewPlugin, ok := mgr.mapPlugin[pluginName]
+	if !ok {
+		return ErrNoPluginName
+	}
+
+	plugin, err := funcNewPlugin(mgr.cfgPath)
+	if err != nil {
+		return err
+	}
+
+	mgr.defaultPlugin = plugin
 
 	return nil
 }

@@ -17,6 +17,7 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 	"github.com/zhs007/jarvistelebot/plugins/assistant"
+	"github.com/zhs007/jarvistelebot/plugins/core"
 	"github.com/zhs007/jarvistelebot/plugins/filetransfer"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
@@ -45,47 +46,13 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(pluginxlsx2json.PluginName, pluginxlsx2json.NewPlugin)
 	mgrPlugins.RegPlugin(pluginfiletransfer.PluginName, pluginfiletransfer.NewPlugin)
 	mgrPlugins.RegPlugin(pluginnormal.PluginName, pluginnormal.NewPlugin)
+	mgrPlugins.RegPlugin(plugincore.PluginName, plugincore.NewPlugin)
+
+	mgrPlugins.SetDefaultPlugin(cfg.DefaultPlugin)
 
 	for _, v := range cfg.Plugins {
 		mgrPlugins.NewPlugin(v)
 	}
-
-	// mgrPlugins.NewPlugin(pluginassistant.PluginName)
-	// mgrPlugins.NewPlugin(pluginjarvisnode.PluginName)
-	// mgrPlugins.NewPlugin(plugintimestamp.PluginName)
-	// mgrPlugins.NewPlugin(pluginxlsx2json.PluginName)
-	// mgrPlugins.NewPlugin(pluginfiletransfer.PluginName)
-	// mgrPlugins.NewPlugin(pluginnormal.PluginName)
-
-	// err := pluginassistant.RegPlugin(cfg.CfgPath, mgrPlugins)
-	// if err != nil {
-	// 	jarvisbase.Warn("telbot.regPlugins:pluginassistant.RegPlugin", zap.Error(err))
-	// }
-
-	// err = pluginjarvisnode.RegPlugin(cfg.CfgPath, mgrPlugins)
-	// if err != nil {
-	// 	jarvisbase.Warn("telbot.regPlugins:pluginjarvisnode.RegPlugin", zap.Error(err))
-	// }
-
-	// err = plugintimestamp.RegPlugin(cfg.CfgPath, mgrPlugins)
-	// if err != nil {
-	// 	jarvisbase.Warn("telbot.regPlugins:plugintimestamp.RegPlugin", zap.Error(err))
-	// }
-
-	// err = pluginxlsx2json.RegPlugin(cfg.CfgPath, mgrPlugins)
-	// if err != nil {
-	// 	jarvisbase.Warn("telbot.regPlugins:pluginxlsx2json.RegPlugin", zap.Error(err))
-	// }
-
-	// err = pluginfiletransfer.RegPlugin(cfg.CfgPath, mgrPlugins)
-	// if err != nil {
-	// 	jarvisbase.Warn("telbot.regPlugins:pluginfiletransfer.RegPlugin", zap.Error(err))
-	// }
-
-	// err = pluginnormal.RegPlugin(cfg.CfgPath, mgrPlugins)
-	// if err != nil {
-	// 	jarvisbase.Warn("telbot.regPlugins:pluginnormal.RegPlugin", zap.Error(err))
-	// }
 }
 
 // NewTeleChatBot - new tele chat bot

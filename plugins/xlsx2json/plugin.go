@@ -86,6 +86,24 @@ func (p *xlsx2jsonPlugin) GetPluginName() string {
 
 // IsMyMessage
 func (p *xlsx2jsonPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
+	file := params.Msg.GetFile()
+	if file != nil {
+		if file.FileType == chatbot.FileExcel {
+			if params.Msg.GetText() == "" {
+				return true
+			}
+			// if len(params.LstStr) == 1 {
+			// 	arr := strings.Split(params.Msg.GetText(), ":")
+			// 	if len(arr) == 2 {
+			// 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
+			// 		if curnode != nil {
+			// 			return true
+			// 		}
+			// 	}
+			// }
+		}
+	}
+
 	return false
 }
 

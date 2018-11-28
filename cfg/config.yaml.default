@@ -22,17 +22,23 @@ logpath: 'console'
 # loglevel - log level
 loglevel: 'debug'
 
-# debugmode: true or false
+# loglevel - log level
+loglevel: 'debug'
+
+# debugmode - true or false
 debugmode: true
 
-# cfgpath: 
+# cfgpath - total plugin config in this path
 cfgpath: './cfg'
 
-# plugins
+# plugins - enable plugins
 plugins:
+  - 'core'
   - 'assistant'
   - 'jarvisnode'
   - 'timestamp'
   - 'xlsx2json'
   - 'filetransfer'
-  - 'normal'
+
+# defaultplugin - default plugin
+defaultplugin: 'normal'

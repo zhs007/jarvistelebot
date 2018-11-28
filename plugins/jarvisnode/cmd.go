@@ -85,12 +85,12 @@ func cmdScripts(ctx context.Context, params *chatbot.MessageParams) bool {
 	return true
 }
 
-// cmdVersion - version
-func cmdVersion(ctx context.Context, params *chatbot.MessageParams) bool {
-	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), params.ChatBot.GetVersion())
+// // cmdVersion - version
+// func cmdVersion(ctx context.Context, params *chatbot.MessageParams) bool {
+// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), params.ChatBot.GetVersion())
 
-	return true
-}
+// 	return true
+// }
 
 // cmdRequestFile - request file
 func cmdRequestFile(ctx context.Context, params *chatbot.MessageParams) bool {

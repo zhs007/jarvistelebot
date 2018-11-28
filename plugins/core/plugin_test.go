@@ -1,4 +1,4 @@
-package pluginjarvisnode
+package plugincore
 
 import (
 	"strings"
@@ -79,7 +79,7 @@ func Test_IsMyMessage(t *testing.T) {
 		t.Fatalf("Test_IsMyMessage NewPlugin Err")
 	}
 
-	arrOK := []string{"> help", "   > help    ", "> help"}
+	arrOK := []string{"> version", "   > version    ", "> version"}
 	for i := range arrOK {
 		curmsg := &testMessage{
 			strText: arrOK[i],
@@ -93,11 +93,11 @@ func Test_IsMyMessage(t *testing.T) {
 		}
 
 		if !p.IsMyMessage(params) {
-			t.Fatalf("Test_IsMyMessage Err %v", arrOK[i])
+			t.Fatalf("Test_IsMyMessage arrOK %v", arrOK[i])
 		}
 	}
 
-	arrErr := []string{"123", ">> haha", ">   ", ">haha", "> help1"}
+	arrErr := []string{"123", ">> haha", ">   ", ">haha", "> help"}
 	for i := range arrErr {
 		curmsg := &testMessage{
 			strText: arrErr[i],
@@ -111,7 +111,7 @@ func Test_IsMyMessage(t *testing.T) {
 		}
 
 		if p.IsMyMessage(params) {
-			t.Fatalf("Test_IsMyMessage Err %v", arrErr[i])
+			t.Fatalf("Test_IsMyMessage arrErr %v", arrErr[i])
 		}
 	}
 

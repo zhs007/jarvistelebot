@@ -30,11 +30,21 @@ func (m *CommandMap) RegFunc(cmd string, f FuncCommand) {
 	m.mapCmd[cmd] = f
 }
 
-// Run - reg func with cmd
+// Run - run func with cmd
 func (m *CommandMap) Run(ctx context.Context, cmd string, params *MessageParams) bool {
 	f, ok := m.mapCmd[cmd]
 	if ok {
 		return f(ctx, params)
+	}
+
+	return false
+}
+
+// HasCommand - has command
+func (m *CommandMap) HasCommand(cmd string) bool {
+	_, ok := m.mapCmd[cmd]
+	if ok {
+		return true
 	}
 
 	return false

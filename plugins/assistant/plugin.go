@@ -74,8 +74,8 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		ip := p.parseInput(params)
 
 		if ip != nil {
-			str := fmt.Sprintf("%+v", ip)
-			jarvisbase.Debug("assistantPlugin.OnMessage:parseInput", zap.String("ret", str))
+			// str := fmt.Sprintf("%+v", ip)
+			// jarvisbase.Debug("assistantPlugin.OnMessage:parseInput", zap.String("ret", str))
 
 			if ip.isSave {
 				msg, err := p.db.NewMsg(ip.dat, ip.keys)
@@ -119,20 +119,20 @@ func (p *assistantPlugin) GetPluginName() string {
 
 // IsMyMessage
 func (p *assistantPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-	if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
-		for i := 2; i < len(params.LstStr)-1; i++ {
-			if params.LstStr[i] == ">" {
-				return true
-			}
-		}
-	}
+	// if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
+	// 	for i := 2; i < len(params.LstStr)-1; i++ {
+	// 		if params.LstStr[i] == ">" {
+	// 			return true
+	// 		}
+	// 	}
+	// }
 
-	if len(params.LstStr) == 3 && params.LstStr[0] == "<<" && params.LstStr[1] == "@" {
-		_, err := strconv.ParseInt(params.LstStr[2], 10, 64)
-		if err == nil {
-			return true
-		}
-	}
+	// if len(params.LstStr) == 3 && params.LstStr[0] == "<<" && params.LstStr[1] == "@" {
+	// 	_, err := strconv.ParseInt(params.LstStr[2], 10, 64)
+	// 	if err == nil {
+	// 		return true
+	// 	}
+	// }
 
 	return false
 }

@@ -37,6 +37,7 @@ type Config struct {
 	DebugMode     bool
 	CfgPath       string
 	Plugins       []string
+	DefaultPlugin string
 
 	lvl zapcore.Level
 }

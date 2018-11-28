@@ -2,7 +2,6 @@ package pluginjarvisnode
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarviscore/proto"
@@ -31,7 +30,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.RegFunc("run", cmdRun)
 	cmd.RegFunc("nodes", cmdNodes)
 	cmd.RegFunc("scripts", cmdScripts)
-	cmd.RegFunc("version", cmdVersion)
+	// cmd.RegFunc("version", cmdVersion)
 	cmd.RegFunc("requestfile", cmdRequestFile)
 
 	p := &jarvisnodePlugin{
@@ -52,7 +51,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 // OnMessage - get message
 func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
-	jarvisbase.Debug("jarvisnodePlugin.OnMessage", zap.String("params", fmt.Sprintf("%+v", params)))
+	// jarvisbase.Debug("jarvisnodePlugin.OnMessage", zap.String("params", fmt.Sprintf("%+v", params)))
 
 	from := params.Msg.GetFrom()
 	if from == nil {
@@ -113,12 +112,14 @@ func (p *jarvisnodePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
 	file := params.Msg.GetFile()
 	if file != nil {
 		if file.FileType == chatbot.FileTypeShellScript {
-			return true
+			if len(params.LstStr) == 1 {
+				return true
+			}
 		}
 	}
 
-	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
-		return true
+	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
+		return p.cmd.HasCommand(params.LstStr[1])
 	}
 
 	return false
