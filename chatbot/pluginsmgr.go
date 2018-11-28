@@ -21,10 +21,10 @@ type PluginsMgr interface {
 	NewPlugin(pluginName string) error
 	// OnMessage
 	OnMessage(ctx context.Context, bot ChatBot, msg Message) error
-	// GetComeInPlugin
-	GetComeInPlugin(code string) Plugin
-	// ComeInPlugin
-	ComeInPlugin(plugin Plugin)
+	// // GetComeInPlugin
+	// GetComeInPlugin(code string) Plugin
+	// // ComeInPlugin
+	// ComeInPlugin(plugin Plugin)
 	// GetCurPlugin
 	GetCurPlugin() Plugin
 	// OnStart - on start
@@ -54,15 +54,15 @@ type pluginsMgr struct {
 	cfgPath    string
 }
 
-func (mgr *pluginsMgr) GetComeInPlugin(code string) Plugin {
-	for _, v := range mgr.lstComeIn {
-		if v.GetComeInCode() == code {
-			return v
-		}
-	}
+// func (mgr *pluginsMgr) GetComeInPlugin(code string) Plugin {
+// 	for _, v := range mgr.lstComeIn {
+// 		if v.GetComeInCode() == code {
+// 			return v
+// 		}
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 // NewPlugin - New a plugin
 func (mgr *pluginsMgr) NewPlugin(pluginName string) error {

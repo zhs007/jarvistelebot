@@ -71,8 +71,8 @@ func (p *timestampPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 	return false, nil
 }
 
-// GetComeInCode - if return is empty string, it means not comein
-func (p *timestampPlugin) GetComeInCode() string {
+// GetPluginName - get plugin name
+func (p *timestampPlugin) GetPluginName() string {
 	return PluginName
 }
 

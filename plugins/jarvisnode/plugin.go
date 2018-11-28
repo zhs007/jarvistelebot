@@ -103,8 +103,8 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 	return false, nil
 }
 
-// GetComeInCode - if return is empty string, it means not comein
-func (p *jarvisnodePlugin) GetComeInCode() string {
+// GetPluginName - get plugin name
+func (p *jarvisnodePlugin) GetPluginName() string {
 	return PluginName
 }
 

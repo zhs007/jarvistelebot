@@ -79,8 +79,8 @@ func (p *xlsx2jsonPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 	return false, nil
 }
 
-// GetComeInCode - if return is empty string, it means not comein
-func (p *xlsx2jsonPlugin) GetComeInCode() string {
+// GetPluginName - get plugin name
+func (p *xlsx2jsonPlugin) GetPluginName() string {
 	return PluginName
 }
 

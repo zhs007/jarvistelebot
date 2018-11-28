@@ -112,8 +112,8 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 	return false, nil
 }
 
-// GetComeInCode - if return is empty string, it means not comein
-func (p *assistantPlugin) GetComeInCode() string {
+// GetPluginName - get plugin name
+func (p *assistantPlugin) GetPluginName() string {
 	return PluginName
 }
 

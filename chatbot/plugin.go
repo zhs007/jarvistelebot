@@ -6,8 +6,8 @@ import "context"
 type Plugin interface {
 	// OnMessage - get message
 	OnMessage(ctx context.Context, params *MessageParams) (bool, error)
-	// GetComeInCode - if return is empty string, it means not comein
-	GetComeInCode() string
+	// // GetComeInCode - if return is empty string, it means not comein
+	// GetComeInCode() string
 	// IsMyMessage
 	IsMyMessage(params *MessageParams) bool
 	// OnStart - on start
@@ -15,4 +15,7 @@ type Plugin interface {
 
 	// GetPluginType - get pluginType
 	GetPluginType() int
+
+	// GetPluginName - get plugin name
+	GetPluginName() string
 }

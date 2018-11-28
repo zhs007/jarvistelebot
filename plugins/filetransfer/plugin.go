@@ -79,8 +79,8 @@ func (p *filetransferPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 	return false, nil
 }
 
-// GetComeInCode - if return is empty string, it means not comein
-func (p *filetransferPlugin) GetComeInCode() string {
+// GetPluginName - get plugin name
+func (p *filetransferPlugin) GetPluginName() string {
 	return PluginName
 }
 
