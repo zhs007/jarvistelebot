@@ -12,3 +12,22 @@ func cmdVersion(ctx context.Context, params *chatbot.MessageParams) bool {
 
 	return true
 }
+
+// cmdUsers - users
+func cmdUsers(ctx context.Context, params *chatbot.MessageParams) bool {
+	// coredb := params.ChatBot.GetJarvisNodeCoreDB()
+
+	lst, err := params.ChatBot.GetChatBotDB().GetUsers(100)
+	if err != nil {
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+	}
+
+	strret, err := chatbot.FormatJSONObj(lst)
+	if err != nil {
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+	} else {
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+	}
+
+	return true
+}

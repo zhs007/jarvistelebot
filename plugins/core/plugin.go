@@ -21,6 +21,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd := chatbot.NewCommandMap()
 
 	cmd.RegFunc("version", cmdVersion)
+	cmd.RegFunc("users", cmdUsers)
 
 	p := &corePlugin{
 		cmd: cmd,

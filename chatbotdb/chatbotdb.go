@@ -90,6 +90,18 @@ const queryGetUserScript = `query UserScript($userID: ID!, $scriptName: ID!) {
 	}
 }`
 
+const queryUsers = `query Users($snapshotID: Int64!, $beginIndex: Int!, $nums: Int!) {
+	users(snapshotID: $snapshotID, beginIndex: $beginIndex, nums: $nums) {
+		snapshotID, endIndex, maxIndex, 
+		users {
+			nickName
+			userID
+			userName
+			lastMsgID
+		}
+	}
+}`
+
 // ChatBotDB - chatbotdb
 type ChatBotDB struct {
 	db *ankadb.AnkaDB
@@ -330,4 +342,45 @@ func (db *ChatBotDB) GetUserScript(userID string, scriptName string) (*pb.UserSc
 	}
 
 	return userScript, nil
+}
+
+// GetUsers - get users
+func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
+	if db.db == nil {
+		return nil, ErrChatBotDBNil
+	}
+
+	params := make(map[string]interface{})
+	params["snapshotID"] = int64(0)
+	params["beginIndex"] = 0
+	params["nums"] = nums
+
+	result, err := db.db.LocalQuery(context.Background(), queryUsers, params)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
+
+		return nil, err
+	}
+
+	us := &ResultUsers{}
+	err = ankadb.MakeObjFromResult(result, us)
+	if err != nil {
+		return nil, err
+	}
+	// s, err := json.Marshal(ret)
+	// if err != nil {
+	// 	jarvisbase.Error("CoreDB.GetNodes", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	jarvisbase.Debug("GetUsers",
+		jarvisbase.JSON("result", us))
+
+	lst, err := ResultUsers2UserList(us)
+	if err != nil {
+		return nil, err
+	}
+
+	return lst, nil
 }
