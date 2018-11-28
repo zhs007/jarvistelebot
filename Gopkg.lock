@@ -84,7 +84,7 @@
     "leveldb/table",
     "leveldb/util"
   ]
-  revision = "f9080354173f192dfc8821931eacf9cfd6819253"
+  revision = "353a9fca669c44dedb58d5a074f6d052fb0f58e0"
 
 [[projects]]
   name = "github.com/technoweenie/multipartstreamer"
@@ -113,8 +113,8 @@
     "crypto",
     "proto"
   ]
-  revision = "69f0851ffcf6e44a6a5a52d88868163cc758c63b"
-  version = "v0.6.12"
+  revision = "f77d73ed829e364017e0c4dc7f15196af4b141c5"
+  version = "v0.6.15"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -145,7 +145,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ripemd160"]
-  revision = "9eb0be3963eaeb646c9a9b6d11f3da2b249bb2ca"
+  revision = "eb0de9b17e854e9b1ccd9963efafc79862359959"
 
 [[projects]]
   branch = "master"
@@ -192,7 +192,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "b5d43981345bdb2c233eb4bf3277847b48c6fdc6"
+  revision = "31ac5d88444a9e7ad18077db9a165d793ad06a2e"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -236,6 +236,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5d57186a5ea8ea993838df818ea0dfd84cf8e4495878b4c993003c4fbeb4f671"
+  inputs-digest = "fd04320b13d0abc7a3b0a8baf31615751352b7cddfbb8cc8e8a13e8877f5bf09"
   solver-name = "gps-cdcl"
   solver-version = 1
