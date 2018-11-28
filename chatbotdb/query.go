@@ -101,7 +101,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxCurDB
 					}
 
-					mgrSnapshot := anka.MgrDB.GetMgrSnapshot("coredb")
+					mgrSnapshot := anka.MgrDB.GetMgrSnapshot("chatbotdb")
 					if mgrSnapshot == nil {
 						return nil, ankadb.ErrCtxSnapshotMgr
 					}
