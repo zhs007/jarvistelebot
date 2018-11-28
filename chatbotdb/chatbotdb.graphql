@@ -3,6 +3,15 @@ type User {
     userID: ID!
     userName: ID!
     lastMsgID: Int64!
+    scripts: [String]
+    fileTemplates: [String]
+}
+
+type UserList {
+    snapshotID: Int64!
+    endIndex: Int!
+    maxIndex: Int!
+    users: [User]
 }
 
 type File {
@@ -39,13 +48,15 @@ type Query {
     user(userID: ID!): User!
     userWithUserName(userName: ID!): User!
 
+    users(snapshotID: Int64!, beginIndex: Int!, nums: Int!): UserList!
+
     userScript(userID: ID!, scriptName: ID!): UserScript!
 }
 
 type Mutation {
     newMsg(msg: Message!): Message!
 
-    updUser(nickName: String!, userID: ID!, userName: ID!, lastMsgID: Int64!): User!
+    updUser(user: User!): User!
 
     updUserScript(userID: ID!, scriptName: ID!, file: File!): UserScript!
 }

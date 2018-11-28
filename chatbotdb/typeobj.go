@@ -23,6 +23,12 @@ var typeUser = graphql.NewObject(
 			"lastMsgID": &graphql.Field{
 				Type: graphqlext.Int64,
 			},
+			"scripts": &graphql.Field{
+				Type: graphql.NewList(graphql.String),
+			},
+			"fileTemplates": &graphql.Field{
+				Type: graphql.NewList(graphql.String),
+			},
 		},
 	},
 )
@@ -94,6 +100,19 @@ var typeUserScript = graphql.NewObject(
 			},
 			"file": &graphql.Field{
 				Type: typeFile,
+			},
+		},
+	},
+)
+
+// typeUserList - UserList
+//		you can see chatbotdb.graphql
+var typeUserList = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "UserList",
+		Fields: graphql.Fields{
+			"users": &graphql.Field{
+				Type: graphql.NewList(typeUser),
 			},
 		},
 	},

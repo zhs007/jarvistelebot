@@ -60,3 +60,31 @@ var inputTypeFile = graphql.NewInputObject(
 		},
 	},
 )
+
+// inputTypeUser - User
+//		you can see chatbotdb.graphql
+var inputTypeUser = graphql.NewInputObject(
+	graphql.InputObjectConfig{
+		Name: "UserInput",
+		Fields: graphql.InputObjectConfigFieldMap{
+			"nickName": &graphql.InputObjectFieldConfig{
+				Type: graphql.String,
+			},
+			"userID": &graphql.InputObjectFieldConfig{
+				Type: graphql.ID,
+			},
+			"userName": &graphql.InputObjectFieldConfig{
+				Type: graphql.ID,
+			},
+			"lastMsgID": &graphql.InputObjectFieldConfig{
+				Type: graphqlext.Int64,
+			},
+			"scripts": &graphql.InputObjectFieldConfig{
+				Type: graphql.NewList(graphql.String),
+			},
+			"fileTemplates": &graphql.InputObjectFieldConfig{
+				Type: graphql.NewList(graphql.String),
+			},
+		},
+	},
+)

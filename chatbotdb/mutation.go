@@ -5,7 +5,6 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
-	"github.com/zhs007/ankadb/graphqlext"
 	pb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
 
@@ -59,17 +58,8 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 			Type:        typeUser,
 			Description: "update user",
 			Args: graphql.FieldConfigArgument{
-				"nickName": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.String),
-				},
-				"userID": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.ID),
-				},
-				"userName": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.ID),
-				},
-				"lastMsgID": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphqlext.Int64),
+				"user": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(inputTypeUser),
 				},
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
@@ -83,24 +73,30 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxCurDB
 				}
 
-				nickName := params.Args["nickName"].(string)
-				userID := params.Args["userID"].(string)
-				userName := params.Args["userName"].(string)
-				lastMsgID := params.Args["lastMsgID"].(int64)
-
-				user := &pb.User{
-					NickName:  nickName,
-					UserID:    userID,
-					UserName:  userName,
-					LastMsgID: lastMsgID,
-				}
-
-				err := ankadb.PutMsg2DB(curdb, []byte(makeUserKey(userID)), user)
+				user := &pb.User{}
+				err := ankadb.GetMsgFromParam(params, "user", user)
 				if err != nil {
 					return nil, err
 				}
 
-				err = curdb.Put([]byte(makeUserNameKey(userName)), []byte(userID))
+				// nickName := params.Args["nickName"].(string)
+				// userID := params.Args["userID"].(string)
+				// userName := params.Args["userName"].(string)
+				// lastMsgID := params.Args["lastMsgID"].(int64)
+
+				// user := &pb.User{
+				// 	NickName:  nickName,
+				// 	UserID:    userID,
+				// 	UserName:  userName,
+				// 	LastMsgID: lastMsgID,
+				// }
+
+				err = ankadb.PutMsg2DB(curdb, []byte(makeUserKey(user.UserID)), user)
+				if err != nil {
+					return nil, err
+				}
+
+				err = curdb.Put([]byte(makeUserNameKey(user.UserName)), []byte(user.UserID))
 				if err != nil {
 					return nil, err
 				}

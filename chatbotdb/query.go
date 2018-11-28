@@ -5,6 +5,8 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
+	"github.com/zhs007/ankadb/graphqlext"
+	"github.com/zhs007/ankadb/proto"
 	pb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
 
@@ -73,6 +75,72 @@ var typeQuery = graphql.NewObject(
 					}
 
 					return user, nil
+				},
+			},
+			"users": &graphql.Field{
+				Type: typeUserList,
+				Args: graphql.FieldConfigArgument{
+					"snapshotID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphqlext.Int64),
+					},
+					"beginIndex": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"nums": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+					if anka == nil {
+						return nil, ankadb.ErrCtxAnkaDB
+					}
+
+					curdb := anka.MgrDB.GetDB("chatbotdb")
+					if curdb == nil {
+						return nil, ankadb.ErrCtxCurDB
+					}
+
+					mgrSnapshot := anka.MgrDB.GetMgrSnapshot("coredb")
+					if mgrSnapshot == nil {
+						return nil, ankadb.ErrCtxSnapshotMgr
+					}
+
+					snapshotID := params.Args["snapshotID"].(int64)
+					beginIndex := params.Args["beginIndex"].(int)
+					nums := params.Args["nums"].(int)
+					if beginIndex < 0 || nums <= 0 {
+						return nil, ankadb.ErrQuertParams
+					}
+
+					lstUser := &pb.UserList{}
+					var pSnapshot *ankadbpb.Snapshot
+
+					if snapshotID > 0 {
+						pSnapshot = mgrSnapshot.Get(snapshotID)
+					} else {
+						var err error
+						pSnapshot, err = mgrSnapshot.NewSnapshot([]byte(prefixKeyUser))
+						if err != nil {
+							return nil, ankadb.ErrCtxSnapshotMgr
+						}
+					}
+
+					lstUser.SnapshotID = pSnapshot.SnapshotID
+					lstUser.MaxIndex = int32(len(pSnapshot.Keys))
+
+					curi := beginIndex
+					for ; curi < len(pSnapshot.Keys) && len(lstUser.Users) < nums; curi++ {
+						cui := &pb.User{}
+						err := ankadb.GetMsgFromDB(curdb, []byte(pSnapshot.Keys[curi]), cui)
+						if err == nil {
+							lstUser.Users = append(lstUser.Users, cui)
+						}
+					}
+
+					lstUser.EndIndex = int32(curi)
+
+					return lstUser, nil
 				},
 			},
 			"userWithUserName": &graphql.Field{

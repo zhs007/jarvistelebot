@@ -42,20 +42,24 @@ type ResultMsg struct {
 // ResultUser - user
 type ResultUser struct {
 	User struct {
-		NickName  string `json:"nickName"`
-		UserID    string `json:"userID"`
-		UserName  string `json:"userName"`
-		LastMsgID int64  `json:"lastMsgID"`
+		NickName      string   `json:"nickName"`
+		UserID        string   `json:"userID"`
+		UserName      string   `json:"userName"`
+		LastMsgID     int64    `json:"lastMsgID"`
+		Scripts       []string `json:"scripts"`
+		FileTemplates []string `json:"fileTemplates"`
 	} `json:"user"`
 }
 
 // ResultUserWithUserName - userWithUserName
 type ResultUserWithUserName struct {
 	UserWithUserName struct {
-		NickName  string `json:"nickName"`
-		UserID    string `json:"userID"`
-		UserName  string `json:"userName"`
-		LastMsgID int64  `json:"lastMsgID"`
+		NickName      string   `json:"nickName"`
+		UserID        string   `json:"userID"`
+		UserName      string   `json:"userName"`
+		LastMsgID     int64    `json:"lastMsgID"`
+		Scripts       []string `json:"scripts"`
+		FileTemplates []string `json:"fileTemplates"`
 	} `json:"userWithUserName"`
 }
 
@@ -131,20 +135,24 @@ func ResultMsg2Msg(result *ResultMsg) (*pb.Message, error) {
 // ResultUser2User - ResultUser -> User
 func ResultUser2User(result *ResultUser) (*pb.User, error) {
 	return &pb.User{
-		NickName:  result.User.NickName,
-		UserID:    result.User.UserID,
-		UserName:  result.User.UserName,
-		LastMsgID: result.User.LastMsgID,
+		NickName:      result.User.NickName,
+		UserID:        result.User.UserID,
+		UserName:      result.User.UserName,
+		LastMsgID:     result.User.LastMsgID,
+		Scripts:       result.User.Scripts,
+		FileTemplates: result.User.FileTemplates,
 	}, nil
 }
 
 // ResultUserWithUserName2User - ResultUserWithUserName -> User
 func ResultUserWithUserName2User(result *ResultUserWithUserName) (*pb.User, error) {
 	return &pb.User{
-		NickName:  result.UserWithUserName.NickName,
-		UserID:    result.UserWithUserName.UserID,
-		UserName:  result.UserWithUserName.UserName,
-		LastMsgID: result.UserWithUserName.LastMsgID,
+		NickName:      result.UserWithUserName.NickName,
+		UserID:        result.UserWithUserName.UserID,
+		UserName:      result.UserWithUserName.UserName,
+		LastMsgID:     result.UserWithUserName.LastMsgID,
+		Scripts:       result.UserWithUserName.Scripts,
+		FileTemplates: result.UserWithUserName.FileTemplates,
 	}, nil
 }
 

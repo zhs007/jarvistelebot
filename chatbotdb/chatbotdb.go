@@ -23,8 +23,8 @@ const querySaveUserScript = `mutation UpdUserScript(userID: ID!, scriptName: ID!
 	}
 }`
 
-const queryUpdUser = `mutation UpdUser($nickName: String!, $userID: ID!, $userName: ID!, $lastMsgID: Int64!) {
-	updUser(nickName: $nickName, userID: $userID, userName: $userName, lastMsgID: $lastMsgID) {
+const queryUpdUser = `mutation UpdUser($user: UserInput!) {
+	updUser(user: $user) {
 		nickName
 		userID
 		userName
@@ -66,6 +66,8 @@ const queryGetUser = `query User($uerID: ID!) {
 		userID
 		userName
 		lastMsgID
+		scripts
+		fileTemplates
 	}
 }`
 
@@ -197,10 +199,16 @@ func (db *ChatBotDB) UpdUser(user *pb.User) error {
 	}
 
 	params := make(map[string]interface{})
-	params["nickName"] = user.GetNickName()
-	params["userID"] = user.GetUserID()
-	params["userName"] = user.GetUserName()
-	params["lastMsgID"] = user.GetLastMsgID()
+	err := ankadb.MakeParamsFromMsg(params, "user", user)
+	if err != nil {
+		return err
+	}
+
+	// params := make(map[string]interface{})
+	// params["nickName"] = user.GetNickName()
+	// params["userID"] = user.GetUserID()
+	// params["userName"] = user.GetUserName()
+	// params["lastMsgID"] = user.GetLastMsgID()
 
 	result, err := db.db.LocalQuery(context.Background(), queryUpdUser, params)
 	if err != nil {

@@ -59,3 +59,15 @@ message UserScript {
     // file - file data
     File file = 2;
 }
+
+// UserList - user list
+message UserList {
+    // snapshotID - snapshot ID
+    int64 snapshotID = 1;
+    // endIndex - end index
+    int32 endIndex = 2;
+    // maxIndex - max index
+    int32 maxIndex = 3;    
+    // users - user list
+    repeated User users = 4;
+}
