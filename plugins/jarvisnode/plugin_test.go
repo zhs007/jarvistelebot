@@ -4,6 +4,8 @@ import (
 	"strings"
 	"testing"
 
+	"go.uber.org/zap/zapcore"
+
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
@@ -70,6 +72,8 @@ func (msg *testMessage) GetOption(id int) string {
 }
 
 func Test_IsMyMessage(t *testing.T) {
+	chatbot.InitLogger(zapcore.InfoLevel, true, "./")
+
 	p, err := NewPlugin("")
 	if err != nil {
 		t.Fatalf("Test_IsMyMessage NewPlugin Err")
