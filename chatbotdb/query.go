@@ -110,11 +110,18 @@ var typeQuery = graphql.NewObject(
 					}
 
 					curit := curdb.NewIteratorWithPrefix([]byte(prefixKeyUser))
+					jarvisbase.Debug("curdb.NewIteratorWithPrefix")
 					for curit.Next() {
 						key := curit.Key()
 						jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("key", string(key)))
 					}
 					curit.Release()
+					err := curit.Error()
+					if err != nil {
+						jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.Error(err))
+
+						return nil, err
+					}
 
 					snapshotID := params.Args["snapshotID"].(int64)
 					beginIndex := params.Args["beginIndex"].(int)
