@@ -3,6 +3,9 @@ package chatbotdb
 import (
 	"encoding/base64"
 
+	"github.com/zhs007/jarviscore/base"
+	"go.uber.org/zap"
+
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
 	"github.com/zhs007/ankadb/graphqlext"
@@ -105,6 +108,13 @@ var typeQuery = graphql.NewObject(
 					if mgrSnapshot == nil {
 						return nil, ankadb.ErrCtxSnapshotMgr
 					}
+
+					curit := curdb.NewIteratorWithPrefix([]byte(prefixKeyUser))
+					for curit.Next() {
+						key := curit.Key()
+						jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("key", string(key)))
+					}
+					curit.Release()
 
 					snapshotID := params.Args["snapshotID"].(int64)
 					beginIndex := params.Args["beginIndex"].(int)
