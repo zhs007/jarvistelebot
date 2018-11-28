@@ -94,6 +94,8 @@ var typeQuery = graphql.NewObject(
 					},
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					jarvisbase.Debug("query users")
+
 					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
 					if anka == nil {
 						return nil, ankadb.ErrCtxAnkaDB
