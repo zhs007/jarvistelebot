@@ -47,6 +47,7 @@ func NewPluginsMgr(cfgPath string) PluginsMgr {
 		lstCommand:         make([]Plugin, 0, 16),
 		lstWritableCommand: make([]Plugin, 0, 16),
 		mapFuncNewPlugin:   make(map[string]FuncNewPlugin),
+		mapPlugin:          make(map[string]Plugin),
 		cfgPath:            cfgPath,
 	}
 }
