@@ -78,16 +78,18 @@ type ResultUserScript struct {
 
 // ResultUsers - users
 type ResultUsers struct {
-	SnapshotID int64 `json:"snapshotID"`
-	EndIndex   int32 `json:"endIndex"`
-	MaxIndex   int32 `json:"maxIndex"`
-	Users      []struct {
-		NickName      string   `json:"nickName"`
-		UserID        string   `json:"userID"`
-		UserName      string   `json:"userName"`
-		LastMsgID     int64    `json:"lastMsgID"`
-		Scripts       []string `json:"scripts"`
-		FileTemplates []string `json:"fileTemplates"`
+	Users struct {
+		SnapshotID int64 `json:"snapshotID"`
+		EndIndex   int32 `json:"endIndex"`
+		MaxIndex   int32 `json:"maxIndex"`
+		Users      []struct {
+			NickName      string   `json:"nickName"`
+			UserID        string   `json:"userID"`
+			UserName      string   `json:"userName"`
+			LastMsgID     int64    `json:"lastMsgID"`
+			Scripts       []string `json:"scripts"`
+			FileTemplates []string `json:"fileTemplates"`
+		} `json:"users"`
 	} `json:"users"`
 }
 
@@ -193,12 +195,12 @@ func ResultUserScript2UserScript(result *ResultUserScript) (*pb.UserScript, erro
 // ResultUsers2UserList - ResultUsers -> UserList
 func ResultUsers2UserList(result *ResultUsers) (*pb.UserList, error) {
 	lst := &pb.UserList{
-		SnapshotID: result.SnapshotID,
-		EndIndex:   result.EndIndex,
-		MaxIndex:   result.MaxIndex,
+		SnapshotID: result.Users.SnapshotID,
+		EndIndex:   result.Users.EndIndex,
+		MaxIndex:   result.Users.MaxIndex,
 	}
 
-	for _, v := range result.Users {
+	for _, v := range result.Users.Users {
 		ui := &pb.User{
 			NickName:      v.NickName,
 			UserID:        v.UserID,
