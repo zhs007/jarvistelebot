@@ -357,17 +357,23 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 
 	result, err := db.db.LocalQuery(context.Background(), queryGetUsers, params)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
+
 		return nil, err
 	}
 
 	us := &ResultUsers{}
 	err = ankadb.MakeObjFromResult(result, us)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUsers:MakeObjFromResult", zap.Error(err))
+
 		return nil, err
 	}
 
 	lst, err := ResultUsers2UserList(us)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUsers:ResultUsers2UserList", zap.Error(err))
+
 		return nil, err
 	}
 
