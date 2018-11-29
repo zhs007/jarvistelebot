@@ -2,10 +2,6 @@ package chatbotdb
 
 import (
 	"encoding/base64"
-	"encoding/json"
-
-	"github.com/zhs007/jarviscore/base"
-	"go.uber.org/zap"
 
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
@@ -97,7 +93,7 @@ var typeQuery = graphql.NewObject(
 					},
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-					jarvisbase.Debug("query users")
+					// jarvisbase.Debug("query users")
 
 					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
 					if anka == nil {
@@ -151,19 +147,19 @@ var typeQuery = graphql.NewObject(
 					lstUser.SnapshotID = pSnapshot.SnapshotID
 					lstUser.MaxIndex = int32(len(pSnapshot.Keys))
 
-					jarvisbase.Debug("query users", zap.Int32("MaxIndex", lstUser.MaxIndex))
+					// jarvisbase.Debug("query users", zap.Int32("MaxIndex", lstUser.MaxIndex))
 
 					curi := beginIndex
 					for ; curi < len(pSnapshot.Keys) && len(lstUser.Users) < nums; curi++ {
 						cui := &pb.User{}
 						err := ankadb.GetMsgFromDB(curdb, []byte(pSnapshot.Keys[curi]), cui)
 						if err == nil {
-							s, err := json.Marshal(cui)
-							if err != nil {
-								jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.Error(err))
-							} else {
-								jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.String("user", string(s)))
-							}
+							// s, err := json.Marshal(cui)
+							// if err != nil {
+							// 	jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.Error(err))
+							// } else {
+							// 	jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.String("user", string(s)))
+							// }
 
 							lstUser.Users = append(lstUser.Users, cui)
 						}

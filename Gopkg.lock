@@ -84,7 +84,7 @@
     "leveldb/table",
     "leveldb/util"
   ]
-  revision = "353a9fca669c44dedb58d5a074f6d052fb0f58e0"
+  revision = "b001fa50d6b27f3f0bb175a87d0cb55426d0a0ae"
 
 [[projects]]
   name = "github.com/technoweenie/multipartstreamer"
@@ -113,8 +113,8 @@
     "crypto",
     "proto"
   ]
-  revision = "f77d73ed829e364017e0c4dc7f15196af4b141c5"
-  version = "v0.6.15"
+  revision = "46b5922a0085d25fb72a058df49ba16753169ecd"
+  version = "v0.6.16"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -159,13 +159,13 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "adae6a3d119ae4890b46832a2e88a95adc62b8e7"
+  revision = "fae4c4e3ad76c295c3d6d259f898136b4bf833a8"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "62eef0e2fa9b2c385f7b2778e763486da6880d37"
+  revision = "4ed8d59d0b35e1e29334a206d1b3f38b1e5dfb31"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -236,6 +236,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fd04320b13d0abc7a3b0a8baf31615751352b7cddfbb8cc8e8a13e8877f5bf09"
+  inputs-digest = "6de3ab7b96f91667415c4caff833a655ab725de36129e56161ea32f144104eeb"
   solver-name = "gps-cdcl"
   solver-version = 1

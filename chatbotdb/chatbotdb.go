@@ -369,7 +369,7 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 	// 	return nil, err
 	// }
 
-	jarvisbase.Debug("ChatBotDB.GetUsers:Marshal", jarvisbase.JSON("result", result))
+	// jarvisbase.Debug("ChatBotDB.GetUsers:Marshal", jarvisbase.JSON("result", result))
 
 	us := &ResultUsers{}
 	err = ankadb.MakeObjFromResult(result, us)
