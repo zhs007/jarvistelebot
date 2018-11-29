@@ -109,5 +109,5 @@ func (p *filetransferPlugin) OnStart(ctx context.Context) error {
 
 // GetPluginType - get pluginType
 func (p *filetransferPlugin) GetPluginType() int {
-	return chatbot.PluginTypeCommand
+	return chatbot.PluginTypeWritableCommand
 }
