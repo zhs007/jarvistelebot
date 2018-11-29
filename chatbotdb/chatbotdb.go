@@ -360,15 +360,18 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 		return nil, err
 	}
 
-	ruser := &ResultUser{}
-	err = ankadb.MakeObjFromResult(result, ruser)
+	us := &ResultUsers{}
+	err = ankadb.MakeObjFromResult(result, us)
 	if err != nil {
 		return nil, err
 	}
 
-	jarvisbase.Debug("ChatBotDB.GetUser", jarvisbase.JSON("result", result))
+	lst, err := ResultUsers2UserList(us)
+	if err != nil {
+		return nil, err
+	}
 
-	return &pb.UserList{}, nil
+	return lst, nil
 
 	// if db.db == nil {
 	// 	return nil, ErrChatBotDBNil
