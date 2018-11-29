@@ -90,7 +90,7 @@ const queryGetUserScript = `query UserScript($userID: ID!, $scriptName: ID!) {
 	}
 }`
 
-const queryUsers = `query Users($snapshotID: Int64!, $beginIndex: Int!, $nums: Int!) {
+const queryGetUsers = `query Users($snapshotID: Int64!, $beginIndex: Int!, $nums: Int!) {
 	users(snapshotID: $snapshotID, beginIndex: $beginIndex, nums: $nums) {
 		snapshotID, endIndex, maxIndex, 
 		users {
@@ -353,7 +353,7 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 	params := make(map[string]interface{})
 	params["userID"] = "361046657"
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetUser, params)
+	result, err := db.db.LocalQuery(context.Background(), queryGetUsers, params)
 	if err != nil {
 		return nil, err
 	}
