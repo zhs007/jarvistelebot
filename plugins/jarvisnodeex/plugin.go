@@ -2,6 +2,7 @@ package pluginjarvisnodeex
 
 import (
 	"context"
+	"strings"
 
 	"github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarviscore/proto"
@@ -104,7 +105,10 @@ func (p *jarvisnodeexPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
 	if file != nil {
 		if file.FileType == chatbot.FileTypeShellScript {
 			if len(params.LstStr) == 1 {
-				return true
+				arr := strings.Split(params.Msg.GetText(), ":")
+				if len(arr) == 1 {
+					return true
+				}
 			}
 		}
 	}
