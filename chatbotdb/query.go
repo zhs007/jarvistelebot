@@ -2,6 +2,7 @@ package chatbotdb
 
 import (
 	"encoding/base64"
+	"encoding/json"
 
 	"github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
@@ -59,7 +60,7 @@ var typeQuery = graphql.NewObject(
 					},
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-					jarvisbase.Debug("query user")
+					// jarvisbase.Debug("query user")
 
 					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
 					if anka == nil {
@@ -113,19 +114,19 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxSnapshotMgr
 					}
 
-					curit := curdb.NewIteratorWithPrefix([]byte(prefixKeyUser))
-					jarvisbase.Debug("curdb.NewIteratorWithPrefix")
-					for curit.Next() {
-						key := curit.Key()
-						jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("key", string(key)))
-					}
-					curit.Release()
-					err := curit.Error()
-					if err != nil {
-						jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.Error(err))
+					// curit := curdb.NewIteratorWithPrefix([]byte(prefixKeyUser))
+					// // jarvisbase.Debug("curdb.NewIteratorWithPrefix")
+					// for curit.Next() {
+					// 	key := curit.Key()
+					// 	jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("key", string(key)))
+					// }
+					// curit.Release()
+					// err := curit.Error()
+					// if err != nil {
+					// 	jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.Error(err))
 
-						return nil, err
-					}
+					// 	return nil, err
+					// }
 
 					snapshotID := params.Args["snapshotID"].(int64)
 					beginIndex := params.Args["beginIndex"].(int)
@@ -150,11 +151,20 @@ var typeQuery = graphql.NewObject(
 					lstUser.SnapshotID = pSnapshot.SnapshotID
 					lstUser.MaxIndex = int32(len(pSnapshot.Keys))
 
+					jarvisbase.Debug("query users", zap.Int32("MaxIndex", lstUser.MaxIndex))
+
 					curi := beginIndex
 					for ; curi < len(pSnapshot.Keys) && len(lstUser.Users) < nums; curi++ {
 						cui := &pb.User{}
 						err := ankadb.GetMsgFromDB(curdb, []byte(pSnapshot.Keys[curi]), cui)
 						if err == nil {
+							s, err := json.Marshal(cui)
+							if err != nil {
+								jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.Error(err))
+							} else {
+								jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.String("user", string(s)))
+							}
+
 							lstUser.Users = append(lstUser.Users, cui)
 						}
 					}

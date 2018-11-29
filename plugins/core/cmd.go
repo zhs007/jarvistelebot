@@ -20,6 +20,8 @@ func cmdUsers(ctx context.Context, params *chatbot.MessageParams) bool {
 	lst, err := params.ChatBot.GetChatBotDB().GetUsers(100)
 	if err != nil {
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+
+		return true
 	}
 
 	strret, err := chatbot.FormatJSONObj(lst)
