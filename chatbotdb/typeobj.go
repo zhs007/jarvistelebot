@@ -111,6 +111,15 @@ var typeUserList = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "UserList",
 		Fields: graphql.Fields{
+			"snapshotID": &graphql.Field{
+				Type: graphqlext.Int64,
+			},
+			"endIndex": &graphql.Field{
+				Type: graphql.Int,
+			},
+			"maxIndex": &graphql.Field{
+				Type: graphql.Int,
+			},
 			"users": &graphql.Field{
 				Type: graphql.NewList(typeUser),
 			},

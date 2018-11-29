@@ -351,7 +351,9 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 	}
 
 	params := make(map[string]interface{})
-	params["userID"] = "361046657"
+	params["snapshotID"] = int64(0)
+	params["beginIndex"] = 0
+	params["nums"] = nums
 
 	result, err := db.db.LocalQuery(context.Background(), queryGetUsers, params)
 	if err != nil {
