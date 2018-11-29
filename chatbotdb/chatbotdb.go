@@ -362,6 +362,15 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 		return nil, err
 	}
 
+	// s, err := json.Marshal(result)
+	// if err != nil {
+	// 	jarvisbase.Error("CoreDB.GetUsers", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	jarvisbase.Debug("ChatBotDB.GetUsers:Marshal", jarvisbase.JSON("result", result))
+
 	us := &ResultUsers{}
 	err = ankadb.MakeObjFromResult(result, us)
 	if err != nil {
