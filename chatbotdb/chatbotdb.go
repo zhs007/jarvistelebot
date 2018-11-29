@@ -355,6 +355,9 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 	params["beginIndex"] = 0
 	params["nums"] = nums
 
+	jarvisbase.Debug("GetUsers",
+		zap.String("query string", queryUsers))
+
 	result, err := db.db.LocalQuery(context.Background(), queryUsers, params)
 	if err != nil {
 		jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
