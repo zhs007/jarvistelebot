@@ -351,39 +351,65 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 	}
 
 	params := make(map[string]interface{})
-	params["snapshotID"] = int64(0)
-	params["beginIndex"] = 0
-	params["nums"] = nums
+	params["userID"] = "361046657"
 
-	jarvisbase.Debug("GetUsers",
-		zap.String("query string", queryUsers))
-
-	result, err := db.db.LocalQuery(context.Background(), queryUsers, params)
-	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
-
-		return nil, err
-	}
-
-	us := &ResultUsers{}
-	err = ankadb.MakeObjFromResult(result, us)
+	result, err := db.db.LocalQuery(context.Background(), queryGetUser, params)
 	if err != nil {
 		return nil, err
 	}
-	// s, err := json.Marshal(ret)
+
+	ruser := &ResultUser{}
+	err = ankadb.MakeObjFromResult(result, ruser)
+	if err != nil {
+		return nil, err
+	}
+
+	jarvisbase.Debug("ChatBotDB.GetUser", jarvisbase.JSON("result", result))
+
+	return &pb.UserList{}, nil
+
+	// if db.db == nil {
+	// 	return nil, ErrChatBotDBNil
+	// }
+
+	// params := make(map[string]interface{})
+	// params["snapshotID"] = int64(0)
+	// params["beginIndex"] = 0
+	// params["nums"] = nums
+
+	// jarvisbase.Debug("GetUsers",
+	// 	zap.String("query string", queryUsers))
+
+	// result, err := db.db.LocalQuery(context.Background(), queryUsers, params)
+	// if err != nil {
+	// 	jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	// s, err := json.Marshal(result)
 	// if err != nil {
 	// 	jarvisbase.Error("CoreDB.GetNodes", zap.Error(err))
 
 	// 	return nil, err
 	// }
 
-	jarvisbase.Debug("GetUsers",
-		jarvisbase.JSON("result", us))
+	// jarvisbase.Debug("GetUsers",
+	// 	jarvisbase.JSON("resultstr", string(s)))
 
-	lst, err := ResultUsers2UserList(us)
-	if err != nil {
-		return nil, err
-	}
+	// us := &ResultUsers{}
+	// err = ankadb.MakeObjFromResult(result, us)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return lst, nil
+	// jarvisbase.Debug("GetUsers",
+	// 	jarvisbase.JSON("result", us))
+
+	// lst, err := ResultUsers2UserList(us)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// return lst, nil
 }
