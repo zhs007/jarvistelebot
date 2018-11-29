@@ -20,6 +20,7 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/core"
 	"github.com/zhs007/jarvistelebot/plugins/filetransfer"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
+	"github.com/zhs007/jarvistelebot/plugins/jarvisnodeex"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
 	"github.com/zhs007/jarvistelebot/plugins/timestamp"
 	"github.com/zhs007/jarvistelebot/plugins/xlsx2json"
@@ -47,6 +48,7 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(pluginfiletransfer.PluginName, pluginfiletransfer.NewPlugin)
 	mgrPlugins.RegPlugin(pluginnormal.PluginName, pluginnormal.NewPlugin)
 	mgrPlugins.RegPlugin(plugincore.PluginName, plugincore.NewPlugin)
+	mgrPlugins.RegPlugin(pluginjarvisnodeex.PluginName, pluginjarvisnodeex.NewPlugin)
 
 	mgrPlugins.SetDefaultPlugin(cfg.DefaultPlugin)
 

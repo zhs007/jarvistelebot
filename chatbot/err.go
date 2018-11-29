@@ -3,50 +3,50 @@ package chatbot
 import "errors"
 
 var (
-	// ErrRepeatPlugins - the plugins repeat
-	ErrRepeatPlugins = errors.New("the plugins repeat")
-	// ErrPluginsEmpty - no plugins
-	ErrPluginsEmpty = errors.New("no plugins")
-	// ErrRepeatUserID - the userid repeat
-	ErrRepeatUserID = errors.New("the userid repeat")
-	// ErrMsgNoFrom - msg no from
-	ErrMsgNoFrom = errors.New("msg no from")
-	// ErrConfigFile - can't load config file
-	ErrConfigFile = errors.New("can't load config file")
-	// ErrInvalidConfigFile - invalid config file
-	ErrInvalidConfigFile = errors.New("invalid config file")
-	// ErrInvalidConfigCfgPath - invalid config cfgpath
-	ErrInvalidConfigCfgPath = errors.New("invalid config cfgpath")
-	// ErrInvalidConfigDownloadPath - invalid config downloadpath
-	ErrInvalidConfigDownloadPath = errors.New("invalid config downloadpath")
-	// ErrInvalidConfigAnkaDB - invalid config ankaDB
-	ErrInvalidConfigAnkaDB = errors.New("invalid config ankaDB")
-	// ErrSameOption - same option
-	ErrSameOption = errors.New("same option")
-	// ErrEmptyOption - empty option
-	ErrEmptyOption = errors.New("empty option")
-	// ErrAlreadySelected - already selected
-	ErrAlreadySelected = errors.New("already selected")
-	// ErrInvalidOption - invalid option
-	ErrInvalidOption = errors.New("invalid option")
-	// ErrInvalidMessageTo - invalid Message.To
-	ErrInvalidMessageTo = errors.New("invalid Message.To")
-	// ErrSameMsgCallback - same msgcallback
-	ErrSameMsgCallback = errors.New("same msgcallback")
-	// ErrNoMsgCallback - can't find msgcallback
-	ErrNoMsgCallback = errors.New("can't find msgcallback")
-	// ErrInvalidPluginType - invalid plugin type
-	ErrInvalidPluginType = errors.New("invalid plugin type")
-	// ErrSameJarvisMsgCallback - same jarvismsgcallback
-	ErrSameJarvisMsgCallback = errors.New("same jarvismsgcallback")
-	// ErrNoJarvisMsgCallback - can't find jarvismsgcallback
-	ErrNoJarvisMsgCallback = errors.New("can't find jarvismsgcallback")
-	// ErrEmptyMsgText - empty message text
-	ErrEmptyMsgText = errors.New("empty message text")
-	// ErrInvalidEventID - invalid eventid
-	ErrInvalidEventID = errors.New("invalid eventid")
-	// ErrSamePluginName - same plugin name
-	ErrSamePluginName = errors.New("same plugin name")
-	// ErrNoPluginName - no plugin name
-	ErrNoPluginName = errors.New("no plugin name")
+	// ErrRepeatPlugins - The plugins repeat
+	ErrRepeatPlugins = errors.New("The plugins repeat")
+	// ErrPluginsEmpty - No plugins
+	ErrPluginsEmpty = errors.New("No plugins")
+	// ErrRepeatUserID - The userid repeat
+	ErrRepeatUserID = errors.New("The userid repeat")
+	// ErrMsgNoFrom - Message no from
+	ErrMsgNoFrom = errors.New("Message no from")
+	// ErrConfigFile - Can't load config file
+	ErrConfigFile = errors.New("Can't load config file")
+	// ErrInvalidConfigFile - Invalid config file
+	ErrInvalidConfigFile = errors.New("Invalid config file")
+	// ErrInvalidConfigCfgPath - Invalid config cfgpath
+	ErrInvalidConfigCfgPath = errors.New("Invalid config cfgpath")
+	// ErrInvalidConfigDownloadPath - Invalid config downloadpath
+	ErrInvalidConfigDownloadPath = errors.New("Invalid config downloadpath")
+	// ErrInvalidConfigAnkaDB - Invalid config ankaDB
+	ErrInvalidConfigAnkaDB = errors.New("Invalid config ankaDB")
+	// ErrSameOption - Same option
+	ErrSameOption = errors.New("Same option")
+	// ErrEmptyOption - Empty option
+	ErrEmptyOption = errors.New("Empty option")
+	// ErrAlreadySelected - Already selected
+	ErrAlreadySelected = errors.New("Already selected")
+	// ErrInvalidOption - Invalid option
+	ErrInvalidOption = errors.New("Invalid option")
+	// ErrInvalidMessageTo - Invalid Message.To
+	ErrInvalidMessageTo = errors.New("Invalid Message.To")
+	// ErrSameMsgCallback - Same msgcallback
+	ErrSameMsgCallback = errors.New("Same msgcallback")
+	// ErrNoMsgCallback - Can't find msgcallback
+	ErrNoMsgCallback = errors.New("Can't find msgcallback")
+	// ErrInvalidPluginType - Invalid plugin type
+	ErrInvalidPluginType = errors.New("Invalid plugin type")
+	// ErrSameJarvisMsgCallback - Same jarvismsgcallback
+	ErrSameJarvisMsgCallback = errors.New("Same jarvismsgcallback")
+	// ErrNoJarvisMsgCallback - Can't find jarvismsgcallback
+	ErrNoJarvisMsgCallback = errors.New("Can't find jarvismsgcallback")
+	// ErrEmptyMsgText - Empty message text
+	ErrEmptyMsgText = errors.New("Empty message text")
+	// ErrInvalidEventID - Invalid eventid
+	ErrInvalidEventID = errors.New("Invalid eventid")
+	// ErrSamePluginName - Same plugin name
+	ErrSamePluginName = errors.New("Same plugin name")
+	// ErrNoPluginName - No plugin name
+	ErrNoPluginName = errors.New("No plugin name")
 )

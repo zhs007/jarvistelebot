@@ -36,6 +36,7 @@ plugins:
   - 'core'
   - 'assistant'
   - 'jarvisnode'
+  - 'jarvisnodeex'
   - 'timestamp'
   - 'xlsx2json'
   - 'filetransfer'

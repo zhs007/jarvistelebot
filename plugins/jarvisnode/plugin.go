@@ -3,11 +3,6 @@ package pluginjarvisnode
 import (
 	"context"
 
-	"github.com/zhs007/jarviscore/base"
-	"github.com/zhs007/jarviscore/proto"
-	"go.uber.org/zap"
-
-	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
@@ -62,36 +57,36 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 		return false, nil
 	}
 
-	file := params.Msg.GetFile()
-	if file != nil {
-		if file.FileType == chatbot.FileTypeShellScript {
-			ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, file.Filename, file.Data, "")
-			if err != nil {
-				jarvisbase.Warn("jarvisnodePlugin.OnMessage", zap.Error(err))
+	// file := params.Msg.GetFile()
+	// if file != nil {
+	// 	if file.FileType == chatbot.FileTypeShellScript {
+	// 		ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, file.Filename, file.Data, "")
+	// 		if err != nil {
+	// 			jarvisbase.Warn("jarvisnodePlugin.OnMessage", zap.Error(err))
 
-				return false, err
-			}
+	// 			return false, err
+	// 		}
 
-			curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(params.Msg.GetText())
-			if curnode == nil {
-				return false, nil
-			}
+	// 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(params.Msg.GetText())
+	// 		if curnode == nil {
+	// 			return false, nil
+	// 		}
 
-			params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
+	// 		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
 
-			params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-				cr := msg.GetCtrlResult()
+	// 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+	// 			cr := msg.GetCtrlResult()
 
-				chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)
+	// 			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)
 
-				return nil
-			})
+	// 			return nil
+	// 		})
 
-			return true, nil
-		}
+	// 		return true, nil
+	// 	}
 
-		return false, nil
-	}
+	// 	return false, nil
+	// }
 
 	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
 		p.cmd.Run(ctx, params.LstStr[1], params)
