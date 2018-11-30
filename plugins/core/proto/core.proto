@@ -9,3 +9,9 @@ message UserCommand {
     // userName - Username
     string userName = 2;
 }
+
+// UsersCommand - users command
+message UsersCommand {
+    // nums - user nums
+    int32 nums = 1;
+}
