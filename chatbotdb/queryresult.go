@@ -42,24 +42,20 @@ type ResultMsg struct {
 // ResultUser - user
 type ResultUser struct {
 	User struct {
-		NickName      string   `json:"nickName"`
-		UserID        string   `json:"userID"`
-		UserName      string   `json:"userName"`
-		LastMsgID     int64    `json:"lastMsgID"`
-		Scripts       []string `json:"scripts"`
-		FileTemplates []string `json:"fileTemplates"`
+		NickName  string `json:"nickName"`
+		UserID    string `json:"userID"`
+		UserName  string `json:"userName"`
+		LastMsgID int64  `json:"lastMsgID"`
 	} `json:"user"`
 }
 
 // ResultUserWithUserName - userWithUserName
 type ResultUserWithUserName struct {
 	UserWithUserName struct {
-		NickName      string   `json:"nickName"`
-		UserID        string   `json:"userID"`
-		UserName      string   `json:"userName"`
-		LastMsgID     int64    `json:"lastMsgID"`
-		Scripts       []string `json:"scripts"`
-		FileTemplates []string `json:"fileTemplates"`
+		NickName  string `json:"nickName"`
+		UserID    string `json:"userID"`
+		UserName  string `json:"userName"`
+		LastMsgID int64  `json:"lastMsgID"`
 	} `json:"userWithUserName"`
 }
 
@@ -83,14 +79,24 @@ type ResultUsers struct {
 		EndIndex   int32 `json:"endIndex"`
 		MaxIndex   int32 `json:"maxIndex"`
 		Users      []struct {
-			NickName      string   `json:"nickName"`
-			UserID        string   `json:"userID"`
-			UserName      string   `json:"userName"`
-			LastMsgID     int64    `json:"lastMsgID"`
-			Scripts       []string `json:"scripts"`
-			FileTemplates []string `json:"fileTemplates"`
+			NickName  string `json:"nickName"`
+			UserID    string `json:"userID"`
+			UserName  string `json:"userName"`
+			LastMsgID int64  `json:"lastMsgID"`
 		} `json:"users"`
 	} `json:"users"`
+}
+
+// ResultUserScripts - userScripts
+type ResultUserScripts struct {
+	UserScripts struct {
+		SnapshotID int64 `json:"snapshotID"`
+		EndIndex   int32 `json:"endIndex"`
+		MaxIndex   int32 `json:"maxIndex"`
+		Scripts    []struct {
+			ScriptName string `json:"scriptName"`
+		} `json:"scripts"`
+	} `json:"userScripts"`
 }
 
 // ResultMsg2Msg - ResultMsg -> Message
@@ -152,24 +158,20 @@ func ResultMsg2Msg(result *ResultMsg) (*pb.Message, error) {
 // ResultUser2User - ResultUser -> User
 func ResultUser2User(result *ResultUser) (*pb.User, error) {
 	return &pb.User{
-		NickName:      result.User.NickName,
-		UserID:        result.User.UserID,
-		UserName:      result.User.UserName,
-		LastMsgID:     result.User.LastMsgID,
-		Scripts:       result.User.Scripts,
-		FileTemplates: result.User.FileTemplates,
+		NickName:  result.User.NickName,
+		UserID:    result.User.UserID,
+		UserName:  result.User.UserName,
+		LastMsgID: result.User.LastMsgID,
 	}, nil
 }
 
 // ResultUserWithUserName2User - ResultUserWithUserName -> User
 func ResultUserWithUserName2User(result *ResultUserWithUserName) (*pb.User, error) {
 	return &pb.User{
-		NickName:      result.UserWithUserName.NickName,
-		UserID:        result.UserWithUserName.UserID,
-		UserName:      result.UserWithUserName.UserName,
-		LastMsgID:     result.UserWithUserName.LastMsgID,
-		Scripts:       result.UserWithUserName.Scripts,
-		FileTemplates: result.UserWithUserName.FileTemplates,
+		NickName:  result.UserWithUserName.NickName,
+		UserID:    result.UserWithUserName.UserID,
+		UserName:  result.UserWithUserName.UserName,
+		LastMsgID: result.UserWithUserName.LastMsgID,
 	}, nil
 }
 
@@ -202,15 +204,28 @@ func ResultUsers2UserList(result *ResultUsers) (*pb.UserList, error) {
 
 	for _, v := range result.Users.Users {
 		ui := &pb.User{
-			NickName:      v.NickName,
-			UserID:        v.UserID,
-			UserName:      v.UserName,
-			LastMsgID:     v.LastMsgID,
-			Scripts:       v.Scripts,
-			FileTemplates: v.FileTemplates,
+			NickName:  v.NickName,
+			UserID:    v.UserID,
+			UserName:  v.UserName,
+			LastMsgID: v.LastMsgID,
 		}
 
 		lst.Users = append(lst.Users, ui)
+	}
+
+	return lst, nil
+}
+
+// ResultUserScripts2UserScriptList - ResultUserScripts -> UserScriptList
+func ResultUserScripts2UserScriptList(result *ResultUserScripts) (*pb.UserScriptList, error) {
+	lst := &pb.UserScriptList{}
+
+	for _, v := range result.UserScripts.Scripts {
+		ui := &pb.UserScript{
+			ScriptName: v.ScriptName,
+		}
+
+		lst.Scripts = append(lst.Scripts, ui)
 	}
 
 	return lst, nil

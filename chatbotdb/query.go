@@ -7,7 +7,9 @@ import (
 	"github.com/zhs007/ankadb"
 	"github.com/zhs007/ankadb/graphqlext"
 	"github.com/zhs007/ankadb/proto"
+	"github.com/zhs007/jarviscore/base"
 	pb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
+	"go.uber.org/zap"
 )
 
 var typeQuery = graphql.NewObject(
@@ -238,6 +240,112 @@ var typeQuery = graphql.NewObject(
 					}
 
 					return userScript, nil
+				},
+			},
+			"userScripts": &graphql.Field{
+				Type: typeUserScriptList,
+				Args: graphql.FieldConfigArgument{
+					"userID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"jarvisNodeName": &graphql.ArgumentConfig{
+						Type: graphql.String,
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					// jarvisbase.Debug("query users")
+
+					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+					if anka == nil {
+						return nil, ankadb.ErrCtxAnkaDB
+					}
+
+					curdb := anka.MgrDB.GetDB("chatbotdb")
+					if curdb == nil {
+						return nil, ankadb.ErrCtxCurDB
+					}
+
+					userID := params.Args["userID"].(string)
+					jarvisNodeName := params.Args["jarvisNodeName"].(string)
+
+					curPrefixKey := prefixKeyUserScript + userID + ":"
+
+					// mgrSnapshot := anka.MgrDB.GetMgrSnapshot("chatbotdb")
+					// if mgrSnapshot == nil {
+					// 	return nil, ankadb.ErrCtxSnapshotMgr
+					// }
+
+					lstScripts := &pb.UserScriptList{}
+					curit := curdb.NewIteratorWithPrefix([]byte(curPrefixKey))
+					// jarvisbase.Debug("curdb.NewIteratorWithPrefix")
+					for curit.Next() {
+						key := curit.Key()
+						userScript := &pb.UserScript{}
+						err := ankadb.GetMsgFromDB(curdb, key, userScript)
+						if err != nil {
+							return nil, err
+						}
+
+						if jarvisNodeName == "" {
+							lstScripts.Scripts = append(lstScripts.Scripts, userScript)
+						} else if jarvisNodeName == userScript.JarvisNodeName {
+							lstScripts.Scripts = append(lstScripts.Scripts, userScript)
+						}
+
+						// jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("key", string(key)))
+					}
+					curit.Release()
+					err := curit.Error()
+					if err != nil {
+						jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.Error(err))
+
+						return nil, err
+					}
+
+					// snapshotID := params.Args["snapshotID"].(int64)
+					// beginIndex := params.Args["beginIndex"].(int)
+					// nums := params.Args["nums"].(int)
+					// if beginIndex < 0 || nums <= 0 {
+					// 	return nil, ankadb.ErrQuertParams
+					// }
+
+					// lstUser := &pb.UserList{}
+					// var pSnapshot *ankadbpb.Snapshot
+
+					// if snapshotID > 0 {
+					// 	pSnapshot = mgrSnapshot.Get(snapshotID)
+					// } else {
+					// 	var err error
+					// 	pSnapshot, err = mgrSnapshot.NewSnapshot([]byte(prefixKeyUser))
+					// 	if err != nil {
+					// 		return nil, ankadb.ErrCtxSnapshotMgr
+					// 	}
+					// }
+
+					// lstUser.SnapshotID = pSnapshot.SnapshotID
+					// lstUser.MaxIndex = int32(len(pSnapshot.Keys))
+
+					// // jarvisbase.Debug("query users", zap.Int32("MaxIndex", lstUser.MaxIndex))
+
+					// curi := beginIndex
+					// for ; curi < len(pSnapshot.Keys) && len(lstUser.Users) < nums; curi++ {
+					// 	cui := &pb.User{}
+					// 	err := ankadb.GetMsgFromDB(curdb, []byte(pSnapshot.Keys[curi]), cui)
+					// 	if err == nil {
+					// 		// s, err := json.Marshal(cui)
+					// 		// if err != nil {
+					// 		// 	jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.Error(err))
+					// 		// } else {
+					// 		// 	jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.String("user", string(s)))
+					// 		// }
+
+					// 		lstUser.Users = append(lstUser.Users, cui)
+					// 	}
+					// }
+
+					// lstUser.EndIndex = int32(curi)
+
+					return lstScripts, nil
 				},
 			},
 		},

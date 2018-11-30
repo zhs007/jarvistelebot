@@ -23,12 +23,12 @@ var typeUser = graphql.NewObject(
 			"lastMsgID": &graphql.Field{
 				Type: graphqlext.Int64,
 			},
-			"scripts": &graphql.Field{
-				Type: graphql.NewList(graphql.String),
-			},
-			"fileTemplates": &graphql.Field{
-				Type: graphql.NewList(graphql.String),
-			},
+			// "scripts": &graphql.Field{
+			// 	Type: graphql.NewList(graphql.String),
+			// },
+			// "fileTemplates": &graphql.Field{
+			// 	Type: graphql.NewList(graphql.String),
+			// },
 		},
 	},
 )
@@ -101,6 +101,9 @@ var typeUserScript = graphql.NewObject(
 			"file": &graphql.Field{
 				Type: typeFile,
 			},
+			"jarvisNodeName": &graphql.Field{
+				Type: graphql.NewNonNull(graphql.String),
+			},
 		},
 	},
 )
@@ -122,6 +125,28 @@ var typeUserList = graphql.NewObject(
 			},
 			"users": &graphql.Field{
 				Type: graphql.NewList(typeUser),
+			},
+		},
+	},
+)
+
+// typeUserScriptList - UserScriptList
+//		you can see chatbotdb.graphql
+var typeUserScriptList = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "UserScriptList",
+		Fields: graphql.Fields{
+			"snapshotID": &graphql.Field{
+				Type: graphqlext.Int64,
+			},
+			"endIndex": &graphql.Field{
+				Type: graphql.Int,
+			},
+			"maxIndex": &graphql.Field{
+				Type: graphql.Int,
+			},
+			"Scripts": &graphql.Field{
+				Type: graphql.NewList(typeUserScript),
 			},
 		},
 	},

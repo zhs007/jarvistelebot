@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package pluginusermgrpb;
+
+// UpdScriptCommand - updscript command
+message UpdScriptCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+    // scriptName - script name
+    string scriptName = 3;
+    // jarvisNodeName - jarvis node name
+    string jarvisNodeName = 4;
+}
+
+// UserScriptsCommand - userscripts command
+message UserScriptsCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+    // jarvisNodeName - jarvis node name
+    string jarvisNodeName = 3;
+}

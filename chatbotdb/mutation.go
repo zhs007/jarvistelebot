@@ -111,6 +111,9 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				"userID": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(graphql.ID),
 				},
+				"jarvisNodeName": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
 				"scriptName": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(graphql.ID),
 				},
@@ -131,6 +134,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 
 				userID := params.Args["userID"].(string)
 				scriptName := params.Args["scriptName"].(string)
+				jarvisNodeName := params.Args["jarvisNodeName"].(string)
 
 				file := &pb.File{}
 				err := ankadb.GetMsgFromParam(params, "file", file)
@@ -144,8 +148,9 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				}
 
 				userScript := &pb.UserScript{
-					ScriptName: scriptName,
-					File:       file,
+					ScriptName:     scriptName,
+					File:           file,
+					JarvisNodeName: jarvisNodeName,
 				}
 
 				err = ankadb.PutMsg2DB(curdb, []byte(makeUserScriptKey(userID, scriptName)), userScript)

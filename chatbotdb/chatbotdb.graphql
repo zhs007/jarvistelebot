@@ -3,8 +3,6 @@ type User {
     userID: ID!
     userName: ID!
     lastMsgID: Int64!
-    scripts: [String]
-    fileTemplates: [String]
 }
 
 type UserList {
@@ -35,6 +33,14 @@ type Message {
 type UserScript {
     scriptName: ID!
     file: File
+    jarvisNodeName: String!
+}
+
+type UserScriptList {
+    snapshotID: Int64!
+    endIndex: Int!
+    maxIndex: Int!
+    scripts: [UserScript]
 }
 
 type UserMessageChunk {
@@ -51,6 +57,8 @@ type Query {
     users(snapshotID: Int64!, beginIndex: Int!, nums: Int!): UserList!
 
     userScript(userID: ID!, scriptName: ID!): UserScript!
+
+    userScripts(userID: ID!, jarvisNodeName: String!): UserScriptList!
 }
 
 type Mutation {
@@ -58,5 +66,5 @@ type Mutation {
 
     updUser(user: User!): User!
 
-    updUserScript(userID: ID!, scriptName: ID!, file: File!): UserScript!
+    updUserScript(userID: ID!, jarvisNodeName: String!, scriptName: ID!, file: File!): UserScript!
 }

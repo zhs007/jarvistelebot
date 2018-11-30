@@ -79,12 +79,6 @@ var inputTypeUser = graphql.NewInputObject(
 			"lastMsgID": &graphql.InputObjectFieldConfig{
 				Type: graphqlext.Int64,
 			},
-			"scripts": &graphql.InputObjectFieldConfig{
-				Type: graphql.NewList(graphql.String),
-			},
-			"fileTemplates": &graphql.InputObjectFieldConfig{
-				Type: graphql.NewList(graphql.String),
-			},
 		},
 	},
 )

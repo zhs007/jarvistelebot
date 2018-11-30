@@ -13,9 +13,9 @@ message User {
     // lastMsgID - The last msgid that has been processed
     int64 lastMsgID = 4;
     // scripts - user's scripts
-    repeated string scripts = 5;
+    repeated string scripts = 5 [deprecated = true];
     // fileTemplates - user's file templates
-    repeated string fileTemplates = 6;
+    repeated string fileTemplates = 6 [deprecated = true];
 }
 
 // File - file info
@@ -58,6 +58,8 @@ message UserScript {
     string scriptName = 1;
     // file - file data
     File file = 2;
+    // jarvisNodeName - JarvisNode's name
+    string jarvisNodeName = 3;
 }
 
 // UserList - user list
@@ -70,4 +72,16 @@ message UserList {
     int32 maxIndex = 3;    
     // users - user list
     repeated User users = 4;
+}
+
+// UserScriptList - user script list
+message UserScriptList {
+    // snapshotID - snapshot ID
+    int64 snapshotID = 1;
+    // endIndex - end index
+    int32 endIndex = 2;
+    // maxIndex - max index
+    int32 maxIndex = 3;    
+    // users - user list
+    repeated UserScript Scripts = 4;
 }

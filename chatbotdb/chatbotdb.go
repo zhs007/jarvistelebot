@@ -66,8 +66,6 @@ const queryGetUser = `query User($userID: ID!) {
 		userID
 		userName
 		lastMsgID
-		scripts
-		fileTemplates
 	}
 }`
 
@@ -382,6 +380,95 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 	lst, err := ResultUsers2UserList(us)
 	if err != nil {
 		jarvisbase.Warn("ChatBotDB.GetUsers:ResultUsers2UserList", zap.Error(err))
+
+		return nil, err
+	}
+
+	return lst, nil
+
+	// if db.db == nil {
+	// 	return nil, ErrChatBotDBNil
+	// }
+
+	// params := make(map[string]interface{})
+	// params["snapshotID"] = int64(0)
+	// params["beginIndex"] = 0
+	// params["nums"] = nums
+
+	// jarvisbase.Debug("GetUsers",
+	// 	zap.String("query string", queryUsers))
+
+	// result, err := db.db.LocalQuery(context.Background(), queryUsers, params)
+	// if err != nil {
+	// 	jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	// s, err := json.Marshal(result)
+	// if err != nil {
+	// 	jarvisbase.Error("CoreDB.GetNodes", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	// jarvisbase.Debug("GetUsers",
+	// 	jarvisbase.JSON("resultstr", string(s)))
+
+	// us := &ResultUsers{}
+	// err = ankadb.MakeObjFromResult(result, us)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// jarvisbase.Debug("GetUsers",
+	// 	jarvisbase.JSON("result", us))
+
+	// lst, err := ResultUsers2UserList(us)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// return lst, nil
+}
+
+// GetUserScripts - get user scripts
+func (db *ChatBotDB) GetUserScripts(userID string, jarvisNodeName string) (*pb.UserScriptList, error) {
+	if db.db == nil {
+		return nil, ErrChatBotDBNil
+	}
+
+	params := make(map[string]interface{})
+	params["userID"] = userID
+	params["jarvisNodeName"] = jarvisNodeName
+
+	result, err := db.db.LocalQuery(context.Background(), queryGetUsers, params)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUserScripts:LocalQuery", zap.Error(err))
+
+		return nil, err
+	}
+
+	// s, err := json.Marshal(result)
+	// if err != nil {
+	// 	jarvisbase.Error("CoreDB.GetUsers", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	// jarvisbase.Debug("ChatBotDB.GetUsers:Marshal", jarvisbase.JSON("result", result))
+
+	us := &ResultUserScripts{}
+	err = ankadb.MakeObjFromResult(result, us)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUserScripts:MakeObjFromResult", zap.Error(err))
+
+		return nil, err
+	}
+
+	lst, err := ResultUserScripts2UserScriptList(us)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUserScripts:ResultUserScripts2UserScriptList", zap.Error(err))
 
 		return nil, err
 	}
