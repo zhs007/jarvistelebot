@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/spf13/pflag"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/plugins/core/proto"
 )
@@ -42,5 +43,20 @@ func (cmd *cmdUsers) RunCommand(ctx context.Context, params *chatbot.MessagePara
 
 // Parse - parse command line
 func (cmd *cmdUsers) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	return nil, nil
+	if len(params.LstStr) < 2 {
+		return nil, chatbot.ErrInvalidCommandLineItemNums
+	}
+
+	flagset := pflag.NewFlagSet("users", pflag.ContinueOnError)
+
+	var nums = flagset.Int32P("nums", "n", 128, "you need see numbers")
+
+	err := flagset.Parse(params.LstStr[2:])
+	if err != nil {
+		return nil, err
+	}
+
+	return &plugincorepb.UsersCommand{
+		Nums: *nums,
+	}, nil
 }

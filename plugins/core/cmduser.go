@@ -54,7 +54,7 @@ func (cmd *cmdUser) RunCommand(ctx context.Context, params *chatbot.MessageParam
 			return true
 		}
 
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I didn't find this user.")
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this user.")
 
 		return true
 	}

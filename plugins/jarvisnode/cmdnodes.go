@@ -15,16 +15,21 @@ type cmdNodes struct {
 
 // RunCommand - run command
 func (cmd *cmdNodes) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
-	coredb := params.ChatBot.GetJarvisNodeCoreDB()
+	if params.CommandLine != nil {
+		nodescmd, ok := params.CommandLine.(*pluginjarvisnodepb.NodesCommand)
+		if !ok {
+			return false
+		}
 
-	str, _ := coredb.GetNodes(100)
-	strret, err := chatbot.FormatJSON(str)
-	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
-	} else {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+		coredb := params.ChatBot.GetJarvisNodeCoreDB()
+
+		str, _ := coredb.GetNodes(int(nodescmd.Nums))
+		strret, err := chatbot.FormatJSON(str)
+		if err != nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
+		} else {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+		}
 	}
 
 	return true
