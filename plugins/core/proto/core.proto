@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package plugincorepb;
+
+// UserCommand - user command
+message UserCommand {
+    // userID - User's unique identifier
+    string userID = 1;
+    // userName - Username
+    string userName = 2;
+}

@@ -71,15 +71,15 @@ func (msg *testMessage) GetOption(id int) string {
 	return ""
 }
 
-func Test_IsMyMessage(t *testing.T) {
+func Test_corePlugin_IsMyMessage(t *testing.T) {
 	chatbot.InitLogger(zapcore.InfoLevel, true, "./")
 
 	p, err := NewPlugin("")
 	if err != nil {
-		t.Fatalf("Test_IsMyMessage NewPlugin Err")
+		t.Fatalf("Test_corePlugin_IsMyMessage NewPlugin Err")
 	}
 
-	arrOK := []string{"> version", "   > version    ", "> version"}
+	arrOK := []string{"> version", "   > version    ", "> version", "> users", "> users 100", "> user 123 --username 456", "> user 123 -n 456"}
 	for i := range arrOK {
 		curmsg := &testMessage{
 			strText: arrOK[i],
@@ -92,12 +92,13 @@ func Test_IsMyMessage(t *testing.T) {
 			LstStr:     strings.Fields(curmsg.GetText()),
 		}
 
-		if !p.IsMyMessage(params) {
-			t.Fatalf("Test_IsMyMessage arrOK %v", arrOK[i])
+		_, err := p.ParseMessage(params)
+		if err != nil {
+			t.Fatalf("Test_corePlugin_IsMyMessage arrOK %v %v", arrOK[i], err)
 		}
 	}
 
-	arrErr := []string{"123", ">> haha", ">   ", ">haha", "> help"}
+	arrErr := []string{"123", ">> haha", ">   ", ">haha", "> help", "> user -userid 123 -n 456"}
 	for i := range arrErr {
 		curmsg := &testMessage{
 			strText: arrErr[i],
@@ -110,10 +111,11 @@ func Test_IsMyMessage(t *testing.T) {
 			LstStr:     strings.Fields(curmsg.GetText()),
 		}
 
-		if p.IsMyMessage(params) {
-			t.Fatalf("Test_IsMyMessage arrErr %v", arrErr[i])
+		_, err := p.ParseMessage(params)
+		if err == nil {
+			t.Fatalf("Test_corePlugin_IsMyMessage arrOK %v", arrErr[i])
 		}
 	}
 
-	t.Log("Test_IsMyMessage OK")
+	t.Log("Test_corePlugin_IsMyMessage OK")
 }

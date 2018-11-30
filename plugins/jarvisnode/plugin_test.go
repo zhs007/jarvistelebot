@@ -71,15 +71,25 @@ func (msg *testMessage) GetOption(id int) string {
 	return ""
 }
 
-func Test_IsMyMessage(t *testing.T) {
+func Test_jarvisnodePlugin_IsMyMessage(t *testing.T) {
 	chatbot.InitLogger(zapcore.InfoLevel, true, "./")
 
 	p, err := NewPlugin("")
 	if err != nil {
-		t.Fatalf("Test_IsMyMessage NewPlugin Err")
+		t.Fatalf("jarvisnodePlugin NewPlugin Err")
 	}
 
-	arrOK := []string{"> help", "   > help    ", "> help"}
+	arrOK := []string{
+		"> mystate",
+		"   > mystate    ",
+		"> mystate",
+		"> requestfile a:b",
+		"> requestfile a b",
+		"> requestfile -n a -f b",
+		"> requestfile -n a a b",
+		"> requestfile -n a a:b",
+	}
+
 	for i := range arrOK {
 		curmsg := &testMessage{
 			strText: arrOK[i],
@@ -92,12 +102,22 @@ func Test_IsMyMessage(t *testing.T) {
 			LstStr:     strings.Fields(curmsg.GetText()),
 		}
 
-		if !p.IsMyMessage(params) {
-			t.Fatalf("Test_IsMyMessage Err %v", arrOK[i])
+		_, err := p.ParseMessage(params)
+		if err != nil {
+			t.Fatalf("Test_jarvisnodePlugin_IsMyMessage arrOK %v %v", arrOK[i], err)
 		}
 	}
 
-	arrErr := []string{"123", ">> haha", ">   ", ">haha", "> help1"}
+	arrErr := []string{
+		"123",
+		">> haha",
+		">   ",
+		">haha",
+		"> help",
+		"> requestfile a",
+		"> requestfile a -n a",
+	}
+
 	for i := range arrErr {
 		curmsg := &testMessage{
 			strText: arrErr[i],
@@ -110,10 +130,11 @@ func Test_IsMyMessage(t *testing.T) {
 			LstStr:     strings.Fields(curmsg.GetText()),
 		}
 
-		if p.IsMyMessage(params) {
-			t.Fatalf("Test_IsMyMessage Err %v", arrErr[i])
+		_, err := p.ParseMessage(params)
+		if err == nil {
+			t.Fatalf("Test_jarvisnodePlugin_IsMyMessage arrOK %v", arrErr[i])
 		}
 	}
 
-	t.Log("Test_IsMyMessage OK")
+	t.Log("Test_jarvisnodePlugin_IsMyMessage OK")
 }

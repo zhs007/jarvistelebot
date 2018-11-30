@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
@@ -76,10 +77,10 @@ func (p *timestampPlugin) GetPluginName() string {
 	return PluginName
 }
 
-// IsMyMessage
-func (p *timestampPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-	return false
-}
+// // IsMyMessage
+// func (p *timestampPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
+// 	return false
+// }
 
 // OnStart - on start
 func (p *timestampPlugin) OnStart(ctx context.Context) error {
@@ -89,4 +90,10 @@ func (p *timestampPlugin) OnStart(ctx context.Context) error {
 // GetPluginType - get pluginType
 func (p *timestampPlugin) GetPluginType() int {
 	return chatbot.PluginTypeCommand
+}
+
+// ParseMessage - If this message is what I can process,
+//	it will return to the command line, otherwise it will return an error.
+func (p *timestampPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
+	return nil, chatbot.ErrMsgNotMine
 }

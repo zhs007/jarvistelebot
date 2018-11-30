@@ -3,6 +3,7 @@ package pluginjarvisnode
 import (
 	"context"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
@@ -20,13 +21,13 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 	cmd := chatbot.NewCommandMap()
 
-	cmd.RegFunc("help", cmdHelp)
-	cmd.RegFunc("mystate", cmdMyState)
-	cmd.RegFunc("run", cmdRun)
-	cmd.RegFunc("nodes", cmdNodes)
-	cmd.RegFunc("scripts", cmdScripts)
+	// cmd.RegFunc("help", cmdHelp)
+	cmd.AddCommand("mystate", &cmdMyState{})
+	// cmd.RegFunc("run", cmdRun)
+	cmd.AddCommand("nodes", &cmdNodes{})
+	// cmd.RegFunc("scripts", cmdScripts)
 	// cmd.RegFunc("version", cmdVersion)
-	cmd.RegFunc("requestfile", cmdRequestFile)
+	cmd.AddCommand("requestfile", &cmdRequestFile{})
 
 	p := &jarvisnodePlugin{
 		cmd: cmd,
@@ -102,23 +103,23 @@ func (p *jarvisnodePlugin) GetPluginName() string {
 	return PluginName
 }
 
-// IsMyMessage
-func (p *jarvisnodePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-	file := params.Msg.GetFile()
-	if file != nil {
-		if file.FileType == chatbot.FileTypeShellScript {
-			if len(params.LstStr) == 1 {
-				return true
-			}
-		}
-	}
+// // IsMyMessage
+// func (p *jarvisnodePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
+// 	file := params.Msg.GetFile()
+// 	if file != nil {
+// 		if file.FileType == chatbot.FileTypeShellScript {
+// 			if len(params.LstStr) == 1 {
+// 				return true
+// 			}
+// 		}
+// 	}
 
-	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
-		return p.cmd.HasCommand(params.LstStr[1])
-	}
+// 	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
+// 		return p.cmd.HasCommand(params.LstStr[1])
+// 	}
 
-	return false
-}
+// 	return false
+// }
 
 // OnStart - on start
 func (p *jarvisnodePlugin) OnStart(ctx context.Context) error {
@@ -128,4 +129,25 @@ func (p *jarvisnodePlugin) OnStart(ctx context.Context) error {
 // GetPluginType - get pluginType
 func (p *jarvisnodePlugin) GetPluginType() int {
 	return chatbot.PluginTypeCommand
+}
+
+// ParseMessage - If this message is what I can process,
+//	it will return to the command line, otherwise it will return an error.
+func (p *jarvisnodePlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
+	file := params.Msg.GetFile()
+	if file != nil {
+		if file.FileType == chatbot.FileTypeShellScript {
+			if len(params.LstStr) == 1 {
+				return nil, nil
+			}
+		}
+	}
+
+	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
+		if p.cmd.HasCommand(params.LstStr[1]) {
+			return p.cmd.ParseCommandLine(params.LstStr[1], params)
+		}
+	}
+
+	return nil, chatbot.ErrMsgNotMine
 }

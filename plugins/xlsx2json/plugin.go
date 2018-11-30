@@ -3,6 +3,7 @@ package pluginxlsx2json
 import (
 	"context"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
@@ -84,28 +85,28 @@ func (p *xlsx2jsonPlugin) GetPluginName() string {
 	return PluginName
 }
 
-// IsMyMessage
-func (p *xlsx2jsonPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-	file := params.Msg.GetFile()
-	if file != nil {
-		if file.FileType == chatbot.FileExcel {
-			if params.Msg.GetText() == "" {
-				return true
-			}
-			// if len(params.LstStr) == 1 {
-			// 	arr := strings.Split(params.Msg.GetText(), ":")
-			// 	if len(arr) == 2 {
-			// 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
-			// 		if curnode != nil {
-			// 			return true
-			// 		}
-			// 	}
-			// }
-		}
-	}
+// // IsMyMessage
+// func (p *xlsx2jsonPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
+// 	file := params.Msg.GetFile()
+// 	if file != nil {
+// 		if file.FileType == chatbot.FileExcel {
+// 			if params.Msg.GetText() == "" {
+// 				return true
+// 			}
+// 			// if len(params.LstStr) == 1 {
+// 			// 	arr := strings.Split(params.Msg.GetText(), ":")
+// 			// 	if len(arr) == 2 {
+// 			// 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
+// 			// 		if curnode != nil {
+// 			// 			return true
+// 			// 		}
+// 			// 	}
+// 			// }
+// 		}
+// 	}
 
-	return false
-}
+// 	return false
+// }
 
 // OnStart - on start
 func (p *xlsx2jsonPlugin) OnStart(ctx context.Context) error {
@@ -115,4 +116,21 @@ func (p *xlsx2jsonPlugin) OnStart(ctx context.Context) error {
 // GetPluginType - get pluginType
 func (p *xlsx2jsonPlugin) GetPluginType() int {
 	return chatbot.PluginTypeCommand
+}
+
+// ParseMessage - If this message is what I can process,
+//	it will return to the command line, otherwise it will return an error.
+func (p *xlsx2jsonPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
+	file := params.Msg.GetFile()
+	if file != nil {
+		if file.FileType == chatbot.FileExcel {
+			if params.Msg.GetText() == "" {
+				return nil, nil
+			}
+		}
+
+		return nil, chatbot.ErrMsgNotMine
+	}
+
+	return nil, chatbot.ErrMsgNotMine
 }

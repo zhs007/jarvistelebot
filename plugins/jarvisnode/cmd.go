@@ -1,89 +1,77 @@
 package pluginjarvisnode
 
-import (
-	"context"
-	"fmt"
-	"path"
-	"path/filepath"
-	"strings"
+// // cmdHelp - help
+// func cmdHelp(ctx context.Context, params *chatbot.MessageParams) bool {
+// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "This is jarvisnode plugin help.")
+// 	// params.ChatBot.SendMsg(params.Msg.GetFrom(), "This is jarvisnode plugin help.")
 
-	"github.com/zhs007/jarviscore/proto"
-	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
-)
+// 	return true
+// }
 
-// cmdHelp - help
-func cmdHelp(ctx context.Context, params *chatbot.MessageParams) bool {
-	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "This is jarvisnode plugin help.")
-	// params.ChatBot.SendMsg(params.Msg.GetFrom(), "This is jarvisnode plugin help.")
+// // cmdMyState - mystate
+// func cmdMyState(ctx context.Context, params *chatbot.MessageParams) bool {
+// 	coredb := params.ChatBot.GetJarvisNodeCoreDB()
 
-	return true
-}
+// 	str, _ := coredb.GetMyState()
+// 	strret, err := chatbot.FormatJSON(str)
+// 	if err != nil {
+// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
+// 		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+// 	} else {
+// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+// 		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+// 	}
 
-// cmdMyState - mystate
-func cmdMyState(ctx context.Context, params *chatbot.MessageParams) bool {
-	coredb := params.ChatBot.GetJarvisNodeCoreDB()
+// 	return true
+// }
 
-	str, _ := coredb.GetMyState()
-	strret, err := chatbot.FormatJSON(str)
-	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
-	} else {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
-	}
+// // cmdRun - run
+// func cmdRun(ctx context.Context, params *chatbot.MessageParams) bool {
+// 	// node := params.ChatBot.GetJarvisNode()
 
-	return true
-}
+// 	// err := node.SendCtrl(ctx, "1JJaKpZGhYPuVHc1EKiiHZEswPAB5SybW5", "shell", "haha")
+// 	// if err != nil {
+// 	// 	params.ChatBot.SendMsg(params.Msg.GetFrom(), err.Error())
+// 	// } else {
+// 	// 	params.ChatBot.SendMsg(params.Msg.GetFrom(), "OK!")
+// 	// }
 
-// cmdRun - run
-func cmdRun(ctx context.Context, params *chatbot.MessageParams) bool {
-	// node := params.ChatBot.GetJarvisNode()
+// 	return true
+// }
 
-	// err := node.SendCtrl(ctx, "1JJaKpZGhYPuVHc1EKiiHZEswPAB5SybW5", "shell", "haha")
-	// if err != nil {
-	// 	params.ChatBot.SendMsg(params.Msg.GetFrom(), err.Error())
-	// } else {
-	// 	params.ChatBot.SendMsg(params.Msg.GetFrom(), "OK!")
-	// }
+// // cmdNodes - nodes
+// func cmdNodes(ctx context.Context, params *chatbot.MessageParams) bool {
+// 	coredb := params.ChatBot.GetJarvisNodeCoreDB()
 
-	return true
-}
+// 	str, _ := coredb.GetNodes(100)
+// 	strret, err := chatbot.FormatJSON(str)
+// 	if err != nil {
+// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
+// 		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+// 	} else {
+// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+// 		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+// 	}
 
-// cmdNodes - nodes
-func cmdNodes(ctx context.Context, params *chatbot.MessageParams) bool {
-	coredb := params.ChatBot.GetJarvisNodeCoreDB()
+// 	return true
+// }
 
-	str, _ := coredb.GetNodes(100)
-	strret, err := chatbot.FormatJSON(str)
-	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
-	} else {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
-	}
+// // cmdScripts - scripts
+// func cmdScripts(ctx context.Context, params *chatbot.MessageParams) bool {
+// 	files, _ := filepath.Glob(path.Join(params.ChatBot.GetConfig().DownloadPath, "scripts", "*.sh"))
 
-	return true
-}
+// 	strret, err := chatbot.FormatJSONObj(files)
+// 	if err != nil {
+// 		str := fmt.Sprintf("%+v", files)
+// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
+// 		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+// 	} else {
+// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+// 		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
+// 	}
 
-// cmdScripts - scripts
-func cmdScripts(ctx context.Context, params *chatbot.MessageParams) bool {
-	files, _ := filepath.Glob(path.Join(params.ChatBot.GetConfig().DownloadPath, "scripts", "*.sh"))
-
-	strret, err := chatbot.FormatJSONObj(files)
-	if err != nil {
-		str := fmt.Sprintf("%+v", files)
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
-	} else {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
-	}
-
-	return true
-}
+// 	return true
+// }
 
 // // cmdVersion - version
 // func cmdVersion(ctx context.Context, params *chatbot.MessageParams) bool {
@@ -92,40 +80,40 @@ func cmdScripts(ctx context.Context, params *chatbot.MessageParams) bool {
 // 	return true
 // }
 
-// cmdRequestFile - request file
-func cmdRequestFile(ctx context.Context, params *chatbot.MessageParams) bool {
-	fn := strings.Join(params.LstStr[2:], " ")
+// // cmdRequestFile - request file
+// func cmdRequestFile(ctx context.Context, params *chatbot.MessageParams) bool {
+// 	fn := strings.Join(params.LstStr[2:], " ")
 
-	arr := strings.Split(fn, ":")
-	if len(arr) < 2 {
-		return false
-	}
+// 	arr := strings.Split(fn, ":")
+// 	if len(arr) < 2 {
+// 		return false
+// 	}
 
-	curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
-	if curnode == nil {
-		return false
-	}
+// 	curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
+// 	if curnode == nil {
+// 		return false
+// 	}
 
-	rf := &jarviscorepb.RequestFile{
-		Filename: strings.Join(arr[1:], ":"),
-	}
+// 	rf := &jarviscorepb.RequestFile{
+// 		Filename: strings.Join(arr[1:], ":"),
+// 	}
 
-	params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf)
+// 	params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf)
 
-	params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-		if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
-			fd := msg.GetFile()
+// 	params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+// 		if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
+// 			fd := msg.GetFile()
 
-			chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-				Filename: chatbot.GetFileNameFromFullPath(fd.Filename),
-				Data:     fd.File,
-			})
-		}
+// 			chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+// 				Filename: chatbot.GetFileNameFromFullPath(fd.Filename),
+// 				Data:     fd.File,
+// 			})
+// 		}
 
-		return nil
-	})
+// 		return nil
+// 	})
 
-	// chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), params.ChatBot.GetVersion())
+// 	// chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), params.ChatBot.GetVersion())
 
-	return true
-}
+// 	return true
+// }

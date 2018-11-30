@@ -6,6 +6,7 @@ import (
 	"path"
 	"strconv"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
 
@@ -117,25 +118,25 @@ func (p *assistantPlugin) GetPluginName() string {
 	return PluginName
 }
 
-// IsMyMessage
-func (p *assistantPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-	// if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
-	// 	for i := 2; i < len(params.LstStr)-1; i++ {
-	// 		if params.LstStr[i] == ">" {
-	// 			return true
-	// 		}
-	// 	}
-	// }
+// // IsMyMessage
+// func (p *assistantPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
+// 	// if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
+// 	// 	for i := 2; i < len(params.LstStr)-1; i++ {
+// 	// 		if params.LstStr[i] == ">" {
+// 	// 			return true
+// 	// 		}
+// 	// 	}
+// 	// }
 
-	// if len(params.LstStr) == 3 && params.LstStr[0] == "<<" && params.LstStr[1] == "@" {
-	// 	_, err := strconv.ParseInt(params.LstStr[2], 10, 64)
-	// 	if err == nil {
-	// 		return true
-	// 	}
-	// }
+// 	// if len(params.LstStr) == 3 && params.LstStr[0] == "<<" && params.LstStr[1] == "@" {
+// 	// 	_, err := strconv.ParseInt(params.LstStr[2], 10, 64)
+// 	// 	if err == nil {
+// 	// 		return true
+// 	// 	}
+// 	// }
 
-	return false
-}
+// 	return false
+// }
 
 // parseInput
 func (p *assistantPlugin) parseInput(params *chatbot.MessageParams) *inputParams {
@@ -200,4 +201,10 @@ func (p *assistantPlugin) OnStart(ctx context.Context) error {
 // GetPluginType - get pluginType
 func (p *assistantPlugin) GetPluginType() int {
 	return chatbot.PluginTypeCommand
+}
+
+// ParseMessage - If this message is what I can process,
+//	it will return to the command line, otherwise it will return an error.
+func (p *assistantPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
+	return nil, chatbot.ErrMsgNotMine
 }

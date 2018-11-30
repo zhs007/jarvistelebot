@@ -1,40 +1,55 @@
 package chatbot
 
-import "context"
+import (
+	"context"
+
+	"github.com/golang/protobuf/proto"
+)
 
 // MessageParams - Message func params
 type MessageParams struct {
-	ChatBot    ChatBot
-	MgrPlugins PluginsMgr
-	Msg        Message
-	LstStr     []string
+	ChatBot     ChatBot
+	MgrPlugins  PluginsMgr
+	Msg         Message
+	LstStr      []string
+	CommandLine proto.Message
 }
 
-// FuncCommand - func ([]string)
-type FuncCommand func(context.Context, *MessageParams) bool
+// // FuncCommand - func ([]string)
+// type FuncCommand func(context.Context, *MessageParams) bool
 
 // CommandMap - command list
 type CommandMap struct {
-	mapCmd map[string]FuncCommand
+	mapCmd map[string]Command
 }
 
 // NewCommandMap - new CommandMap
 func NewCommandMap() *CommandMap {
 	return &CommandMap{
-		mapCmd: make(map[string]FuncCommand),
+		mapCmd: make(map[string]Command),
 	}
 }
 
-// RegFunc - reg func with cmd
-func (m *CommandMap) RegFunc(cmd string, f FuncCommand) {
-	m.mapCmd[cmd] = f
+// AddCommand - add command with cmd
+func (m *CommandMap) AddCommand(cmd string, c Command) {
+	m.mapCmd[cmd] = c
+}
+
+// ParseCommandLine - run func with cmd
+func (m *CommandMap) ParseCommandLine(cmd string, params *MessageParams) (proto.Message, error) {
+	c, ok := m.mapCmd[cmd]
+	if ok {
+		return c.ParseCommandLine(params)
+	}
+
+	return nil, ErrNoCommand
 }
 
 // Run - run func with cmd
 func (m *CommandMap) Run(ctx context.Context, cmd string, params *MessageParams) bool {
-	f, ok := m.mapCmd[cmd]
+	c, ok := m.mapCmd[cmd]
 	if ok {
-		return f(ctx, params)
+		return c.RunCommand(ctx, params)
 	}
 
 	return false

@@ -1,15 +1,20 @@
 package chatbot
 
-import "context"
+import (
+	"context"
+
+	"github.com/golang/protobuf/proto"
+)
 
 // Plugin - chat bot plugin interface
 type Plugin interface {
 	// OnMessage - get message
 	OnMessage(ctx context.Context, params *MessageParams) (bool, error)
-	// // GetComeInCode - if return is empty string, it means not comein
-	// GetComeInCode() string
-	// IsMyMessage
-	IsMyMessage(params *MessageParams) bool
+
+	// ParseMessage - If this message is what I can process,
+	//	it will return to the command line, otherwise it will return an error.
+	ParseMessage(params *MessageParams) (proto.Message, error)
+
 	// OnStart - on start
 	OnStart(ctx context.Context) error
 

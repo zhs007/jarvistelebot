@@ -3,6 +3,8 @@ package chatbot
 import (
 	"context"
 	"strings"
+
+	"github.com/golang/protobuf/proto"
 )
 
 // FuncNewPlugin - func newPlugin(cfgPath string) (Plugin, error)
@@ -50,6 +52,11 @@ func NewPluginsMgr(cfgPath string) PluginsMgr {
 		mapPlugin:          make(map[string]Plugin),
 		cfgPath:            cfgPath,
 	}
+}
+
+type pluginParsingInfo struct {
+	plugin  Plugin
+	cmdline proto.Message
 }
 
 // PluginsMgr - chat bot plugins
@@ -119,32 +126,45 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 		}
 	}
 
-	var cp []Plugin
+	var lstppi []*pluginParsingInfo
 
 	if mgr.isWritableCommand(params) {
 		for _, v := range mgr.lstWritableCommand {
-			if v.IsMyMessage(params) {
-				cp = append(cp, v)
+			cmdline, err := v.ParseMessage(params)
+			if err == nil {
+				lstppi = append(lstppi, &pluginParsingInfo{
+					plugin:  v,
+					cmdline: cmdline,
+				})
 			}
 		}
 	}
 
 	if mgr.isCommand(params) {
 		for _, v := range mgr.lstCommand {
-			if v.IsMyMessage(params) {
-				cp = append(cp, v)
+			cmdline, err := v.ParseMessage(params)
+			if err == nil {
+				lstppi = append(lstppi, &pluginParsingInfo{
+					plugin:  v,
+					cmdline: cmdline,
+				})
 			}
 		}
 	}
 
 	for _, v := range mgr.lstNormal {
-		if v.IsMyMessage(params) {
-			cp = append(cp, v)
+		cmdline, err := v.ParseMessage(params)
+		if err == nil {
+			lstppi = append(lstppi, &pluginParsingInfo{
+				plugin:  v,
+				cmdline: cmdline,
+			})
 		}
 	}
 
-	if len(cp) > 0 {
-		r, err := cp[0].OnMessage(ctx, params)
+	if len(lstppi) > 0 {
+		params.CommandLine = lstppi[0].cmdline
+		r, err := lstppi[0].plugin.OnMessage(ctx, params)
 		if err != nil {
 			return err
 		}

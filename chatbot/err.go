@@ -49,4 +49,12 @@ var (
 	ErrSamePluginName = errors.New("Same plugin name")
 	// ErrNoPluginName - No plugin name
 	ErrNoPluginName = errors.New("No plugin name")
+	// ErrNoCommand - No command
+	ErrNoCommand = errors.New("No command")
+	// ErrInvalidCommandLineItemNums - Invalid command line item nums
+	ErrInvalidCommandLineItemNums = errors.New("Invalid command line item nums")
+	// ErrMsgNotMine - This message should not be processed by me
+	ErrMsgNotMine = errors.New("This message should not be processed by me")
+	// ErrInvalidCommandLine - Invalid command line
+	ErrInvalidCommandLine = errors.New("Invalid command line")
 )

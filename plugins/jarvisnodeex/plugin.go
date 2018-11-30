@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarviscore/proto"
 	"go.uber.org/zap"
@@ -99,26 +100,26 @@ func (p *jarvisnodeexPlugin) GetPluginName() string {
 	return PluginName
 }
 
-// IsMyMessage
-func (p *jarvisnodeexPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-	file := params.Msg.GetFile()
-	if file != nil {
-		if file.FileType == chatbot.FileTypeShellScript {
-			if len(params.LstStr) == 1 {
-				arr := strings.Split(params.Msg.GetText(), ":")
-				if len(arr) == 1 {
-					return true
-				}
-			}
-		}
-	}
+// // IsMyMessage
+// func (p *jarvisnodeexPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
+// 	file := params.Msg.GetFile()
+// 	if file != nil {
+// 		if file.FileType == chatbot.FileTypeShellScript {
+// 			if len(params.LstStr) == 1 {
+// 				arr := strings.Split(params.Msg.GetText(), ":")
+// 				if len(arr) == 1 {
+// 					return true
+// 				}
+// 			}
+// 		}
+// 	}
 
-	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
-		return p.cmd.HasCommand(params.LstStr[1])
-	}
+// 	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
+// 		return p.cmd.HasCommand(params.LstStr[1])
+// 	}
 
-	return false
-}
+// 	return false
+// }
 
 // OnStart - on start
 func (p *jarvisnodeexPlugin) OnStart(ctx context.Context) error {
@@ -128,4 +129,30 @@ func (p *jarvisnodeexPlugin) OnStart(ctx context.Context) error {
 // GetPluginType - get pluginType
 func (p *jarvisnodeexPlugin) GetPluginType() int {
 	return chatbot.PluginTypeWritableCommand
+}
+
+// ParseMessage - If this message is what I can process,
+//	it will return to the command line, otherwise it will return an error.
+func (p *jarvisnodeexPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
+	file := params.Msg.GetFile()
+	if file != nil {
+		if file.FileType == chatbot.FileTypeShellScript {
+			if len(params.LstStr) == 1 {
+				arr := strings.Split(params.Msg.GetText(), ":")
+				if len(arr) == 1 {
+					return nil, nil
+				}
+			}
+		}
+
+		return nil, chatbot.ErrMsgNotMine
+	}
+
+	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
+		if p.cmd.HasCommand(params.LstStr[1]) {
+			return p.cmd.ParseCommandLine(params.LstStr[1], params)
+		}
+	}
+
+	return nil, chatbot.ErrMsgNotMine
 }

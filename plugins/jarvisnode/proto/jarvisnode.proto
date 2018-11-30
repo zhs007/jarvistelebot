@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pluginjarvisnodepb;
+
+// NodesCommand - nodes command
+message NodesCommand {
+    // nums - show node nums
+    int32 nums = 1;
+}
+
+// RequestFileCommand - request file command
+message RequestFileCommand {
+    // jarvisNodeName - jarvisnode name
+    string jarvisNodeName = 1;
+    // fileFullPath - file fullpath
+    string fileFullPath = 2;
+}
