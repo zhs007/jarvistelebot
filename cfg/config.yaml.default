@@ -40,6 +40,8 @@ plugins:
   - 'timestamp'
   - 'xlsx2json'
   - 'filetransfer'
+  - 'usermgr'
+  - 'userscript'
 
 # defaultplugin - default plugin
 defaultplugin: 'normal'

@@ -37,7 +37,7 @@ func (m *UpdScriptCommand) Reset()         { *m = UpdScriptCommand{} }
 func (m *UpdScriptCommand) String() string { return proto.CompactTextString(m) }
 func (*UpdScriptCommand) ProtoMessage()    {}
 func (*UpdScriptCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_f21fc65ed23da2bf, []int{0}
+	return fileDescriptor_usermgr_31cae0e4645f968f, []int{0}
 }
 func (m *UpdScriptCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UpdScriptCommand.Unmarshal(m, b)
@@ -102,7 +102,7 @@ func (m *UserScriptsCommand) Reset()         { *m = UserScriptsCommand{} }
 func (m *UserScriptsCommand) String() string { return proto.CompactTextString(m) }
 func (*UserScriptsCommand) ProtoMessage()    {}
 func (*UserScriptsCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_f21fc65ed23da2bf, []int{1}
+	return fileDescriptor_usermgr_31cae0e4645f968f, []int{1}
 }
 func (m *UserScriptsCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UserScriptsCommand.Unmarshal(m, b)
@@ -143,8 +143,8 @@ func (m *UserScriptsCommand) GetJarvisNodeName() string {
 	return ""
 }
 
-// RemoveScriptsCommand - rmscript command
-type RemoveScriptsCommand struct {
+// RemoveScriptCommand - rmscript command
+type RemoveScriptCommand struct {
 	// userID - userID
 	UserID string `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
 	// userName - userName
@@ -156,45 +156,103 @@ type RemoveScriptsCommand struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveScriptsCommand) Reset()         { *m = RemoveScriptsCommand{} }
-func (m *RemoveScriptsCommand) String() string { return proto.CompactTextString(m) }
-func (*RemoveScriptsCommand) ProtoMessage()    {}
-func (*RemoveScriptsCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_f21fc65ed23da2bf, []int{2}
+func (m *RemoveScriptCommand) Reset()         { *m = RemoveScriptCommand{} }
+func (m *RemoveScriptCommand) String() string { return proto.CompactTextString(m) }
+func (*RemoveScriptCommand) ProtoMessage()    {}
+func (*RemoveScriptCommand) Descriptor() ([]byte, []int) {
+	return fileDescriptor_usermgr_31cae0e4645f968f, []int{2}
 }
-func (m *RemoveScriptsCommand) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_RemoveScriptsCommand.Unmarshal(m, b)
+func (m *RemoveScriptCommand) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveScriptCommand.Unmarshal(m, b)
 }
-func (m *RemoveScriptsCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_RemoveScriptsCommand.Marshal(b, m, deterministic)
+func (m *RemoveScriptCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveScriptCommand.Marshal(b, m, deterministic)
 }
-func (dst *RemoveScriptsCommand) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_RemoveScriptsCommand.Merge(dst, src)
+func (dst *RemoveScriptCommand) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveScriptCommand.Merge(dst, src)
 }
-func (m *RemoveScriptsCommand) XXX_Size() int {
-	return xxx_messageInfo_RemoveScriptsCommand.Size(m)
+func (m *RemoveScriptCommand) XXX_Size() int {
+	return xxx_messageInfo_RemoveScriptCommand.Size(m)
 }
-func (m *RemoveScriptsCommand) XXX_DiscardUnknown() {
-	xxx_messageInfo_RemoveScriptsCommand.DiscardUnknown(m)
+func (m *RemoveScriptCommand) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveScriptCommand.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_RemoveScriptsCommand proto.InternalMessageInfo
+var xxx_messageInfo_RemoveScriptCommand proto.InternalMessageInfo
 
-func (m *RemoveScriptsCommand) GetUserID() string {
+func (m *RemoveScriptCommand) GetUserID() string {
 	if m != nil {
 		return m.UserID
 	}
 	return ""
 }
 
-func (m *RemoveScriptsCommand) GetUserName() string {
+func (m *RemoveScriptCommand) GetUserName() string {
 	if m != nil {
 		return m.UserName
 	}
 	return ""
 }
 
-func (m *RemoveScriptsCommand) GetScriptName() string {
+func (m *RemoveScriptCommand) GetScriptName() string {
+	if m != nil {
+		return m.ScriptName
+	}
+	return ""
+}
+
+// ShowScriptCommand - showscript command
+type ShowScriptCommand struct {
+	// userID - userID
+	UserID string `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	// userName - userName
+	UserName string `protobuf:"bytes,2,opt,name=userName,proto3" json:"userName,omitempty"`
+	// scriptName - script name
+	ScriptName           string   `protobuf:"bytes,3,opt,name=scriptName,proto3" json:"scriptName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ShowScriptCommand) Reset()         { *m = ShowScriptCommand{} }
+func (m *ShowScriptCommand) String() string { return proto.CompactTextString(m) }
+func (*ShowScriptCommand) ProtoMessage()    {}
+func (*ShowScriptCommand) Descriptor() ([]byte, []int) {
+	return fileDescriptor_usermgr_31cae0e4645f968f, []int{3}
+}
+func (m *ShowScriptCommand) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ShowScriptCommand.Unmarshal(m, b)
+}
+func (m *ShowScriptCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ShowScriptCommand.Marshal(b, m, deterministic)
+}
+func (dst *ShowScriptCommand) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ShowScriptCommand.Merge(dst, src)
+}
+func (m *ShowScriptCommand) XXX_Size() int {
+	return xxx_messageInfo_ShowScriptCommand.Size(m)
+}
+func (m *ShowScriptCommand) XXX_DiscardUnknown() {
+	xxx_messageInfo_ShowScriptCommand.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ShowScriptCommand proto.InternalMessageInfo
+
+func (m *ShowScriptCommand) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *ShowScriptCommand) GetUserName() string {
+	if m != nil {
+		return m.UserName
+	}
+	return ""
+}
+
+func (m *ShowScriptCommand) GetScriptName() string {
 	if m != nil {
 		return m.ScriptName
 	}
@@ -204,13 +262,14 @@ func (m *RemoveScriptsCommand) GetScriptName() string {
 func init() {
 	proto.RegisterType((*UpdScriptCommand)(nil), "pluginusermgrpb.UpdScriptCommand")
 	proto.RegisterType((*UserScriptsCommand)(nil), "pluginusermgrpb.UserScriptsCommand")
-	proto.RegisterType((*RemoveScriptsCommand)(nil), "pluginusermgrpb.RemoveScriptsCommand")
+	proto.RegisterType((*RemoveScriptCommand)(nil), "pluginusermgrpb.RemoveScriptCommand")
+	proto.RegisterType((*ShowScriptCommand)(nil), "pluginusermgrpb.ShowScriptCommand")
 }
 
-func init() { proto.RegisterFile("usermgr.proto", fileDescriptor_usermgr_f21fc65ed23da2bf) }
+func init() { proto.RegisterFile("usermgr.proto", fileDescriptor_usermgr_31cae0e4645f968f) }
 
-var fileDescriptor_usermgr_f21fc65ed23da2bf = []byte{
-	// 178 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_usermgr_31cae0e4645f968f = []byte{
+	// 186 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2d, 0x2d, 0x4e, 0x2d,
 	0xca, 0x4d, 0x2f, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x2f, 0xc8, 0x29, 0x4d, 0xcf,
 	0xcc, 0x83, 0x0a, 0x16, 0x24, 0x29, 0xf5, 0x31, 0x72, 0x09, 0x84, 0x16, 0xa4, 0x04, 0x27, 0x17,
@@ -220,7 +279,7 @@ var fileDescriptor_usermgr_f21fc65ed23da2bf = []byte{
 	0x1b, 0x02, 0x96, 0x65, 0x06, 0xcb, 0x22, 0x89, 0x08, 0xa9, 0x71, 0xf1, 0x65, 0x25, 0x16, 0x95,
 	0x65, 0x16, 0xfb, 0xe5, 0xa7, 0xa4, 0x82, 0xd5, 0xb0, 0x80, 0xd5, 0xa0, 0x89, 0x2a, 0x15, 0x70,
 	0x09, 0x85, 0x16, 0xa7, 0x16, 0x41, 0x1c, 0x54, 0x4c, 0x89, 0x8b, 0x30, 0x6d, 0x64, 0xc6, 0x6a,
-	0x63, 0x16, 0x97, 0x48, 0x50, 0x6a, 0x6e, 0x7e, 0x59, 0x2a, 0x15, 0xec, 0x24, 0x10, 0x0a, 0x49,
-	0x6c, 0xe0, 0x68, 0x30, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x58, 0x48, 0x22, 0x50, 0x97, 0x01,
-	0x00, 0x00,
+	0x63, 0x26, 0x97, 0x70, 0x50, 0x6a, 0x6e, 0x7e, 0x59, 0x2a, 0xcd, 0x03, 0x41, 0x29, 0x9d, 0x4b,
+	0x30, 0x38, 0x23, 0xbf, 0x9c, 0xe6, 0x16, 0x25, 0xb1, 0x81, 0xa3, 0xdb, 0x18, 0x10, 0x00, 0x00,
+	0xff, 0xff, 0x1a, 0xf4, 0xcb, 0x14, 0xff, 0x01, 0x00, 0x00,
 }

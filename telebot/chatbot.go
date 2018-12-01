@@ -24,6 +24,7 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/normal"
 	"github.com/zhs007/jarvistelebot/plugins/timestamp"
 	"github.com/zhs007/jarvistelebot/plugins/usermgr"
+	"github.com/zhs007/jarvistelebot/plugins/userscript"
 	"github.com/zhs007/jarvistelebot/plugins/xlsx2json"
 
 	"go.uber.org/zap"
@@ -51,6 +52,7 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(plugincore.PluginName, plugincore.NewPlugin)
 	mgrPlugins.RegPlugin(pluginjarvisnodeex.PluginName, pluginjarvisnodeex.NewPlugin)
 	mgrPlugins.RegPlugin(pluginusermgr.PluginName, pluginusermgr.NewPlugin)
+	mgrPlugins.RegPlugin(pluginuserscript.PluginName, pluginuserscript.NewPlugin)
 
 	mgrPlugins.SetDefaultPlugin(cfg.DefaultPlugin)
 

@@ -10,14 +10,14 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/usermgr/proto"
 )
 
-// cmdRmScripts - rmscript
-type cmdRmScripts struct {
+// cmdRmScript - rmscript
+type cmdRmScript struct {
 }
 
 // RunCommand - run command
-func (cmd *cmdRmScripts) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
+func (cmd *cmdRmScript) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
 	if params.CommandLine != nil {
-		rmscmd, ok := params.CommandLine.(*pluginusermgrpb.RemoveScriptsCommand)
+		rmscmd, ok := params.CommandLine.(*pluginusermgrpb.RemoveScriptCommand)
 		if !ok {
 			return false
 		}
@@ -86,7 +86,7 @@ func (cmd *cmdRmScripts) RunCommand(ctx context.Context, params *chatbot.Message
 }
 
 // Parse - parse command line
-func (cmd *cmdRmScripts) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
+func (cmd *cmdRmScript) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) < 2 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
@@ -103,7 +103,7 @@ func (cmd *cmdRmScripts) ParseCommandLine(params *chatbot.MessageParams) (proto.
 	}
 
 	if (*uid != "" || *uname != "") && *scriptname != "" {
-		return &pluginusermgrpb.RemoveScriptsCommand{
+		return &pluginusermgrpb.RemoveScriptCommand{
 			UserID:     *uid,
 			UserName:   *uname,
 			ScriptName: *scriptname,

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package pluginuserscriptpb;
+
+// RunScriptCommand - run command
+message RunScriptCommand {
+    // scriptName - script name
+    string scriptName = 1;
+}
