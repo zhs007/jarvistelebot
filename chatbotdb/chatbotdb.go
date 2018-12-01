@@ -100,6 +100,14 @@ const queryGetUsers = `query Users($snapshotID: Int64!, $beginIndex: Int!, $nums
 	}
 }`
 
+const queryGetUserScripts = `query UserScripts($userID: String!, $jarvisNodeName: String!) {
+	userscripts(userID: $userID, jarvisNodeName: $jarvisNodeName) {
+		scripts {
+			scriptName
+		}
+	}
+}`
+
 // ChatBotDB - chatbotdb
 type ChatBotDB struct {
 	db *ankadb.AnkaDB
@@ -442,7 +450,7 @@ func (db *ChatBotDB) GetUserScripts(userID string, jarvisNodeName string) (*pb.U
 	params["userID"] = userID
 	params["jarvisNodeName"] = jarvisNodeName
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetUsers, params)
+	result, err := db.db.LocalQuery(context.Background(), queryGetUserScripts, params)
 	if err != nil {
 		jarvisbase.Warn("ChatBotDB.GetUserScripts:LocalQuery", zap.Error(err))
 
