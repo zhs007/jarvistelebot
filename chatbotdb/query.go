@@ -277,7 +277,7 @@ var typeQuery = graphql.NewObject(
 
 					lstScripts := &pb.UserScriptList{}
 					curit := curdb.NewIteratorWithPrefix([]byte(curPrefixKey))
-					// jarvisbase.Debug("curdb.NewIteratorWithPrefix")
+					jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("prefixkey", curPrefixKey))
 					for curit.Next() {
 						key := curit.Key()
 						userScript := &pb.UserScript{}
@@ -292,7 +292,7 @@ var typeQuery = graphql.NewObject(
 							lstScripts.Scripts = append(lstScripts.Scripts, userScript)
 						}
 
-						// jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("key", string(key)))
+						jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("key", string(key)))
 					}
 					curit.Release()
 					err := curit.Error()

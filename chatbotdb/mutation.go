@@ -3,6 +3,9 @@ package chatbotdb
 import (
 	"encoding/base64"
 
+	"github.com/zhs007/jarviscore/base"
+	"go.uber.org/zap"
+
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
 	pb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
@@ -157,6 +160,10 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				if err != nil {
 					return nil, err
 				}
+
+				jarvisbase.Debug("updUserScript",
+					zap.String("key", makeUserScriptKey(userID, scriptName)),
+					jarvisbase.JSON("userScript", userScript))
 
 				return userScript, nil
 			},
