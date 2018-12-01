@@ -405,7 +405,7 @@ func (db *ChatBotDB) GetUserScript(userID string, scriptName string) (*pb.UserSc
 		return nil, err
 	}
 
-	// jarvisbase.Debug("ChatBotDB.GetUserScript", jarvisbase.JSON("result", result))
+	jarvisbase.Debug("ChatBotDB.GetUserScript", jarvisbase.JSON("result", result))
 
 	rus := &ResultUserScript{}
 	err = ankadb.MakeObjFromResult(result, rus)
