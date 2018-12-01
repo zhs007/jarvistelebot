@@ -456,7 +456,7 @@ func (db *ChatBotDB) GetUserScripts(userID string, jarvisNodeName string) (*pb.U
 	// 	return nil, err
 	// }
 
-	// jarvisbase.Debug("ChatBotDB.GetUsers:Marshal", jarvisbase.JSON("result", result))
+	jarvisbase.Debug("ChatBotDB.GetUserScripts", jarvisbase.JSON("result", result))
 
 	us := &ResultUserScripts{}
 	err = ankadb.MakeObjFromResult(result, us)
