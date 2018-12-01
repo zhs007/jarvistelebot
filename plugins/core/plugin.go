@@ -24,6 +24,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("version", &cmdVersion{})
 	cmd.AddCommand("users", &cmdUsers{})
 	cmd.AddCommand("user", &cmdUser{})
+	cmd.AddCommand("plugins", &cmdPlugins{})
 
 	p := &corePlugin{
 		cmd: cmd,

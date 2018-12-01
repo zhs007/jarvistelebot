@@ -29,6 +29,8 @@ type ChatBot interface {
 	NewMsgFromProto(msg *chatbotdbpb.Message) Message
 	// GetMsg -
 	GetMsg(chatid string) (Message, error)
+	// GetPluginsMgr - get plugins manager
+	GetPluginsMgr() PluginsMgr
 
 	// GetJarvisNodeCoreDB - get jarvis node coredb
 	GetJarvisNodeCoreDB() *jarviscore.CoreDB
@@ -277,4 +279,9 @@ func (base *BasicChatBot) GetMaster() User {
 // SetMaster - set master, you can only set userid or username
 func (base *BasicChatBot) SetMaster(userid string, username string) {
 	base.MgrUser.SetMaster(userid, username)
+}
+
+// GetPluginsMgr - get plugins manager
+func (base *BasicChatBot) GetPluginsMgr() PluginsMgr {
+	return base.MgrPlugins
 }

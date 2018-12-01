@@ -40,6 +40,9 @@ type PluginsMgr interface {
 
 	// HasPlugin - has a plugin
 	HasPlugin(pluginName string) bool
+
+	// GetPlugins - get plugins
+	GetPlugins() []string
 }
 
 // NewPluginsMgr - new default plugins mgr
@@ -274,4 +277,23 @@ func (mgr *pluginsMgr) CanNewPlugin(pluginName string) bool {
 func (mgr *pluginsMgr) HasPlugin(pluginName string) bool {
 	_, ok := mgr.mapPlugin[pluginName]
 	return ok
+}
+
+// GetPlugins - get plugins
+func (mgr *pluginsMgr) GetPlugins() []string {
+	var lst []string
+
+	for _, v := range mgr.lstWritableCommand {
+		lst = append(lst, v.GetPluginName())
+	}
+
+	for _, v := range mgr.lstCommand {
+		lst = append(lst, v.GetPluginName())
+	}
+
+	for _, v := range mgr.lstNormal {
+		lst = append(lst, v.GetPluginName())
+	}
+
+	return lst
 }
