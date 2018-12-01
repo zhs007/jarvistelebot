@@ -86,7 +86,7 @@ func NewTeleChatBot(cfg *Config) (chatbot.ChatBot, error) {
 	tcb.Init(path.Join(cfg.CfgPath, "chatbot.yaml"), mgrPlugins)
 
 	tcb.SetMaster("", cfg.TeleBotMaster)
-	tcb.NewEventMgr(tcb)
+	// tcb.NewEventMgr(tcb)
 
 	return tcb, nil
 }
@@ -315,7 +315,7 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 		return err
 	}
 
-	cb.OnEvent(ctx, chatbot.EventOnStarted)
+	cb.OnEvent(ctx, cb, chatbot.EventOnStarted)
 
 	for update := range updates {
 		if update.CallbackQuery != nil {

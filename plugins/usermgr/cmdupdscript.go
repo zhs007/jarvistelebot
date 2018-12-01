@@ -71,6 +71,8 @@ func (cmd *cmdUpdScript) RunCommand(ctx context.Context, params *chatbot.Message
 				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "OK, It is done.")
 			}
 
+			params.ChatBot.OnUserEvent(ctx, params.ChatBot, chatbot.UserEventOnChgUserScript, user.UserID)
+
 			return true
 		}
 

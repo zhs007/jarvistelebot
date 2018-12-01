@@ -8,7 +8,7 @@ import (
 )
 
 // onEventStarted - on started
-func onEventStarted(ctx context.Context, eventid string, chatbot ChatBot) error {
+func onEventStarted(ctx context.Context, chatbot ChatBot, eventid string) error {
 
 	user := chatbot.GetMaster()
 	if user != nil {
@@ -17,6 +17,8 @@ func onEventStarted(ctx context.Context, eventid string, chatbot ChatBot) error 
 			jarvisbase.Warn("onEventStarted:SendTextMsg", zap.Error(err))
 		}
 	}
+
+	chatbot.GetUserScriptsMgr().init(chatbot)
 
 	return nil
 }

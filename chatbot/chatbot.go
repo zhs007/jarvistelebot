@@ -31,6 +31,8 @@ type ChatBot interface {
 	GetMsg(chatid string) (Message, error)
 	// GetPluginsMgr - get plugins manager
 	GetPluginsMgr() PluginsMgr
+	// GetUserScriptsMgr - get user scripts manager
+	GetUserScriptsMgr() *UserScriptsMgr
 
 	// GetJarvisNodeCoreDB - get jarvis node coredb
 	GetJarvisNodeCoreDB() *jarviscore.CoreDB
@@ -77,12 +79,18 @@ type ChatBot interface {
 	// GetVersion - get version
 	GetVersion() string
 
-	// NewEventMgr - new EventMgr
-	NewEventMgr(chatbot ChatBot)
+	// // NewEventMgr - new EventMgr
+	// //	Because chatbot is an interface that is not fully implemented,
+	// //	it can only be implemented like this.
+	// NewEventMgr(chatbot ChatBot)
 	// RegEventFunc - reg event
 	RegEventFunc(eventid string, eventfunc FuncEvent) error
 	// OnEvent - on event
-	OnEvent(ctx context.Context, eventid string) error
+	OnEvent(ctx context.Context, chatbot ChatBot, eventid string) error
+	// RegUserEventFunc - reg event
+	RegUserEventFunc(eventid string, eventfunc FuncUserEvent) error
+	// OnUserEvent - on event
+	OnUserEvent(ctx context.Context, chatbot ChatBot, eventid string, userID string) error
 }
 
 // BasicChatBot - base chatbot
@@ -95,6 +103,7 @@ type BasicChatBot struct {
 	mgrMsgCallback       *msgCallbackMgr
 	mgrJsrvisMsgCallback *jarvisMsgCallbackMgr
 	mgrEvent             *eventMgr
+	mgrUserScripts       *UserScriptsMgr
 	// mgrUser              UserMgr
 }
 
@@ -121,6 +130,10 @@ func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 	base.mgrMsgCallback = newMsgCallbackMgr()
 	base.mgrJsrvisMsgCallback = newJarvisMsgCallbackMgr()
 	base.MgrUser = NewBasicUserMgr()
+	base.mgrUserScripts = &UserScriptsMgr{}
+
+	base.mgrEvent = newEventMgr()
+	base.RegEventFunc(EventOnStarted, onEventStarted)
 
 	return nil
 }
@@ -234,12 +247,12 @@ func (base *BasicChatBot) GetVersion() string {
 	return basedef.VERSION
 }
 
-// NewEventMgr - new EventMgr
-func (base *BasicChatBot) NewEventMgr(chatbot ChatBot) {
-	base.mgrEvent = newEventMgr(chatbot)
+// // NewEventMgr - new EventMgr
+// func (base *BasicChatBot) NewEventMgr(chatbot ChatBot) {
+// 	base.mgrEvent = newEventMgr(chatbot)
 
-	base.RegEventFunc(EventOnStarted, onEventStarted)
-}
+// 	base.RegEventFunc(EventOnStarted, onEventStarted)
+// }
 
 // RegEventFunc - reg event
 func (base *BasicChatBot) RegEventFunc(eventid string, eventfunc FuncEvent) error {
@@ -247,8 +260,18 @@ func (base *BasicChatBot) RegEventFunc(eventid string, eventfunc FuncEvent) erro
 }
 
 // OnEvent - on event
-func (base *BasicChatBot) OnEvent(ctx context.Context, eventid string) error {
-	return base.mgrEvent.onEvent(ctx, eventid)
+func (base *BasicChatBot) OnEvent(ctx context.Context, chatbot ChatBot, eventid string) error {
+	return base.mgrEvent.onEvent(ctx, chatbot, eventid)
+}
+
+// RegUserEventFunc - reg event
+func (base *BasicChatBot) RegUserEventFunc(eventid string, eventfunc FuncUserEvent) error {
+	return base.mgrEvent.regUserEventFunc(eventid, eventfunc)
+}
+
+// OnUserEvent - on event
+func (base *BasicChatBot) OnUserEvent(ctx context.Context, chatbot ChatBot, eventid string, userID string) error {
+	return base.mgrEvent.onUserEvent(ctx, chatbot, eventid, userID)
 }
 
 // GetMaster - get master
@@ -284,4 +307,9 @@ func (base *BasicChatBot) SetMaster(userid string, username string) {
 // GetPluginsMgr - get plugins manager
 func (base *BasicChatBot) GetPluginsMgr() PluginsMgr {
 	return base.MgrPlugins
+}
+
+// GetUserScriptsMgr - get user scripts manager
+func (base *BasicChatBot) GetUserScriptsMgr() *UserScriptsMgr {
+	return base.mgrUserScripts
 }
