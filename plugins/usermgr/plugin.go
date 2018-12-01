@@ -23,6 +23,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 	cmd.AddCommand("updscript", &cmdUpdScript{})
 	cmd.AddCommand("userscripts", &cmdUserScripts{})
+	cmd.AddCommand("rmscript", &cmdRmScripts{})
 	// cmd.AddCommand("users", &cmdUsers{})
 	// cmd.AddCommand("user", &cmdUser{})
 

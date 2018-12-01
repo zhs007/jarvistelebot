@@ -32,6 +32,10 @@ const queryUpdUser = `mutation UpdUser($user: UserInput!) {
 	}
 }`
 
+const queryRmScript = `mutation RmScript($userID: ID!, $scriptName: ID!) {
+	rmScript(userID: $userID, scriptName: $scriptName)
+}`
+
 const queryGetMsg = `query Msg($chatID: ID!) {
 	msg(chatID: $chatID) {
 		chatID
@@ -132,7 +136,7 @@ func NewChatBotDB(dbpath string, httpAddr string, engine string) (*ChatBotDB, er
 		return nil, err
 	}
 
-	jarvisbase.Debug("NewChatBotDB", zap.String("dbpath", dbpath),
+	jarvisbase.Info("NewChatBotDB", zap.String("dbpath", dbpath),
 		zap.String("httpAddr", httpAddr), zap.String("engine", engine))
 
 	// return ankaDB, err
@@ -578,6 +582,119 @@ func (db *ChatBotDB) GetUserScripts(userID string, jarvisNodeName string) (*pb.U
 	}
 
 	return lst, nil
+
+	// if db.db == nil {
+	// 	return nil, ErrChatBotDBNil
+	// }
+
+	// params := make(map[string]interface{})
+	// params["snapshotID"] = int64(0)
+	// params["beginIndex"] = 0
+	// params["nums"] = nums
+
+	// jarvisbase.Debug("GetUsers",
+	// 	zap.String("query string", queryUsers))
+
+	// result, err := db.db.LocalQuery(context.Background(), queryUsers, params)
+	// if err != nil {
+	// 	jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	// s, err := json.Marshal(result)
+	// if err != nil {
+	// 	jarvisbase.Error("CoreDB.GetNodes", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	// jarvisbase.Debug("GetUsers",
+	// 	jarvisbase.JSON("resultstr", string(s)))
+
+	// us := &ResultUsers{}
+	// err = ankadb.MakeObjFromResult(result, us)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// jarvisbase.Debug("GetUsers",
+	// 	jarvisbase.JSON("result", us))
+
+	// lst, err := ResultUsers2UserList(us)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// return lst, nil
+}
+
+// RemoveUserScripts - remove user scripts
+func (db *ChatBotDB) RemoveUserScripts(userID string, scriptName string) error {
+	if db.db == nil {
+		return ErrChatBotDBNil
+	}
+
+	params := make(map[string]interface{})
+	params["userID"] = userID
+	params["scriptName"] = scriptName
+
+	result, err := db.db.LocalQuery(context.Background(), queryRmScript, params)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.RemoveUserScripts:LocalQuery", zap.Error(err))
+
+		return err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUserScripts:GetResultError", zap.Error(err))
+
+		return err
+	}
+
+	return nil
+
+	// if result.HasErrors() {
+	// 	var errstr string
+
+	// 	for i, v := range result.Errors {
+	// 		str := fmt.Sprintf("Error-%v: %v", (i + 1), v.Error())
+	// 		if i > 0 {
+	// 			errstr = errstr + " " + str
+	// 		} else {
+	// 			errstr = str
+	// 		}
+	// 	}
+
+	// 	return nil, errors.New(errstr)
+	// }
+
+	// s, err := json.Marshal(result)
+	// if err != nil {
+	// 	jarvisbase.Error("CoreDB.GetUsers", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	// jarvisbase.Debug("ChatBotDB.GetUserScripts", jarvisbase.JSON("result", result))
+
+	// us := &ResultUserScripts{}
+	// err = ankadb.MakeObjFromResult(result, us)
+	// if err != nil {
+	// 	jarvisbase.Warn("ChatBotDB.GetUserScripts:MakeObjFromResult", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	// lst, err := ResultUserScripts2UserScriptList(us)
+	// if err != nil {
+	// 	jarvisbase.Warn("ChatBotDB.GetUserScripts:ResultUserScripts2UserScriptList", zap.Error(err))
+
+	// 	return nil, err
+	// }
+
+	// return lst, nil
 
 	// if db.db == nil {
 	// 	return nil, ErrChatBotDBNil

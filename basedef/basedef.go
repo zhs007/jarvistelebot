@@ -4,7 +4,7 @@ package basedef
 const JARVISNODETYPE = "telebot.jarvis"
 
 // VERSION - version
-const VERSION = "0.1.27"
+const VERSION = "0.1.28"
 
 // MaxTextMessageSize - max message text size
 const MaxTextMessageSize = 4096

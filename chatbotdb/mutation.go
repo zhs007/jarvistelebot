@@ -3,9 +3,6 @@ package chatbotdb
 import (
 	"encoding/base64"
 
-	"github.com/zhs007/jarviscore/base"
-	"go.uber.org/zap"
-
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
 	pb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
@@ -161,11 +158,50 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, err
 				}
 
-				jarvisbase.Debug("updUserScript",
-					zap.String("key", makeUserScriptKey(userID, scriptName)),
-					jarvisbase.JSON("userScript", userScript))
+				// jarvisbase.Debug("updUserScript",
+				// 	zap.String("key", makeUserScriptKey(userID, scriptName)),
+				// 	jarvisbase.JSON("userScript", userScript))
 
 				return userScript, nil
+			},
+		},
+		"rmUserScript": &graphql.Field{
+			Type:        graphql.String,
+			Description: "remove user script",
+			Args: graphql.FieldConfigArgument{
+				"userID": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+				"scriptName": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+				if anka == nil {
+					return nil, ankadb.ErrCtxAnkaDB
+				}
+
+				curdb := anka.MgrDB.GetDB("chatbotdb")
+				if curdb == nil {
+					return nil, ankadb.ErrCtxCurDB
+				}
+
+				userID := params.Args["userID"].(string)
+				scriptName := params.Args["scriptName"].(string)
+
+				key := makeUserScriptKey(userID, scriptName)
+
+				err := curdb.Delete([]byte(key))
+				if err != nil {
+					return nil, err
+				}
+
+				// jarvisbase.Debug("updUserScript",
+				// 	zap.String("key", makeUserScriptKey(userID, scriptName)),
+				// 	jarvisbase.JSON("userScript", userScript))
+
+				return key, nil
 			},
 		},
 	},

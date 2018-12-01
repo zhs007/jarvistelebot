@@ -23,3 +23,13 @@ message UserScriptsCommand {
     // jarvisNodeName - jarvis node name
     string jarvisNodeName = 3;
 }
+
+// RemoveScriptsCommand - rmscript command
+message RemoveScriptsCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+    // scriptName - script name
+    string scriptName = 3;
+}

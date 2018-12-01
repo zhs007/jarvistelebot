@@ -67,4 +67,5 @@ type Mutation {
     updUser(user: User!): User!
 
     updUserScript(userID: ID!, jarvisNodeName: String!, scriptName: ID!, file: File!): UserScript!
+    rmUserScript(userID: ID!, scriptName: ID!) : String!
 }
