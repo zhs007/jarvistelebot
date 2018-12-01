@@ -84,6 +84,8 @@ const queryGetUserWithUserName = `query UserWithUserName($userName: ID!) {
 
 const queryGetUserScript = `query UserScript($userID: ID!, $scriptName: ID!) {
 	userScript(userID: $userID, scriptName: $scriptName) {
+		scriptName
+		jarvisNodeName
 		file {
 			filename
 			strData
@@ -299,7 +301,7 @@ func (db *ChatBotDB) GetUser(userid string) (*pb.User, error) {
 		return nil, err
 	}
 
-	jarvisbase.Debug("ChatBotDB.GetUser", jarvisbase.JSON("result", result))
+	// jarvisbase.Debug("ChatBotDB.GetUser", jarvisbase.JSON("result", result))
 
 	return ResultUser2User(ruser)
 }
@@ -333,7 +335,7 @@ func (db *ChatBotDB) GetUserWithUserName(username string) (*pb.User, error) {
 		return nil, err
 	}
 
-	jarvisbase.Debug("ChatBotDB.GetUserWithUserName", jarvisbase.JSON("result", result))
+	// jarvisbase.Debug("ChatBotDB.GetUserWithUserName", jarvisbase.JSON("result", result))
 
 	return ResultUserWithUserName2User(ruser)
 }
@@ -375,8 +377,8 @@ func (db *ChatBotDB) SaveUserScript(userID string, userScript *pb.UserScript) er
 		return err
 	}
 
-	jarvisbase.Debug("ChatBotDB.SaveUserScript",
-		jarvisbase.JSON("result", result))
+	// jarvisbase.Debug("ChatBotDB.SaveUserScript",
+	// 	jarvisbase.JSON("result", result))
 
 	return nil
 }
@@ -405,7 +407,7 @@ func (db *ChatBotDB) GetUserScript(userID string, scriptName string) (*pb.UserSc
 		return nil, err
 	}
 
-	jarvisbase.Debug("ChatBotDB.GetUserScript", jarvisbase.JSON("result", result))
+	// jarvisbase.Debug("ChatBotDB.GetUserScript", jarvisbase.JSON("result", result))
 
 	rus := &ResultUserScript{}
 	err = ankadb.MakeObjFromResult(result, rus)
@@ -564,7 +566,7 @@ func (db *ChatBotDB) GetUserScripts(userID string, jarvisNodeName string) (*pb.U
 	// 	return nil, err
 	// }
 
-	jarvisbase.Debug("ChatBotDB.GetUserScripts", jarvisbase.JSON("result", result))
+	// jarvisbase.Debug("ChatBotDB.GetUserScripts", jarvisbase.JSON("result", result))
 
 	us := &ResultUserScripts{}
 	err = ankadb.MakeObjFromResult(result, us)
