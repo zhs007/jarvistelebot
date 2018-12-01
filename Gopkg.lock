@@ -106,8 +106,8 @@
     "graphqlext",
     "proto"
   ]
-  revision = "ef6651b14ec19cf5ffe33ecc445bf468d56a16fe"
-  version = "v0.2.7"
+  revision = "530bdea9d82cde9c6a44931fb5d7e46e8dee8ffc"
+  version = "v0.2.8"
 
 [[projects]]
   name = "github.com/zhs007/jarviscore"
@@ -119,8 +119,8 @@
     "crypto",
     "proto"
   ]
-  revision = "b7896a8e80567d62acd2f8d19d1c4184d0856692"
-  version = "v0.6.19"
+  revision = "a8fc8a1a57d2a95fa5caea12a333a6d279bd217c"
+  version = "v0.6.20"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -242,6 +242,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4c8509d081b3b571108ce3c1353df0932927c8be252d38f550d0e42897f84b09"
+  inputs-digest = "460e383c36ebf2e0fa58e0cd390d4eb247937fbc0ba9ee0e3dea0582463f6fba"
   solver-name = "gps-cdcl"
   solver-version = 1

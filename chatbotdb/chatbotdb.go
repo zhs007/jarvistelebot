@@ -17,8 +17,8 @@ const querySaveMsg = `mutation NewMsg($msg: MessageInput!) {
 	}
 }`
 
-const querySaveUserScript = `mutation UpdUserScript(userID: ID!, scriptName: ID!, file: FileInput!) {
-	updUserScript(userID: $userID, scriptName: $scriptName, file: $file) {
+const querySaveUserScript = `mutation UpdUserScript(userID: ID!, jarvisNodeName: ID!, scriptName: ID!, file: FileInput!) {
+	updUserScript(userID: $userID, jarvisNodeName: $jarvisNodeName, scriptName: $scriptName, file: $file) {
 		scriptName
 	}
 }`
@@ -171,6 +171,15 @@ func (db *ChatBotDB) SaveMsg(msg *pb.Message) error {
 
 	result, err := db.db.LocalQuery(context.Background(), querySaveMsg, params)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.SaveMsg:LocalQuery", zap.Error(err))
+
+		return err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.SaveMsg:GetResultError", zap.Error(err))
+
 		return err
 	}
 
@@ -191,6 +200,15 @@ func (db *ChatBotDB) GetMsg(chatid string) (*pb.Message, error) {
 
 	result, err := db.db.LocalQuery(context.Background(), queryGetMsg, params)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetMsg:LocalQuery", zap.Error(err))
+
+		return nil, err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetMsg:GetResultError", zap.Error(err))
+
 		return nil, err
 	}
 
@@ -230,6 +248,15 @@ func (db *ChatBotDB) UpdUser(user *pb.User) error {
 
 	result, err := db.db.LocalQuery(context.Background(), queryUpdUser, params)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.UpdUser:LocalQuery", zap.Error(err))
+
+		return err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.UpdUser:GetResultError", zap.Error(err))
+
 		return err
 	}
 
@@ -250,6 +277,15 @@ func (db *ChatBotDB) GetUser(userid string) (*pb.User, error) {
 
 	result, err := db.db.LocalQuery(context.Background(), queryGetUser, params)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUser:LocalQuery", zap.Error(err))
+
+		return nil, err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUser:GetResultError", zap.Error(err))
+
 		return nil, err
 	}
 
@@ -275,6 +311,15 @@ func (db *ChatBotDB) GetUserWithUserName(username string) (*pb.User, error) {
 
 	result, err := db.db.LocalQuery(context.Background(), queryGetUserWithUserName, params)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUserWithUserName:LocalQuery", zap.Error(err))
+
+		return nil, err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUserWithUserName:GetResultError", zap.Error(err))
+
 		return nil, err
 	}
 
@@ -310,6 +355,15 @@ func (db *ChatBotDB) SaveUserScript(userID string, userScript *pb.UserScript) er
 
 	result, err := db.db.LocalQuery(context.Background(), querySaveUserScript, params)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.SaveUserScript:LocalQuery", zap.Error(err))
+
+		return err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.SaveUserScript:GetResultError", zap.Error(err))
+
 		return err
 	}
 
@@ -331,10 +385,19 @@ func (db *ChatBotDB) GetUserScript(userID string, scriptName string) (*pb.UserSc
 
 	result, err := db.db.LocalQuery(context.Background(), queryGetUserScript, params)
 	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUserScript:LocalQuery", zap.Error(err))
+
 		return nil, err
 	}
 
-	jarvisbase.Debug("ChatBotDB.GetUserScript", jarvisbase.JSON("result", result))
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUserScript:GetResultError", zap.Error(err))
+
+		return nil, err
+	}
+
+	// jarvisbase.Debug("ChatBotDB.GetUserScript", jarvisbase.JSON("result", result))
 
 	rus := &ResultUserScript{}
 	err = ankadb.MakeObjFromResult(result, rus)
@@ -364,6 +427,13 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 	result, err := db.db.LocalQuery(context.Background(), queryGetUsers, params)
 	if err != nil {
 		jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
+
+		return nil, err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUsers:GetResultError", zap.Error(err))
 
 		return nil, err
 	}
@@ -456,6 +526,28 @@ func (db *ChatBotDB) GetUserScripts(userID string, jarvisNodeName string) (*pb.U
 
 		return nil, err
 	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetUserScripts:GetResultError", zap.Error(err))
+
+		return nil, err
+	}
+
+	// if result.HasErrors() {
+	// 	var errstr string
+
+	// 	for i, v := range result.Errors {
+	// 		str := fmt.Sprintf("Error-%v: %v", (i + 1), v.Error())
+	// 		if i > 0 {
+	// 			errstr = errstr + " " + str
+	// 		} else {
+	// 			errstr = str
+	// 		}
+	// 	}
+
+	// 	return nil, errors.New(errstr)
+	// }
 
 	// s, err := json.Marshal(result)
 	// if err != nil {
