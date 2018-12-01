@@ -3,10 +3,12 @@ package pluginuserscript
 import (
 	"context"
 
+	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/plugins/userscript/proto"
 )
@@ -38,7 +40,42 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 			return false, chatbot.ErrInvalidCommandLine
 		}
 
-		chatbot.SendTextMsg(params.ChatBot, from, rscmd.ScriptName)
+		us, err := params.ChatBot.GetChatBotDB().GetUserScript(from.GetUserID(), rscmd.ScriptName)
+		if err != nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+
+			return false, err
+		}
+
+		chatbot.SendTextMsg(params.ChatBot, from,
+			"I will execute the script "+rscmd.ScriptName+" for "+us.JarvisNodeName)
+
+		ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, us.File.Filename, us.File.Data, "")
+		if err != nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			// jarvisbase.Warn("userscriptPlugin.OnMessage", zap.Error(err))
+
+			return false, err
+		}
+
+		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(us.JarvisNodeName)
+		if curnode == nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrNoJarvisNode.Error())
+
+			return false, chatbot.ErrNoJarvisNode
+		}
+
+		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
+
+		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+			cr := msg.GetCtrlResult()
+
+			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)
+
+			return nil
+		})
+
+		// chatbot.SendTextMsg(params.ChatBot, from, rscmd.ScriptName)
 	}
 
 	// if params.Msg.GetText() == "" {

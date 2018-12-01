@@ -57,4 +57,6 @@ var (
 	ErrMsgNotMine = errors.New("This message should not be processed by me")
 	// ErrInvalidCommandLine - Invalid command line
 	ErrInvalidCommandLine = errors.New("Invalid command line")
+	// ErrNoJarvisNode - Can't find jarvisnode
+	ErrNoJarvisNode = errors.New("Can't find jarvisnode")
 )
