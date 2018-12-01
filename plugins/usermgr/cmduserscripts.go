@@ -98,11 +98,18 @@ func (cmd *cmdUserScripts) ParseCommandLine(params *chatbot.MessageParams) (prot
 		return nil, err
 	}
 
-	if (*uid != "" || *uname != "") && *nodename != "" {
+	if *uid != "" || *uname != "" {
+		if *nodename != "" {
+			return &pluginusermgrpb.UserScriptsCommand{
+				UserID:         *uid,
+				UserName:       *uname,
+				JarvisNodeName: *nodename,
+			}, nil
+		}
+
 		return &pluginusermgrpb.UserScriptsCommand{
-			UserID:         *uid,
-			UserName:       *uname,
-			JarvisNodeName: *nodename,
+			UserID:   *uid,
+			UserName: *uname,
 		}, nil
 	}
 
