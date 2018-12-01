@@ -62,7 +62,8 @@ type ResultUserWithUserName struct {
 // ResultUserScript -
 type ResultUserScript struct {
 	UserScript struct {
-		ScriptName string `json:"scriptName"`
+		ScriptName     string `json:"scriptName"`
+		JarvisNodeName string `json:"jarvisNodeName"`
 
 		File struct {
 			Filename string `json:"filename"`
@@ -178,7 +179,8 @@ func ResultUserWithUserName2User(result *ResultUserWithUserName) (*pb.User, erro
 // ResultUserScript2UserScript - ResultUserScript -> UserScript
 func ResultUserScript2UserScript(result *ResultUserScript) (*pb.UserScript, error) {
 	userScript := &pb.UserScript{
-		ScriptName: result.UserScript.ScriptName,
+		ScriptName:     result.UserScript.ScriptName,
+		JarvisNodeName: result.UserScript.JarvisNodeName,
 	}
 
 	if result.UserScript.File.Filename != "" {

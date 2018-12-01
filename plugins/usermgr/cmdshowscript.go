@@ -50,7 +50,12 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 			return false
 		}
 
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(us.File.Data))
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+			"This script is prepared for "+us.JarvisNodeName)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+			"The script data:")
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+			string(us.File.Data))
 
 		// params.ChatBot.OnUserEvent(ctx, params.ChatBot, chatbot.UserEventOnChgUserScript, user.UserID)
 
