@@ -345,7 +345,10 @@ func (db *ChatBotDB) SaveUserScript(userID string, userScript *pb.UserScript) er
 	}
 
 	params := make(map[string]interface{})
-	err := ankadb.MakeParamsFromMsg(params, "file", userScript.File)
+
+	fd := *userScript.File
+	fd.Data = nil
+	err := ankadb.MakeParamsFromMsg(params, "file", &fd)
 	if err != nil {
 		return err
 	}
