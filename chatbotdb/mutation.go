@@ -165,7 +165,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				return userScript, nil
 			},
 		},
-		"rmUserScript": &graphql.Field{
+		"removeUserScript": &graphql.Field{
 			Type:        graphql.String,
 			Description: "remove user script",
 			Args: graphql.FieldConfigArgument{

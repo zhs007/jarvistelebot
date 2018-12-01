@@ -32,8 +32,8 @@ const queryUpdUser = `mutation UpdUser($user: UserInput!) {
 	}
 }`
 
-const queryRmScript = `mutation RmScript($userID: ID!, $scriptName: ID!) {
-	rmScript(userID: $userID, scriptName: $scriptName)
+const queryRmScript = `mutation RemoveUserScript($userID: ID!, $scriptName: ID!) {
+	removeUserScript(userID: $userID, scriptName: $scriptName)
 }`
 
 const queryGetMsg = `query Msg($chatID: ID!) {
