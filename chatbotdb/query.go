@@ -235,6 +235,10 @@ var typeQuery = graphql.NewObject(
 						return nil, err
 					}
 
+					jarvisbase.Debug("updUserScript",
+						zap.String("key", makeUserScriptKey(userID, scriptName)),
+						jarvisbase.JSON("userScript", *userScript))
+
 					if userScript.File != nil && userScript.File.Data != nil {
 						userScript.File.StrData = string(userScript.File.Data)
 					}
