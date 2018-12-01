@@ -5,7 +5,9 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
+	"github.com/zhs007/jarviscore/base"
 	pb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
+	"go.uber.org/zap"
 )
 
 var typeMutation = graphql.NewObject(graphql.ObjectConfig{
@@ -158,9 +160,9 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, err
 				}
 
-				// jarvisbase.Debug("updUserScript",
-				// 	zap.String("key", makeUserScriptKey(userID, scriptName)),
-				// 	jarvisbase.JSON("userScript", userScript))
+				jarvisbase.Debug("updUserScript",
+					zap.String("key", makeUserScriptKey(userID, scriptName)),
+					jarvisbase.JSON("userScript", *userScript))
 
 				return userScript, nil
 			},
