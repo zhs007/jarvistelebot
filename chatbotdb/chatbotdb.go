@@ -352,6 +352,7 @@ func (db *ChatBotDB) SaveUserScript(userID string, userScript *pb.UserScript) er
 
 	params["userID"] = userID
 	params["scriptName"] = userScript.ScriptName
+	params["jarvisNodeName"] = userScript.JarvisNodeName
 
 	result, err := db.db.LocalQuery(context.Background(), querySaveUserScript, params)
 	if err != nil {
