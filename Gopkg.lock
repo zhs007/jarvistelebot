@@ -119,8 +119,8 @@
     "crypto",
     "proto"
   ]
-  revision = "45023ba10312edbc63c15fe351831bc371ad08e0"
-  version = "v0.6.18"
+  revision = "b7896a8e80567d62acd2f8d19d1c4184d0856692"
+  version = "v0.6.19"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -165,7 +165,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "fae4c4e3ad76c295c3d6d259f898136b4bf833a8"
+  revision = "351d144fa1fc0bd934e2408202be0c29f25e35a0"
 
 [[projects]]
   branch = "master"
@@ -242,6 +242,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3edde6149cbd5ee322391c817dd4eb0b178f7a44cde205e1e74e0b530ed08a5f"
+  inputs-digest = "4c8509d081b3b571108ce3c1353df0932927c8be252d38f550d0e42897f84b09"
   solver-name = "gps-cdcl"
   solver-version = 1
