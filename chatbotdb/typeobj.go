@@ -145,7 +145,7 @@ var typeUserScriptList = graphql.NewObject(
 			"maxIndex": &graphql.Field{
 				Type: graphql.Int,
 			},
-			"Scripts": &graphql.Field{
+			"scripts": &graphql.Field{
 				Type: graphql.NewList(typeUserScript),
 			},
 		},
