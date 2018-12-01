@@ -101,7 +101,7 @@ const queryGetUsers = `query Users($snapshotID: Int64!, $beginIndex: Int!, $nums
 }`
 
 const queryGetUserScripts = `query UserScripts($userID: String!, $jarvisNodeName: String!) {
-	userscripts(userID: $userID, jarvisNodeName: $jarvisNodeName) {
+	userScripts(userID: $userID, jarvisNodeName: $jarvisNodeName) {
 		scripts {
 			scriptName
 		}
