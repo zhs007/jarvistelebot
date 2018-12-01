@@ -17,7 +17,7 @@ const querySaveMsg = `mutation NewMsg($msg: MessageInput!) {
 	}
 }`
 
-const querySaveUserScript = `mutation UpdUserScript(userID: ID!, jarvisNodeName: ID!, scriptName: ID!, file: FileInput!) {
+const querySaveUserScript = `mutation UpdUserScript($userID: ID!, $jarvisNodeName: ID!, $scriptName: ID!, $file: FileInput!) {
 	updUserScript(userID: $userID, jarvisNodeName: $jarvisNodeName, scriptName: $scriptName, file: $file) {
 		scriptName
 	}
