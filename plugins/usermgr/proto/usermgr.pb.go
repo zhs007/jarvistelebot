@@ -37,7 +37,7 @@ func (m *UpdScriptCommand) Reset()         { *m = UpdScriptCommand{} }
 func (m *UpdScriptCommand) String() string { return proto.CompactTextString(m) }
 func (*UpdScriptCommand) ProtoMessage()    {}
 func (*UpdScriptCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_31cae0e4645f968f, []int{0}
+	return fileDescriptor_usermgr_9cdff444e8ce2072, []int{0}
 }
 func (m *UpdScriptCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UpdScriptCommand.Unmarshal(m, b)
@@ -102,7 +102,7 @@ func (m *UserScriptsCommand) Reset()         { *m = UserScriptsCommand{} }
 func (m *UserScriptsCommand) String() string { return proto.CompactTextString(m) }
 func (*UserScriptsCommand) ProtoMessage()    {}
 func (*UserScriptsCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_31cae0e4645f968f, []int{1}
+	return fileDescriptor_usermgr_9cdff444e8ce2072, []int{1}
 }
 func (m *UserScriptsCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UserScriptsCommand.Unmarshal(m, b)
@@ -160,7 +160,7 @@ func (m *RemoveScriptCommand) Reset()         { *m = RemoveScriptCommand{} }
 func (m *RemoveScriptCommand) String() string { return proto.CompactTextString(m) }
 func (*RemoveScriptCommand) ProtoMessage()    {}
 func (*RemoveScriptCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_31cae0e4645f968f, []int{2}
+	return fileDescriptor_usermgr_9cdff444e8ce2072, []int{2}
 }
 func (m *RemoveScriptCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_RemoveScriptCommand.Unmarshal(m, b)
@@ -218,7 +218,7 @@ func (m *ShowScriptCommand) Reset()         { *m = ShowScriptCommand{} }
 func (m *ShowScriptCommand) String() string { return proto.CompactTextString(m) }
 func (*ShowScriptCommand) ProtoMessage()    {}
 func (*ShowScriptCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_31cae0e4645f968f, []int{3}
+	return fileDescriptor_usermgr_9cdff444e8ce2072, []int{3}
 }
 func (m *ShowScriptCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ShowScriptCommand.Unmarshal(m, b)
@@ -259,17 +259,271 @@ func (m *ShowScriptCommand) GetScriptName() string {
 	return ""
 }
 
+// UpdFileTemplateCommand - updfiletemplate command
+type UpdFileTemplateCommand struct {
+	// userID - userID
+	UserID string `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	// userName - userName
+	UserName string `protobuf:"bytes,2,opt,name=userName,proto3" json:"userName,omitempty"`
+	// fileTemplateName - file template name
+	FileTemplateName string `protobuf:"bytes,3,opt,name=fileTemplateName,proto3" json:"fileTemplateName,omitempty"`
+	// jarvisNodeName - jarvis node name
+	JarvisNodeName string `protobuf:"bytes,4,opt,name=jarvisNodeName,proto3" json:"jarvisNodeName,omitempty"`
+	// fullPath - full path
+	FullPath             string   `protobuf:"bytes,5,opt,name=fullPath,proto3" json:"fullPath,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdFileTemplateCommand) Reset()         { *m = UpdFileTemplateCommand{} }
+func (m *UpdFileTemplateCommand) String() string { return proto.CompactTextString(m) }
+func (*UpdFileTemplateCommand) ProtoMessage()    {}
+func (*UpdFileTemplateCommand) Descriptor() ([]byte, []int) {
+	return fileDescriptor_usermgr_9cdff444e8ce2072, []int{4}
+}
+func (m *UpdFileTemplateCommand) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdFileTemplateCommand.Unmarshal(m, b)
+}
+func (m *UpdFileTemplateCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdFileTemplateCommand.Marshal(b, m, deterministic)
+}
+func (dst *UpdFileTemplateCommand) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdFileTemplateCommand.Merge(dst, src)
+}
+func (m *UpdFileTemplateCommand) XXX_Size() int {
+	return xxx_messageInfo_UpdFileTemplateCommand.Size(m)
+}
+func (m *UpdFileTemplateCommand) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdFileTemplateCommand.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdFileTemplateCommand proto.InternalMessageInfo
+
+func (m *UpdFileTemplateCommand) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *UpdFileTemplateCommand) GetUserName() string {
+	if m != nil {
+		return m.UserName
+	}
+	return ""
+}
+
+func (m *UpdFileTemplateCommand) GetFileTemplateName() string {
+	if m != nil {
+		return m.FileTemplateName
+	}
+	return ""
+}
+
+func (m *UpdFileTemplateCommand) GetJarvisNodeName() string {
+	if m != nil {
+		return m.JarvisNodeName
+	}
+	return ""
+}
+
+func (m *UpdFileTemplateCommand) GetFullPath() string {
+	if m != nil {
+		return m.FullPath
+	}
+	return ""
+}
+
+// FileTemplatesCommand - filetemplates command
+type FileTemplatesCommand struct {
+	// userID - userID
+	UserID string `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	// userName - userName
+	UserName string `protobuf:"bytes,2,opt,name=userName,proto3" json:"userName,omitempty"`
+	// jarvisNodeName - jarvis node name
+	JarvisNodeName       string   `protobuf:"bytes,3,opt,name=jarvisNodeName,proto3" json:"jarvisNodeName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *FileTemplatesCommand) Reset()         { *m = FileTemplatesCommand{} }
+func (m *FileTemplatesCommand) String() string { return proto.CompactTextString(m) }
+func (*FileTemplatesCommand) ProtoMessage()    {}
+func (*FileTemplatesCommand) Descriptor() ([]byte, []int) {
+	return fileDescriptor_usermgr_9cdff444e8ce2072, []int{5}
+}
+func (m *FileTemplatesCommand) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FileTemplatesCommand.Unmarshal(m, b)
+}
+func (m *FileTemplatesCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FileTemplatesCommand.Marshal(b, m, deterministic)
+}
+func (dst *FileTemplatesCommand) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FileTemplatesCommand.Merge(dst, src)
+}
+func (m *FileTemplatesCommand) XXX_Size() int {
+	return xxx_messageInfo_FileTemplatesCommand.Size(m)
+}
+func (m *FileTemplatesCommand) XXX_DiscardUnknown() {
+	xxx_messageInfo_FileTemplatesCommand.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FileTemplatesCommand proto.InternalMessageInfo
+
+func (m *FileTemplatesCommand) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *FileTemplatesCommand) GetUserName() string {
+	if m != nil {
+		return m.UserName
+	}
+	return ""
+}
+
+func (m *FileTemplatesCommand) GetJarvisNodeName() string {
+	if m != nil {
+		return m.JarvisNodeName
+	}
+	return ""
+}
+
+// RemoveFileTemplateCommand - rmfiletemplate command
+type RemoveFileTemplateCommand struct {
+	// userID - userID
+	UserID string `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	// userName - userName
+	UserName string `protobuf:"bytes,2,opt,name=userName,proto3" json:"userName,omitempty"`
+	// fileTemplateName - filetemplate name
+	FileTemplateName     string   `protobuf:"bytes,3,opt,name=fileTemplateName,proto3" json:"fileTemplateName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RemoveFileTemplateCommand) Reset()         { *m = RemoveFileTemplateCommand{} }
+func (m *RemoveFileTemplateCommand) String() string { return proto.CompactTextString(m) }
+func (*RemoveFileTemplateCommand) ProtoMessage()    {}
+func (*RemoveFileTemplateCommand) Descriptor() ([]byte, []int) {
+	return fileDescriptor_usermgr_9cdff444e8ce2072, []int{6}
+}
+func (m *RemoveFileTemplateCommand) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveFileTemplateCommand.Unmarshal(m, b)
+}
+func (m *RemoveFileTemplateCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveFileTemplateCommand.Marshal(b, m, deterministic)
+}
+func (dst *RemoveFileTemplateCommand) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveFileTemplateCommand.Merge(dst, src)
+}
+func (m *RemoveFileTemplateCommand) XXX_Size() int {
+	return xxx_messageInfo_RemoveFileTemplateCommand.Size(m)
+}
+func (m *RemoveFileTemplateCommand) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveFileTemplateCommand.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveFileTemplateCommand proto.InternalMessageInfo
+
+func (m *RemoveFileTemplateCommand) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *RemoveFileTemplateCommand) GetUserName() string {
+	if m != nil {
+		return m.UserName
+	}
+	return ""
+}
+
+func (m *RemoveFileTemplateCommand) GetFileTemplateName() string {
+	if m != nil {
+		return m.FileTemplateName
+	}
+	return ""
+}
+
+// ShowFileTemplateCommand - showfiletemplate command
+type ShowFileTemplateCommand struct {
+	// userID - userID
+	UserID string `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	// userName - userName
+	UserName string `protobuf:"bytes,2,opt,name=userName,proto3" json:"userName,omitempty"`
+	// scriptName - script name
+	FileTemplateName     string   `protobuf:"bytes,3,opt,name=fileTemplateName,proto3" json:"fileTemplateName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ShowFileTemplateCommand) Reset()         { *m = ShowFileTemplateCommand{} }
+func (m *ShowFileTemplateCommand) String() string { return proto.CompactTextString(m) }
+func (*ShowFileTemplateCommand) ProtoMessage()    {}
+func (*ShowFileTemplateCommand) Descriptor() ([]byte, []int) {
+	return fileDescriptor_usermgr_9cdff444e8ce2072, []int{7}
+}
+func (m *ShowFileTemplateCommand) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ShowFileTemplateCommand.Unmarshal(m, b)
+}
+func (m *ShowFileTemplateCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ShowFileTemplateCommand.Marshal(b, m, deterministic)
+}
+func (dst *ShowFileTemplateCommand) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ShowFileTemplateCommand.Merge(dst, src)
+}
+func (m *ShowFileTemplateCommand) XXX_Size() int {
+	return xxx_messageInfo_ShowFileTemplateCommand.Size(m)
+}
+func (m *ShowFileTemplateCommand) XXX_DiscardUnknown() {
+	xxx_messageInfo_ShowFileTemplateCommand.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ShowFileTemplateCommand proto.InternalMessageInfo
+
+func (m *ShowFileTemplateCommand) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *ShowFileTemplateCommand) GetUserName() string {
+	if m != nil {
+		return m.UserName
+	}
+	return ""
+}
+
+func (m *ShowFileTemplateCommand) GetFileTemplateName() string {
+	if m != nil {
+		return m.FileTemplateName
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*UpdScriptCommand)(nil), "pluginusermgrpb.UpdScriptCommand")
 	proto.RegisterType((*UserScriptsCommand)(nil), "pluginusermgrpb.UserScriptsCommand")
 	proto.RegisterType((*RemoveScriptCommand)(nil), "pluginusermgrpb.RemoveScriptCommand")
 	proto.RegisterType((*ShowScriptCommand)(nil), "pluginusermgrpb.ShowScriptCommand")
+	proto.RegisterType((*UpdFileTemplateCommand)(nil), "pluginusermgrpb.UpdFileTemplateCommand")
+	proto.RegisterType((*FileTemplatesCommand)(nil), "pluginusermgrpb.FileTemplatesCommand")
+	proto.RegisterType((*RemoveFileTemplateCommand)(nil), "pluginusermgrpb.RemoveFileTemplateCommand")
+	proto.RegisterType((*ShowFileTemplateCommand)(nil), "pluginusermgrpb.ShowFileTemplateCommand")
 }
 
-func init() { proto.RegisterFile("usermgr.proto", fileDescriptor_usermgr_31cae0e4645f968f) }
+func init() { proto.RegisterFile("usermgr.proto", fileDescriptor_usermgr_9cdff444e8ce2072) }
 
-var fileDescriptor_usermgr_31cae0e4645f968f = []byte{
-	// 186 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_usermgr_9cdff444e8ce2072 = []byte{
+	// 265 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2d, 0x2d, 0x4e, 0x2d,
 	0xca, 0x4d, 0x2f, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x2f, 0xc8, 0x29, 0x4d, 0xcf,
 	0xcc, 0x83, 0x0a, 0x16, 0x24, 0x29, 0xf5, 0x31, 0x72, 0x09, 0x84, 0x16, 0xa4, 0x04, 0x27, 0x17,
@@ -280,6 +534,11 @@ var fileDescriptor_usermgr_31cae0e4645f968f = []byte{
 	0x65, 0x16, 0xfb, 0xe5, 0xa7, 0xa4, 0x82, 0xd5, 0xb0, 0x80, 0xd5, 0xa0, 0x89, 0x2a, 0x15, 0x70,
 	0x09, 0x85, 0x16, 0xa7, 0x16, 0x41, 0x1c, 0x54, 0x4c, 0x89, 0x8b, 0x30, 0x6d, 0x64, 0xc6, 0x6a,
 	0x63, 0x26, 0x97, 0x70, 0x50, 0x6a, 0x6e, 0x7e, 0x59, 0x2a, 0xcd, 0x03, 0x41, 0x29, 0x9d, 0x4b,
-	0x30, 0x38, 0x23, 0xbf, 0x9c, 0xe6, 0x16, 0x25, 0xb1, 0x81, 0xa3, 0xdb, 0x18, 0x10, 0x00, 0x00,
-	0xff, 0xff, 0x1a, 0xf4, 0xcb, 0x14, 0xff, 0x01, 0x00, 0x00,
+	0x30, 0x38, 0x23, 0xbf, 0x9c, 0xf6, 0x16, 0xed, 0x61, 0xe4, 0x12, 0x0b, 0x2d, 0x48, 0x71, 0xcb,
+	0xcc, 0x49, 0x0d, 0x49, 0xcd, 0x2d, 0xc8, 0x49, 0x2c, 0x49, 0xa5, 0xc4, 0x3a, 0x2d, 0x2e, 0x81,
+	0x34, 0x24, 0xa3, 0x90, 0x2c, 0xc5, 0x10, 0x27, 0x36, 0xa2, 0x41, 0xf6, 0xa5, 0x95, 0xe6, 0xe4,
+	0x04, 0x24, 0x96, 0x64, 0x48, 0xb0, 0x42, 0xec, 0x83, 0xf1, 0x95, 0x8a, 0xb8, 0x44, 0x90, 0x9d,
+	0x4e, 0x97, 0x64, 0x50, 0xcd, 0x25, 0x09, 0x49, 0x06, 0x03, 0x10, 0x68, 0x4a, 0x95, 0x5c, 0xe2,
+	0xa0, 0x84, 0x31, 0x00, 0x56, 0x27, 0xb1, 0x81, 0x4b, 0x06, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0x56, 0xb9, 0xb1, 0x2d, 0x2a, 0x04, 0x00, 0x00,
 }

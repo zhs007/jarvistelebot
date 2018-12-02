@@ -43,3 +43,47 @@ message ShowScriptCommand {
     // scriptName - script name
     string scriptName = 3;
 }
+
+// UpdFileTemplateCommand - updfiletemplate command
+message UpdFileTemplateCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+    // fileTemplateName - file template name
+    string fileTemplateName = 3;
+    // jarvisNodeName - jarvis node name
+    string jarvisNodeName = 4;
+    // fullPath - full path
+    string fullPath = 5;    
+}
+
+// FileTemplatesCommand - filetemplates command
+message FileTemplatesCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+    // jarvisNodeName - jarvis node name
+    string jarvisNodeName = 3;
+}
+
+// RemoveFileTemplateCommand - rmfiletemplate command
+message RemoveFileTemplateCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+    // fileTemplateName - filetemplate name
+    string fileTemplateName = 3;
+}
+
+// ShowFileTemplateCommand - showfiletemplate command
+message ShowFileTemplateCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+    // scriptName - script name
+    string fileTemplateName = 3;
+}

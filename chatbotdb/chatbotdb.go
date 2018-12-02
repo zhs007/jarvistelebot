@@ -42,6 +42,10 @@ const queryRmScript = `mutation RemoveUserScript($userID: ID!, $scriptName: ID!)
 	removeUserScript(userID: $userID, scriptName: $scriptName)
 }`
 
+const queryRmFileTemplate = `mutation RemoveFileTemplate($userID: ID!, $fileTemplateName: ID!) {
+	removeFileTemplate(userID: $userID, fileTemplateName: $fileTemplateName)
+}`
+
 const queryGetMsg = `query Msg($chatID: ID!) {
 	msg(chatID: $chatID) {
 		chatID
@@ -549,7 +553,7 @@ func (db *ChatBotDB) RemoveUserScripts(userID string, scriptName string) error {
 
 	err = ankadb.GetResultError(result)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetUserScripts:GetResultError", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.RemoveUserScripts:GetResultError", zap.Error(err))
 
 		return err
 	}
@@ -670,4 +674,31 @@ func (db *ChatBotDB) GetFileTemplates(userID string, jarvisNodeName string) (*pb
 	}
 
 	return lst, nil
+}
+
+// RemoveFileTemplate - remove file template
+func (db *ChatBotDB) RemoveFileTemplate(userID string, fileTemplateName string) error {
+	if db.db == nil {
+		return ErrChatBotDBNil
+	}
+
+	params := make(map[string]interface{})
+	params["userID"] = userID
+	params["fileTemplateName"] = fileTemplateName
+
+	result, err := db.db.LocalQuery(context.Background(), queryRmFileTemplate, params)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.RemoveFileTemplate:LocalQuery", zap.Error(err))
+
+		return err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.RemoveFileTemplate:GetResultError", zap.Error(err))
+
+		return err
+	}
+
+	return nil
 }

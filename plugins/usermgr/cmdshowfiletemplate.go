@@ -2,6 +2,7 @@ package pluginusermgr
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
@@ -10,21 +11,21 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/usermgr/proto"
 )
 
-// cmdShowScript - showscript
-type cmdShowScript struct {
+// cmdShowFileTemplate - showfiletemplate
+type cmdShowFileTemplate struct {
 }
 
 // RunCommand - run command
-func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
+func (cmd *cmdShowFileTemplate) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
 	if params.CommandLine != nil {
-		sscmd, ok := params.CommandLine.(*pluginusermgrpb.ShowScriptCommand)
+		sftcmd, ok := params.CommandLine.(*pluginusermgrpb.ShowFileTemplateCommand)
 		if !ok {
 			return false
 		}
 
 		var user *chatbotdbpb.User
-		if sscmd.UserID != "" {
-			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(sscmd.UserID)
+		if sftcmd.UserID != "" {
+			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(sftcmd.UserID)
 			if err != nil {
 				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
 
@@ -32,8 +33,8 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 			}
 
 			user = userbyuid
-		} else if sscmd.UserName != "" {
-			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(sscmd.UserName)
+		} else if sftcmd.UserName != "" {
+			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(sftcmd.UserName)
 			if err != nil {
 				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
 
@@ -43,7 +44,7 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 			user = userbyuid
 		}
 
-		us, err := params.ChatBot.GetChatBotDB().GetUserScript(user.UserID, sscmd.ScriptName)
+		ft, err := params.ChatBot.GetChatBotDB().GetFileTemplate(user.UserID, sftcmd.FileTemplateName)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
 
@@ -51,11 +52,8 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 		}
 
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-			"This script is prepared for "+us.JarvisNodeName)
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-			"The script data:")
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-			string(us.File.Data))
+			fmt.Sprintf("If you send %v to me, I will send the file to %v:%v",
+				ft.FileTemplateName, ft.JarvisNodeName, ft.FullPath))
 
 		return true
 	}
@@ -64,27 +62,27 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 }
 
 // Parse - parse command line
-func (cmd *cmdShowScript) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
+func (cmd *cmdShowFileTemplate) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) < 2 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
-	flagset := pflag.NewFlagSet("showscript", pflag.ContinueOnError)
+	flagset := pflag.NewFlagSet("rmscript", pflag.ContinueOnError)
 
 	var uid = flagset.StringP("userid", "i", "", "you can use userid")
 	var uname = flagset.StringP("username", "u", "", "you can use username")
-	var scriptname = flagset.StringP("scriptname", "s", "", "you can remove script name")
+	var filetemplatename = flagset.StringP("filetemplatename", "f", "", "you can show file template name")
 
 	err := flagset.Parse(params.LstStr[2:])
 	if err != nil {
 		return nil, err
 	}
 
-	if (*uid != "" || *uname != "") && *scriptname != "" {
-		return &pluginusermgrpb.ShowScriptCommand{
-			UserID:     *uid,
-			UserName:   *uname,
-			ScriptName: *scriptname,
+	if (*uid != "" || *uname != "") && *filetemplatename != "" {
+		return &pluginusermgrpb.ShowFileTemplateCommand{
+			UserID:           *uid,
+			UserName:         *uname,
+			FileTemplateName: *filetemplatename,
 		}, nil
 	}
 

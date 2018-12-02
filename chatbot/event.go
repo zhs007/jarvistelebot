@@ -10,6 +10,8 @@ var (
 
 	// UserEventOnChgUserScript - chguserscript
 	UserEventOnChgUserScript = "chguserscript"
+	// UserEventOnChgUserFileTemplate - chguserfiletemplate
+	UserEventOnChgUserFileTemplate = "chguserfiletemplate"
 )
 
 // FuncEvent - func event
