@@ -57,8 +57,6 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 			string(us.File.Data))
 
-		// params.ChatBot.OnUserEvent(ctx, params.ChatBot, chatbot.UserEventOnChgUserScript, user.UserID)
-
 		return true
 	}
 

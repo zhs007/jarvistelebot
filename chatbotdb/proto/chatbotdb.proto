@@ -82,6 +82,28 @@ message UserScriptList {
     int32 endIndex = 2;
     // maxIndex - max index
     int32 maxIndex = 3;    
-    // users - user list
-    repeated UserScript Scripts = 4;
+    // scripts - user script list
+    repeated UserScript scripts = 4;
+}
+
+// UserFileTemplate - user's file template
+message UserFileTemplate {
+    // fileTemplateName - file template name
+    string fileTemplateName = 1;
+    // jarvisNodeName - JarvisNode's name
+    string jarvisNodeName = 2;
+    // fullPath - full path
+    string fullPath = 3;
+}
+
+// UserFileTemplateList - user file template list
+message UserFileTemplateList {
+    // snapshotID - snapshot ID
+    int64 snapshotID = 1;
+    // endIndex - end index
+    int32 endIndex = 2;
+    // maxIndex - max index
+    int32 maxIndex = 3;    
+    // templates - file template list
+    repeated UserFileTemplate templates = 4;
 }

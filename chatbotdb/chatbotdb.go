@@ -23,6 +23,12 @@ const querySaveUserScript = `mutation UpdUserScript($userID: ID!, $jarvisNodeNam
 	}
 }`
 
+const querySaveFileTemplate = `mutation UpdFileTemplate($userID: ID!, $fileTemplateName: ID!, $jarvisNodeName: String!, $fullPath: String!) {
+	updFileTemplate(userID: $userID, fileTemplateName: $fileTemplateName, jarvisNodeName: $jarvisNodeName, fullPath: $fullPath) {
+		fileTemplateName
+	}
+}`
+
 const queryUpdUser = `mutation UpdUser($user: UserInput!) {
 	updUser(user: $user) {
 		nickName
@@ -110,6 +116,22 @@ const queryGetUserScripts = `query UserScripts($userID: String!, $jarvisNodeName
 	userScripts(userID: $userID, jarvisNodeName: $jarvisNodeName) {
 		scripts {
 			scriptName
+		}
+	}
+}`
+
+const queryGetFileTemplate = `query FileTemplate($userID: ID!, $fileTemplateName: ID!) {
+	fileTemplate(userID: $userID, fileTemplateName: $fileTemplateName) {
+		fileTemplateName
+		jarvisNodeName
+		fullPath
+	}
+}`
+
+const queryGetFileTemplates = `query FileTemplates($userID: String!, $jarvisNodeName: String!) {
+	fileTemplates(userID: $userID, jarvisNodeName: $jarvisNodeName) {
+		templates {
+			fileTemplateName
 		}
 	}
 }`
@@ -448,15 +470,6 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 		return nil, err
 	}
 
-	// s, err := json.Marshal(result)
-	// if err != nil {
-	// 	jarvisbase.Error("CoreDB.GetUsers", zap.Error(err))
-
-	// 	return nil, err
-	// }
-
-	// jarvisbase.Debug("ChatBotDB.GetUsers:Marshal", jarvisbase.JSON("result", result))
-
 	us := &ResultUsers{}
 	err = ankadb.MakeObjFromResult(result, us)
 	if err != nil {
@@ -473,51 +486,6 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 	}
 
 	return lst, nil
-
-	// if db.db == nil {
-	// 	return nil, ErrChatBotDBNil
-	// }
-
-	// params := make(map[string]interface{})
-	// params["snapshotID"] = int64(0)
-	// params["beginIndex"] = 0
-	// params["nums"] = nums
-
-	// jarvisbase.Debug("GetUsers",
-	// 	zap.String("query string", queryUsers))
-
-	// result, err := db.db.LocalQuery(context.Background(), queryUsers, params)
-	// if err != nil {
-	// 	jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
-
-	// 	return nil, err
-	// }
-
-	// s, err := json.Marshal(result)
-	// if err != nil {
-	// 	jarvisbase.Error("CoreDB.GetNodes", zap.Error(err))
-
-	// 	return nil, err
-	// }
-
-	// jarvisbase.Debug("GetUsers",
-	// 	jarvisbase.JSON("resultstr", string(s)))
-
-	// us := &ResultUsers{}
-	// err = ankadb.MakeObjFromResult(result, us)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// jarvisbase.Debug("GetUsers",
-	// 	jarvisbase.JSON("result", us))
-
-	// lst, err := ResultUsers2UserList(us)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// return lst, nil
 }
 
 // GetUserScripts - get user scripts
@@ -544,30 +512,6 @@ func (db *ChatBotDB) GetUserScripts(userID string, jarvisNodeName string) (*pb.U
 		return nil, err
 	}
 
-	// if result.HasErrors() {
-	// 	var errstr string
-
-	// 	for i, v := range result.Errors {
-	// 		str := fmt.Sprintf("Error-%v: %v", (i + 1), v.Error())
-	// 		if i > 0 {
-	// 			errstr = errstr + " " + str
-	// 		} else {
-	// 			errstr = str
-	// 		}
-	// 	}
-
-	// 	return nil, errors.New(errstr)
-	// }
-
-	// s, err := json.Marshal(result)
-	// if err != nil {
-	// 	jarvisbase.Error("CoreDB.GetUsers", zap.Error(err))
-
-	// 	return nil, err
-	// }
-
-	// jarvisbase.Debug("ChatBotDB.GetUserScripts", jarvisbase.JSON("result", result))
-
 	us := &ResultUserScripts{}
 	err = ankadb.MakeObjFromResult(result, us)
 	if err != nil {
@@ -584,51 +528,6 @@ func (db *ChatBotDB) GetUserScripts(userID string, jarvisNodeName string) (*pb.U
 	}
 
 	return lst, nil
-
-	// if db.db == nil {
-	// 	return nil, ErrChatBotDBNil
-	// }
-
-	// params := make(map[string]interface{})
-	// params["snapshotID"] = int64(0)
-	// params["beginIndex"] = 0
-	// params["nums"] = nums
-
-	// jarvisbase.Debug("GetUsers",
-	// 	zap.String("query string", queryUsers))
-
-	// result, err := db.db.LocalQuery(context.Background(), queryUsers, params)
-	// if err != nil {
-	// 	jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
-
-	// 	return nil, err
-	// }
-
-	// s, err := json.Marshal(result)
-	// if err != nil {
-	// 	jarvisbase.Error("CoreDB.GetNodes", zap.Error(err))
-
-	// 	return nil, err
-	// }
-
-	// jarvisbase.Debug("GetUsers",
-	// 	jarvisbase.JSON("resultstr", string(s)))
-
-	// us := &ResultUsers{}
-	// err = ankadb.MakeObjFromResult(result, us)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// jarvisbase.Debug("GetUsers",
-	// 	jarvisbase.JSON("result", us))
-
-	// lst, err := ResultUsers2UserList(us)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// return lst, nil
 }
 
 // RemoveUserScripts - remove user scripts
@@ -656,90 +555,119 @@ func (db *ChatBotDB) RemoveUserScripts(userID string, scriptName string) error {
 	}
 
 	return nil
+}
 
-	// if result.HasErrors() {
-	// 	var errstr string
+// SaveFileTemplate - save user file template
+func (db *ChatBotDB) SaveFileTemplate(userID string, fileTemplate *pb.UserFileTemplate) error {
+	if db.db == nil {
+		return ErrChatBotDBNil
+	}
 
-	// 	for i, v := range result.Errors {
-	// 		str := fmt.Sprintf("Error-%v: %v", (i + 1), v.Error())
-	// 		if i > 0 {
-	// 			errstr = errstr + " " + str
-	// 		} else {
-	// 			errstr = str
-	// 		}
-	// 	}
+	params := make(map[string]interface{})
 
-	// 	return nil, errors.New(errstr)
-	// }
+	params["userID"] = userID
+	params["fileTemplateName"] = fileTemplate.FileTemplateName
+	params["jarvisNodeName"] = fileTemplate.JarvisNodeName
+	params["fullPath"] = fileTemplate.FullPath
 
-	// s, err := json.Marshal(result)
-	// if err != nil {
-	// 	jarvisbase.Error("CoreDB.GetUsers", zap.Error(err))
+	result, err := db.db.LocalQuery(context.Background(), querySaveFileTemplate, params)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.SaveFileTemplate:LocalQuery", zap.Error(err))
 
-	// 	return nil, err
-	// }
+		return err
+	}
 
-	// jarvisbase.Debug("ChatBotDB.GetUserScripts", jarvisbase.JSON("result", result))
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.SaveFileTemplate:GetResultError", zap.Error(err))
 
-	// us := &ResultUserScripts{}
-	// err = ankadb.MakeObjFromResult(result, us)
-	// if err != nil {
-	// 	jarvisbase.Warn("ChatBotDB.GetUserScripts:MakeObjFromResult", zap.Error(err))
+		return err
+	}
 
-	// 	return nil, err
-	// }
+	// jarvisbase.Debug("ChatBotDB.SaveFileTemplate",
+	// 	jarvisbase.JSON("result", result))
 
-	// lst, err := ResultUserScripts2UserScriptList(us)
-	// if err != nil {
-	// 	jarvisbase.Warn("ChatBotDB.GetUserScripts:ResultUserScripts2UserScriptList", zap.Error(err))
+	return nil
+}
 
-	// 	return nil, err
-	// }
+// GetFileTemplate - get user file template
+func (db *ChatBotDB) GetFileTemplate(userID string, fileTemplateName string) (*pb.UserFileTemplate, error) {
+	if db.db == nil {
+		return nil, ErrChatBotDBNil
+	}
 
-	// return lst, nil
+	params := make(map[string]interface{})
+	params["userID"] = userID
+	params["fileTemplateName"] = fileTemplateName
 
-	// if db.db == nil {
-	// 	return nil, ErrChatBotDBNil
-	// }
+	result, err := db.db.LocalQuery(context.Background(), queryGetUserScript, params)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetFileTemplate:LocalQuery", zap.Error(err))
 
-	// params := make(map[string]interface{})
-	// params["snapshotID"] = int64(0)
-	// params["beginIndex"] = 0
-	// params["nums"] = nums
+		return nil, err
+	}
 
-	// jarvisbase.Debug("GetUsers",
-	// 	zap.String("query string", queryUsers))
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetFileTemplate:GetResultError", zap.Error(err))
 
-	// result, err := db.db.LocalQuery(context.Background(), queryUsers, params)
-	// if err != nil {
-	// 	jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
+		return nil, err
+	}
 
-	// 	return nil, err
-	// }
+	// jarvisbase.Debug("ChatBotDB.GetUserScript", jarvisbase.JSON("result", result))
 
-	// s, err := json.Marshal(result)
-	// if err != nil {
-	// 	jarvisbase.Error("CoreDB.GetNodes", zap.Error(err))
+	ruft := &ResultUserFileTemplate{}
+	err = ankadb.MakeObjFromResult(result, ruft)
+	if err != nil {
+		return nil, err
+	}
 
-	// 	return nil, err
-	// }
+	fileTemplate, err := ResultUserFileTemplate2UserFileTemplate(ruft)
+	if err != nil {
+		return nil, err
+	}
 
-	// jarvisbase.Debug("GetUsers",
-	// 	jarvisbase.JSON("resultstr", string(s)))
+	return fileTemplate, nil
+}
 
-	// us := &ResultUsers{}
-	// err = ankadb.MakeObjFromResult(result, us)
-	// if err != nil {
-	// 	return nil, err
-	// }
+// GetFileTemplates - get user file templates
+func (db *ChatBotDB) GetFileTemplates(userID string, jarvisNodeName string) (*pb.UserFileTemplateList, error) {
+	if db.db == nil {
+		return nil, ErrChatBotDBNil
+	}
 
-	// jarvisbase.Debug("GetUsers",
-	// 	jarvisbase.JSON("result", us))
+	params := make(map[string]interface{})
+	params["userID"] = userID
+	params["jarvisNodeName"] = jarvisNodeName
 
-	// lst, err := ResultUsers2UserList(us)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	result, err := db.db.LocalQuery(context.Background(), queryGetFileTemplates, params)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetFileTemplates:LocalQuery", zap.Error(err))
 
-	// return lst, nil
+		return nil, err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetFileTemplates:GetResultError", zap.Error(err))
+
+		return nil, err
+	}
+
+	ft := &ResultFileTemplates{}
+	err = ankadb.MakeObjFromResult(result, ft)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetFileTemplates:MakeObjFromResult", zap.Error(err))
+
+		return nil, err
+	}
+
+	lst, err := ResultFileTemplates2UserFileTemplateList(ft)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.GetFileTemplates:ResultFileTemplates2UserFileTemplateList", zap.Error(err))
+
+		return nil, err
+	}
+
+	return lst, nil
 }

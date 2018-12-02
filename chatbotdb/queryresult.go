@@ -73,6 +73,15 @@ type ResultUserScript struct {
 	} `json:"userScript"`
 }
 
+// ResultUserFileTemplate -
+type ResultUserFileTemplate struct {
+	FileTemplate struct {
+		FileTemplateName string `json:"fileTemplateName"`
+		JarvisNodeName   string `json:"jarvisNodeName"`
+		FullPath         string `json:"fullPath"`
+	} `json:"fileTemplate"`
+}
+
 // ResultUsers - users
 type ResultUsers struct {
 	Users struct {
@@ -98,6 +107,18 @@ type ResultUserScripts struct {
 			ScriptName string `json:"scriptName"`
 		} `json:"scripts"`
 	} `json:"userScripts"`
+}
+
+// ResultFileTemplates - fileTemplates
+type ResultFileTemplates struct {
+	FileTemplates struct {
+		SnapshotID int64 `json:"snapshotID"`
+		EndIndex   int32 `json:"endIndex"`
+		MaxIndex   int32 `json:"maxIndex"`
+		Templates  []struct {
+			FileTemplateName string `json:"fileTemplateName"`
+		} `json:"templates"`
+	} `json:"fileTemplates"`
 }
 
 // ResultMsg2Msg - ResultMsg -> Message
@@ -228,6 +249,30 @@ func ResultUserScripts2UserScriptList(result *ResultUserScripts) (*pb.UserScript
 		}
 
 		lst.Scripts = append(lst.Scripts, ui)
+	}
+
+	return lst, nil
+}
+
+// ResultUserFileTemplate2UserFileTemplate - ResultUserFileTemplate -> UserFileTemplate
+func ResultUserFileTemplate2UserFileTemplate(result *ResultUserFileTemplate) (*pb.UserFileTemplate, error) {
+	return &pb.UserFileTemplate{
+		FileTemplateName: result.FileTemplate.FileTemplateName,
+		JarvisNodeName:   result.FileTemplate.JarvisNodeName,
+		FullPath:         result.FileTemplate.FullPath,
+	}, nil
+}
+
+// ResultFileTemplates2UserFileTemplateList - ResultFileTemplates -> UserFileTemplateList
+func ResultFileTemplates2UserFileTemplateList(result *ResultFileTemplates) (*pb.UserFileTemplateList, error) {
+	lst := &pb.UserFileTemplateList{}
+
+	for _, v := range result.FileTemplates.Templates {
+		ft := &pb.UserFileTemplate{
+			FileTemplateName: v.FileTemplateName,
+		}
+
+		lst.Templates = append(lst.Templates, ft)
 	}
 
 	return lst, nil

@@ -151,3 +151,44 @@ var typeUserScriptList = graphql.NewObject(
 		},
 	},
 )
+
+// typeUserFileTemplate - UserFileTemplate
+//		you can see chatbotdb.graphql
+var typeUserFileTemplate = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "UserFileTemplate",
+		Fields: graphql.Fields{
+			"fileTemplateName": &graphql.Field{
+				Type: graphql.NewNonNull(graphql.ID),
+			},
+			"jarvisNodeName": &graphql.Field{
+				Type: graphql.NewNonNull(graphql.String),
+			},
+			"fullPath": &graphql.Field{
+				Type: graphql.NewNonNull(graphql.String),
+			},
+		},
+	},
+)
+
+// typeUserFileTemplateList - UserFileTemplateList
+//		you can see chatbotdb.graphql
+var typeUserFileTemplateList = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "UserFileTemplateList",
+		Fields: graphql.Fields{
+			"snapshotID": &graphql.Field{
+				Type: graphqlext.Int64,
+			},
+			"endIndex": &graphql.Field{
+				Type: graphql.Int,
+			},
+			"maxIndex": &graphql.Field{
+				Type: graphql.Int,
+			},
+			"templates": &graphql.Field{
+				Type: graphql.NewList(typeUserFileTemplate),
+			},
+		},
+	},
+)

@@ -25,8 +25,6 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("userscripts", &cmdUserScripts{})
 	cmd.AddCommand("rmscript", &cmdRmScript{})
 	cmd.AddCommand("showscript", &cmdShowScript{})
-	// cmd.AddCommand("users", &cmdUsers{})
-	// cmd.AddCommand("user", &cmdUser{})
 
 	p := &usermgrPlugin{
 		cmd: cmd,
@@ -35,18 +33,8 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	return p, nil
 }
 
-// // RegPlugin - reg timestamp plugin
-// func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
-// 	chatbot.Info("RegPlugin - jarvisnodePlugin")
-
-// 	mgr.RegPlugin(newPlugin())
-
-// 	return nil
-// }
-
 // OnMessage - get message
 func (p *usermgrPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
-	// jarvisbase.Debug("jarvisnodePlugin.OnMessage", zap.String("params", fmt.Sprintf("%+v", params)))
 
 	from := params.Msg.GetFrom()
 	if from == nil {
@@ -70,15 +58,6 @@ func (p *usermgrPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePa
 func (p *usermgrPlugin) GetPluginName() string {
 	return PluginName
 }
-
-// // IsMyMessage
-// func (p *corePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-// 	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
-// 		return p.cmd.HasCommand(params.LstStr[1])
-// 	}
-
-// 	return false
-// }
 
 // OnStart - on start
 func (p *usermgrPlugin) OnStart(ctx context.Context) error {

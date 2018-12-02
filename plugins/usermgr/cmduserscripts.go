@@ -57,26 +57,8 @@ func (cmd *cmdUserScripts) RunCommand(ctx context.Context, params *chatbot.Messa
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
 		}
 
-		// chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this user.")
-
 		return true
 	}
-
-	// if len(params.LstStr) == 3 {
-	// 	lst, err := params.ChatBot.GetChatBotDB().GetUser(params.LstStr[2])
-	// 	if err != nil {
-	// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
-	// 	}
-
-	// 	strret, err := chatbot.FormatJSONObj(lst)
-	// 	if err != nil {
-	// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
-	// 	} else {
-	// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
-	// 	}
-
-	// 	return true
-	// }
 
 	return false
 }

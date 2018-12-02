@@ -204,5 +204,97 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				return key, nil
 			},
 		},
+		"updFileTemplate": &graphql.Field{
+			Type:        typeUserFileTemplate,
+			Description: "update user file template",
+			Args: graphql.FieldConfigArgument{
+				"userID": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+				"fileTemplateName": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+				"jarvisNodeName": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.String),
+				},
+				"fullPath": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.String),
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+				if anka == nil {
+					return nil, ankadb.ErrCtxAnkaDB
+				}
+
+				curdb := anka.MgrDB.GetDB("chatbotdb")
+				if curdb == nil {
+					return nil, ankadb.ErrCtxCurDB
+				}
+
+				userID := params.Args["userID"].(string)
+				fileTemplateName := params.Args["fileTemplateName"].(string)
+				jarvisNodeName := params.Args["jarvisNodeName"].(string)
+				fullPath := params.Args["fullPath"].(string)
+
+				fileTemplate := &pb.UserFileTemplate{
+					FileTemplateName: fileTemplateName,
+					FullPath:         fullPath,
+					JarvisNodeName:   jarvisNodeName,
+				}
+
+				err := ankadb.PutMsg2DB(curdb,
+					[]byte(makeUserFileTemplateKey(userID, fileTemplateName)),
+					fileTemplate)
+				if err != nil {
+					return nil, err
+				}
+
+				// jarvisbase.Debug("updUserScript",
+				// 	zap.String("key", makeUserScriptKey(userID, scriptName)),
+				// 	jarvisbase.JSON("userScript", *userScript))
+
+				return fileTemplate, nil
+			},
+		},
+		"removeFileTemplate": &graphql.Field{
+			Type:        graphql.String,
+			Description: "remove user file template",
+			Args: graphql.FieldConfigArgument{
+				"userID": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+				"fileTemplateName": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+				if anka == nil {
+					return nil, ankadb.ErrCtxAnkaDB
+				}
+
+				curdb := anka.MgrDB.GetDB("chatbotdb")
+				if curdb == nil {
+					return nil, ankadb.ErrCtxCurDB
+				}
+
+				userID := params.Args["userID"].(string)
+				fileTemplateName := params.Args["fileTemplateName"].(string)
+
+				key := makeUserFileTemplateKey(userID, fileTemplateName)
+
+				err := curdb.Delete([]byte(key))
+				if err != nil {
+					return nil, err
+				}
+
+				// jarvisbase.Debug("updUserScript",
+				// 	zap.String("key", makeUserScriptKey(userID, scriptName)),
+				// 	jarvisbase.JSON("userScript", userScript))
+
+				return key, nil
+			},
+		},
 	},
 })

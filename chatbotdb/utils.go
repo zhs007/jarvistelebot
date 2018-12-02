@@ -4,6 +4,7 @@ const prefixKeyMessage = "msg:"
 const prefixKeyUser = "user:"
 const prefixKeyUserName = "uname:"
 const prefixKeyUserScript = "userscript:"
+const prefixKeyUserFileTemplate = "filetemplate:"
 
 func makeMessageKey(chatID string) string {
 	return prefixKeyMessage + chatID
@@ -19,4 +20,8 @@ func makeUserNameKey(userName string) string {
 
 func makeUserScriptKey(userID string, scriptName string) string {
 	return prefixKeyUserScript + userID + ":" + scriptName
+}
+
+func makeUserFileTemplateKey(userID string, fileTemplateName string) string {
+	return prefixKeyUserFileTemplate + userID + ":" + fileTemplateName
 }

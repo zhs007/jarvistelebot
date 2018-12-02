@@ -301,55 +301,118 @@ var typeQuery = graphql.NewObject(
 					curit.Release()
 					err := curit.Error()
 					if err != nil {
-						jarvisbase.Warn("curdb.NewIteratorWithPrefix", zap.Error(err))
+						jarvisbase.Warn("userScripts:curdb.NewIteratorWithPrefix", zap.Error(err))
 
 						return nil, err
 					}
 
-					// snapshotID := params.Args["snapshotID"].(int64)
-					// beginIndex := params.Args["beginIndex"].(int)
-					// nums := params.Args["nums"].(int)
-					// if beginIndex < 0 || nums <= 0 {
-					// 	return nil, ankadb.ErrQuertParams
-					// }
-
-					// lstUser := &pb.UserList{}
-					// var pSnapshot *ankadbpb.Snapshot
-
-					// if snapshotID > 0 {
-					// 	pSnapshot = mgrSnapshot.Get(snapshotID)
-					// } else {
-					// 	var err error
-					// 	pSnapshot, err = mgrSnapshot.NewSnapshot([]byte(prefixKeyUser))
-					// 	if err != nil {
-					// 		return nil, ankadb.ErrCtxSnapshotMgr
-					// 	}
-					// }
-
-					// lstUser.SnapshotID = pSnapshot.SnapshotID
-					// lstUser.MaxIndex = int32(len(pSnapshot.Keys))
-
-					// // jarvisbase.Debug("query users", zap.Int32("MaxIndex", lstUser.MaxIndex))
-
-					// curi := beginIndex
-					// for ; curi < len(pSnapshot.Keys) && len(lstUser.Users) < nums; curi++ {
-					// 	cui := &pb.User{}
-					// 	err := ankadb.GetMsgFromDB(curdb, []byte(pSnapshot.Keys[curi]), cui)
-					// 	if err == nil {
-					// 		// s, err := json.Marshal(cui)
-					// 		// if err != nil {
-					// 		// 	jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.Error(err))
-					// 		// } else {
-					// 		// 	jarvisbase.Debug("query users", zap.String("user key", pSnapshot.Keys[curi]), zap.String("user", string(s)))
-					// 		// }
-
-					// 		lstUser.Users = append(lstUser.Users, cui)
-					// 	}
-					// }
-
-					// lstUser.EndIndex = int32(curi)
-
 					return lstScripts, nil
+				},
+			},
+			"fileTemplate": &graphql.Field{
+				Type: typeUserFileTemplate,
+				Args: graphql.FieldConfigArgument{
+					"userID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.ID),
+					},
+					"fileTemplateName": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.ID),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+					if anka == nil {
+						return nil, ankadb.ErrCtxAnkaDB
+					}
+
+					curdb := anka.MgrDB.GetDB("chatbotdb")
+					if curdb == nil {
+						return nil, ankadb.ErrCtxCurDB
+					}
+
+					userID := params.Args["userID"].(string)
+					fileTemplateName := params.Args["fileTemplateName"].(string)
+
+					fileTemplate := &pb.UserFileTemplate{}
+					err := ankadb.GetMsgFromDB(curdb,
+						[]byte(makeUserFileTemplateKey(userID, fileTemplateName)),
+						fileTemplate)
+					if err != nil {
+						return nil, err
+					}
+
+					// jarvisbase.Debug("updUserScript",
+					// 	zap.String("key", makeUserScriptKey(userID, scriptName)),
+					// 	jarvisbase.JSON("userScript", *userScript))
+
+					// if userScript.File != nil && userScript.File.Data != nil {
+					// 	userScript.File.StrData = string(userScript.File.Data)
+					// }
+
+					return fileTemplate, nil
+				},
+			},
+			"fileTemplates": &graphql.Field{
+				Type: typeUserFileTemplateList,
+				Args: graphql.FieldConfigArgument{
+					"userID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"jarvisNodeName": &graphql.ArgumentConfig{
+						Type: graphql.String,
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					// jarvisbase.Debug("query users")
+
+					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+					if anka == nil {
+						return nil, ankadb.ErrCtxAnkaDB
+					}
+
+					curdb := anka.MgrDB.GetDB("chatbotdb")
+					if curdb == nil {
+						return nil, ankadb.ErrCtxCurDB
+					}
+
+					userID := params.Args["userID"].(string)
+					jarvisNodeName := params.Args["jarvisNodeName"].(string)
+
+					curPrefixKey := prefixKeyUserFileTemplate + userID + ":"
+
+					// mgrSnapshot := anka.MgrDB.GetMgrSnapshot("chatbotdb")
+					// if mgrSnapshot == nil {
+					// 	return nil, ankadb.ErrCtxSnapshotMgr
+					// }
+
+					lstTemplates := &pb.UserFileTemplateList{}
+					curit := curdb.NewIteratorWithPrefix([]byte(curPrefixKey))
+					// jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("prefixkey", curPrefixKey))
+					for curit.Next() {
+						key := curit.Key()
+						fileTemplate := &pb.UserFileTemplate{}
+						err := ankadb.GetMsgFromDB(curdb, key, fileTemplate)
+						if err != nil {
+							return nil, err
+						}
+
+						if jarvisNodeName == "" {
+							lstTemplates.Templates = append(lstTemplates.Templates, fileTemplate)
+						} else if jarvisNodeName == fileTemplate.JarvisNodeName {
+							lstTemplates.Templates = append(lstTemplates.Templates, fileTemplate)
+						}
+
+						// jarvisbase.Debug("curdb.NewIteratorWithPrefix", zap.String("key", string(key)))
+					}
+					curit.Release()
+					err := curit.Error()
+					if err != nil {
+						jarvisbase.Warn("fileTemplates:curdb.NewIteratorWithPrefix", zap.Error(err))
+
+						return nil, err
+					}
+
+					return lstTemplates, nil
 				},
 			},
 		},

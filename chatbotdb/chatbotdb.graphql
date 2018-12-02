@@ -43,6 +43,19 @@ type UserScriptList {
     scripts: [UserScript]
 }
 
+type UserFileTemplate {
+    fileTemplateName: ID!
+    jarvisNodeName: String!
+    fullPath: String!
+}
+
+type UserFileTemplateList {
+    snapshotID: Int64!
+    endIndex: Int!
+    maxIndex: Int!
+    templates: [UserFileTemplate]
+}
+
 type UserMessageChunk {
     from: User
     msgs: [Message]
@@ -59,6 +72,10 @@ type Query {
     userScript(userID: ID!, scriptName: ID!): UserScript!
 
     userScripts(userID: ID!, jarvisNodeName: String!): UserScriptList!
+
+    fileTemplate(userID: ID!, fileTemplateName: ID!): UserFileTemplate!
+    
+    fileTemplates(userID: ID!, jarvisNodeName: String!): UserFileTemplateList!
 }
 
 type Mutation {
@@ -67,5 +84,8 @@ type Mutation {
     updUser(user: User!): User!
 
     updUserScript(userID: ID!, jarvisNodeName: String!, scriptName: ID!, file: File!): UserScript!
-    rmUserScript(userID: ID!, scriptName: ID!) : String!
+    removeUserScript(userID: ID!, scriptName: ID!) : String!
+
+    updFileTemplate(userID: ID!, fileTemplateName: ID!, jarvisNodeName: String!, fullPath: String!): UserFileTemplate!
+    removeFileTemplate(userID: ID!, fileTemplateName: ID!) : String!
 }
