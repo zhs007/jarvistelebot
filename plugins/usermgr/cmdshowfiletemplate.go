@@ -67,7 +67,7 @@ func (cmd *cmdShowFileTemplate) ParseCommandLine(params *chatbot.MessageParams) 
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
-	flagset := pflag.NewFlagSet("rmscript", pflag.ContinueOnError)
+	flagset := pflag.NewFlagSet("showfiletemplate", pflag.ContinueOnError)
 
 	var uid = flagset.StringP("userid", "i", "", "you can use userid")
 	var uname = flagset.StringP("username", "u", "", "you can use username")

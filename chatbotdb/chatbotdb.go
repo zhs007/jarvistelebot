@@ -604,7 +604,7 @@ func (db *ChatBotDB) GetFileTemplate(userID string, fileTemplateName string) (*p
 	params["userID"] = userID
 	params["fileTemplateName"] = fileTemplateName
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetUserScript, params)
+	result, err := db.db.LocalQuery(context.Background(), queryGetFileTemplate, params)
 	if err != nil {
 		jarvisbase.Warn("ChatBotDB.GetFileTemplate:LocalQuery", zap.Error(err))
 
@@ -644,7 +644,7 @@ func (db *ChatBotDB) GetFileTemplates(userID string, jarvisNodeName string) (*pb
 	params["userID"] = userID
 	params["jarvisNodeName"] = jarvisNodeName
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetFileTemplate, params)
+	result, err := db.db.LocalQuery(context.Background(), queryGetFileTemplates, params)
 	if err != nil {
 		jarvisbase.Warn("ChatBotDB.GetFileTemplates:LocalQuery", zap.Error(err))
 
