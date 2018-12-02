@@ -4,3 +4,4 @@ protoc -I plugins/core/proto/ plugins/core/proto/core.proto --go_out=plugins=grp
 protoc -I plugins/jarvisnode/proto/ plugins/jarvisnode/proto/jarvisnode.proto --go_out=plugins=grpc:plugins/jarvisnode/proto
 protoc -I plugins/usermgr/proto/ plugins/usermgr/proto/usermgr.proto --go_out=plugins=grpc:plugins/usermgr/proto
 protoc -I plugins/userscript/proto/ plugins/userscript/proto/userscript.proto --go_out=plugins=grpc:plugins/userscript/proto
+protoc -I plugins/filetemplate/proto/ plugins/filetemplate/proto/filetemplate.proto --go_out=plugins=grpc:plugins/filetemplate/proto

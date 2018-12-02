@@ -33,6 +33,8 @@ type ChatBot interface {
 	GetPluginsMgr() PluginsMgr
 	// GetUserScriptsMgr - get user scripts manager
 	GetUserScriptsMgr() *UserScriptsMgr
+	// GetFileTemplatesMgr - get user file template manager
+	GetFileTemplatesMgr() *FileTemplatesMgr
 
 	// GetJarvisNodeCoreDB - get jarvis node coredb
 	GetJarvisNodeCoreDB() *jarviscore.CoreDB
@@ -104,6 +106,7 @@ type BasicChatBot struct {
 	mgrJsrvisMsgCallback *jarvisMsgCallbackMgr
 	mgrEvent             *eventMgr
 	mgrUserScripts       *UserScriptsMgr
+	mgrFileTemplates     *FileTemplatesMgr
 	// mgrUser              UserMgr
 }
 
@@ -131,6 +134,7 @@ func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 	base.mgrJsrvisMsgCallback = newJarvisMsgCallbackMgr()
 	base.MgrUser = NewBasicUserMgr()
 	base.mgrUserScripts = &UserScriptsMgr{}
+	base.mgrFileTemplates = &FileTemplatesMgr{}
 
 	base.mgrEvent = newEventMgr()
 	base.RegEventFunc(EventOnStarted, onEventStarted)
@@ -312,4 +316,9 @@ func (base *BasicChatBot) GetPluginsMgr() PluginsMgr {
 // GetUserScriptsMgr - get user scripts manager
 func (base *BasicChatBot) GetUserScriptsMgr() *UserScriptsMgr {
 	return base.mgrUserScripts
+}
+
+// GetFileTemplatesMgr - get user file template manager
+func (base *BasicChatBot) GetFileTemplatesMgr() *FileTemplatesMgr {
+	return base.mgrFileTemplates
 }

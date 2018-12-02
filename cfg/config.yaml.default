@@ -42,6 +42,7 @@ plugins:
   - 'filetransfer'
   - 'usermgr'
   - 'userscript'
+  - 'filetemplate'
 
 # defaultplugin - default plugin
 defaultplugin: 'normal'

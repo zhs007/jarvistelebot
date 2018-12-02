@@ -18,6 +18,7 @@ import (
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 	"github.com/zhs007/jarvistelebot/plugins/assistant"
 	"github.com/zhs007/jarvistelebot/plugins/core"
+	"github.com/zhs007/jarvistelebot/plugins/filetemplate"
 	"github.com/zhs007/jarvistelebot/plugins/filetransfer"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnodeex"
@@ -53,6 +54,7 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(pluginjarvisnodeex.PluginName, pluginjarvisnodeex.NewPlugin)
 	mgrPlugins.RegPlugin(pluginusermgr.PluginName, pluginusermgr.NewPlugin)
 	mgrPlugins.RegPlugin(pluginuserscript.PluginName, pluginuserscript.NewPlugin)
+	mgrPlugins.RegPlugin(pluginfiletemplate.PluginName, pluginfiletemplate.NewPlugin)
 
 	mgrPlugins.SetDefaultPlugin(cfg.DefaultPlugin)
 

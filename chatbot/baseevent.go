@@ -19,6 +19,7 @@ func onEventStarted(ctx context.Context, chatbot ChatBot, eventid string) error 
 	}
 
 	chatbot.GetUserScriptsMgr().init(chatbot)
+	chatbot.GetFileTemplatesMgr().init(chatbot)
 
 	return nil
 }

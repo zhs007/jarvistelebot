@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package pluginfiletemplatepb;
+
+// FileTemplateCommand - file template command
+message FileTemplateCommand {
+    // fileTemplateName - file template name
+    string fileTemplateName = 1;
+}
