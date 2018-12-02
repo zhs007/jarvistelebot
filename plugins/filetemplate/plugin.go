@@ -91,7 +91,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 				fd := msg.GetFile()
 
 				chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-					Filename: chatbot.GetFileNameFromFullPath(fd.Filename),
+					Filename: ft.FileTemplateName,
 					Data:     fd.File,
 				})
 			}
