@@ -16,14 +16,10 @@ type cmdUpdFileTemplate struct {
 
 // RunCommand - run command
 func (cmd *cmdUpdFileTemplate) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
-	file := params.Msg.GetFile()
-	if file != nil && params.CommandLine != nil {
+	if params.CommandLine != nil {
 		uftcmd, ok := params.CommandLine.(*pluginusermgrpb.UpdFileTemplateCommand)
 		if !ok {
-			return false
-		}
 
-		if file.FileType != chatbot.FileTypeShellScript {
 			return false
 		}
 
@@ -90,7 +86,7 @@ func (cmd *cmdUpdFileTemplate) ParseCommandLine(params *chatbot.MessageParams) (
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
-	flagset := pflag.NewFlagSet("updscript", pflag.ContinueOnError)
+	flagset := pflag.NewFlagSet("updfiletemplate", pflag.ContinueOnError)
 
 	var uid = flagset.StringP("userid", "i", "", "you can use userid")
 	var uname = flagset.StringP("username", "u", "", "you can use username")

@@ -81,6 +81,7 @@ func Test_usermgrPlugin_IsMyMessage(t *testing.T) {
 
 	arrOK := []string{
 		">> userscripts --username 123",
+		">> updfiletemplate -u zeroz777 -f jarvisconfig.yaml -n jarvisrootsh -p /home/zhs007/jarvistelebot/cfg/config.yaml",
 	}
 
 	for i := range arrOK {
@@ -109,6 +110,7 @@ func Test_usermgrPlugin_IsMyMessage(t *testing.T) {
 		"> help",
 		"> requestfile a",
 		"> requestfile a -n a",
+		">> updfiletemplate -u zeroz777 -f jarvisconfig.yaml -n jarvisrootsh",
 	}
 
 	for i := range arrErr {
