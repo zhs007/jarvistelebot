@@ -45,6 +45,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("note", &cmdNote{})
 	cmd.AddCommand("endnote", &cmdEndNote{})
 	cmd.AddCommand("endkey", &cmdEndKey{})
+	cmd.AddCommand("mynotes", &cmdMyNotes{})
 
 	return &assistantPlugin{
 		mgr: mgr,
