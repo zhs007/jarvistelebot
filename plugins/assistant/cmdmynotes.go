@@ -31,7 +31,11 @@ func (cmd *cmdMyNotes) RunCommand(ctx context.Context, params *chatbot.MessagePa
 		return false
 	}
 
-	uai := pluginAssistant.mgr.GetUserAssistantInfo(from.GetUserID())
+	uai, err := pluginAssistant.mgr.GetUserAssistantInfo(from.GetUserID())
+	if err != nil {
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+	}
+
 	strret, err := chatbot.FormatJSONObj(uai)
 	if err != nil {
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
