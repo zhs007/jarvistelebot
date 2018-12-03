@@ -3,7 +3,6 @@ package assistantdb
 import (
 	"context"
 	"path"
-	"time"
 
 	"github.com/zhs007/ankadb"
 	"github.com/zhs007/jarviscore/base"
@@ -11,16 +10,16 @@ import (
 	"go.uber.org/zap"
 )
 
-const queryAssistantData = `{
-	assistantData {
-		maxMsgID
+const queryUserAssistantInfo = `query UserAssistantInfo($userID: ID!) {
+	userAssistantInfo(userID: $userID) {
+		maxNoteID
 		keys
 	}
 }`
 
-const queryGetMsg = `mutation GetMsg($msgid: Int64!) {
-	msg(msgid: $msgid) {
-		msgID
+const queryGetNote = `mutation Note($userID: ID!, $noteID: Int64!) {
+	msg(userID: $userID, noteID: $noteID) {
+		noteID
 		data
 		keys
 		createTime
@@ -28,9 +27,9 @@ const queryGetMsg = `mutation GetMsg($msgid: Int64!) {
 	}
 }`
 
-const queryUpdMsg = `mutation UpdMsg($msg: MessageInput!) {
-	updMsg(msg: $msg) {
-		msgID
+const queryUpdNote = `mutation UpdNote($userID: ID!, $note: NoteInput!) {
+	updNote(userID: $userID, note: $note) {
+		noteID
 		data
 		keys
 		createTime
@@ -38,9 +37,9 @@ const queryUpdMsg = `mutation UpdMsg($msg: MessageInput!) {
 	}
 }`
 
-const queryUpdAssistantData = `mutation UpdAssistantData($dat: AssistantDataInput!) {
-	updAssistantData(dat: $dat) {
-		maxMsgID
+const queryUpdAssistantData = `mutation UpdUserAssistantInfo($userID: ID!, $uai: UserAssistantInfoInput!) {
+	updUserAssistantInfo(userID: $userID, uai: $uai) {
+		maxNoteID
 		keys
 	}
 }`
@@ -48,7 +47,7 @@ const queryUpdAssistantData = `mutation UpdAssistantData($dat: AssistantDataInpu
 // AssistantDB -
 type AssistantDB struct {
 	ankaDB *ankadb.AnkaDB
-	dat    *pb.AssistantData
+	// dat    *pb.UserAssistantInfo
 }
 
 // NewAssistantDB - new assistant db
@@ -77,150 +76,157 @@ func NewAssistantDB(dbpath string, httpAddr string, engine string) (*AssistantDB
 		ankaDB: ankaDB,
 	}
 
-	err = db.loadAssistantDB()
-	if err != nil {
-		jarvisbase.Error("NewAssistantDB", zap.Error(err))
+	// err = db.loadAssistantDB()
+	// if err != nil {
+	// 	jarvisbase.Error("NewAssistantDB", zap.Error(err))
 
-		return nil, err
-	}
+	// 	return nil, err
+	// }
 
 	return db, err
 }
 
-func (db *AssistantDB) loadAssistantDB() error {
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryAssistantData, nil)
+// LoadUserAssistantInfo - load UserAssistantInfo
+func (db *AssistantDB) LoadUserAssistantInfo(userID string) (*pb.UserAssistantInfo, error) {
+	params := make(map[string]interface{})
+	params["userID"] = userID
+
+	result, err := db.ankaDB.LocalQuery(context.Background(), queryUserAssistantInfo, params)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	jarvisbase.Info("AssistantDB.loadAssistantDB",
+	jarvisbase.Info("AssistantDB.LoadUserAssistantInfo",
 		jarvisbase.JSON("result", result))
 
-	rad := &ResultAssistantData{}
-	err = ankadb.MakeObjFromResult(result, rad)
+	ruai := &ResultUserAssistantInfo{}
+	err = ankadb.MakeObjFromResult(result, ruai)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	db.dat = ResultAssistantData2AssistantData(rad)
-
-	return nil
+	return ResultUserAssistantInfo2UserAssistantInfo(ruai), nil
 }
 
-// newMsgID - new MsgID
-func (db *AssistantDB) newMsgID() int64 {
-	if db.dat == nil {
-		jarvisbase.Error("AssistantDB.newMsgID", zap.Error(ErrNoAssistantData))
+// // newNoteID - new NoteID
+// func (db *AssistantDB) newNoteID() int64 {
+// 	if db.dat == nil {
+// 		jarvisbase.Error("AssistantDB.newNoteID", zap.Error(ErrNoAssistantData))
 
-		return -1
-	}
+// 		return -1
+// 	}
 
-	db.dat.MaxMsgID++
+// 	db.dat.MaxNoteID++
 
-	return db.dat.MaxMsgID
-}
+// 	return db.dat.MaxNoteID
+// }
 
-// updMsg - update msg to db
-func (db *AssistantDB) updMsg(msg *pb.Message) error {
+// UpdNote - update note to db
+func (db *AssistantDB) UpdNote(userID string, note *pb.Note) (*pb.Note, error) {
 	params := make(map[string]interface{})
 
-	err := ankadb.MakeParamsFromMsg(params, "msg", msg)
+	params["userID"] = userID
+
+	err := ankadb.MakeParamsFromMsg(params, "note", note)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryUpdMsg, params)
+	result, err := db.ankaDB.LocalQuery(context.Background(), queryUpdNote, params)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	jarvisbase.Info("AssistantDB.updMsg",
+	jarvisbase.Info("AssistantDB.UpdNote",
 		jarvisbase.JSON("result", result))
 
-	rum := &ResultUpdMsg{}
-	err = ankadb.MakeObjFromResult(result, rum)
+	run := &ResultUpdNote{}
+	err = ankadb.MakeObjFromResult(result, run)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return ResultUpdNote2Note(run), nil
 }
 
-// updAssistantData - update AssistantData to db
-func (db *AssistantDB) updAssistantData(dat *pb.AssistantData) error {
+// UpdUserAssistantInfo - update AssistantData to db
+func (db *AssistantDB) UpdUserAssistantInfo(userID string, uai *pb.UserAssistantInfo) (*pb.UserAssistantInfo, error) {
 	params := make(map[string]interface{})
 
-	err := ankadb.MakeParamsFromMsg(params, "dat", dat)
+	params["userID"] = userID
+
+	err := ankadb.MakeParamsFromMsg(params, "uai", uai)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	result, err := db.ankaDB.LocalQuery(context.Background(), queryUpdAssistantData, params)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	jarvisbase.Info("AssistantDB.updAssistantData",
+	jarvisbase.Info("AssistantDB.UpdUserAssistantInfo",
 		jarvisbase.JSON("result", result))
 
-	rum := &ResultUpdAssistantData{}
-	err = ankadb.MakeObjFromResult(result, rum)
+	ruuai := &ResultUpdUserAssistantInfo{}
+	err = ankadb.MakeObjFromResult(result, ruuai)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return ResultUpdUserAssistantInfo2UserAssistantInfo(ruuai), nil
 }
 
-// GetMsg - get message from db
-func (db *AssistantDB) GetMsg(msgid int64) (*pb.Message, error) {
+// GetNote - get note from db
+func (db *AssistantDB) GetNote(userID string, noteID int64) (*pb.Note, error) {
 	params := make(map[string]interface{})
 
-	params["msgid"] = msgid
+	params["userID"] = userID
+	params["noteID"] = noteID
 
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryGetMsg, params)
+	result, err := db.ankaDB.LocalQuery(context.Background(), queryGetNote, params)
 	if err != nil {
 		return nil, err
 	}
 
-	jarvisbase.Info("AssistantDB.GetMsg",
+	jarvisbase.Info("AssistantDB.GetNote",
 		jarvisbase.JSON("result", result))
 
-	rm := &ResultMsg{}
-	err = ankadb.MakeObjFromResult(result, rm)
+	rn := &ResultNote{}
+	err = ankadb.MakeObjFromResult(result, rn)
 	if err != nil {
 		return nil, err
 	}
 
-	return ResultMsg2Msg(rm), nil
+	return ResultNote2Note(rn), nil
 }
 
-// NewMsg - new Message
-func (db *AssistantDB) NewMsg(dat string, keys []string) (*pb.Message, error) {
-	msg := &pb.Message{
-		MsgID:      db.newMsgID(),
-		Data:       dat,
-		Keys:       keys,
-		CreateTime: time.Now().Unix(),
-		UpdateTime: time.Now().Unix(),
-	}
+// // UpdNote - update note
+// func (db *AssistantDB) UpdNote(userID string, note *pb.Note) (*pb.Note, error) {
+// 	// msg := &pb.Note{
+// 	// 	NoteID:     db.newNoteID(),
+// 	// 	Data:       dat,
+// 	// 	Keys:       keys,
+// 	// 	CreateTime: time.Now().Unix(),
+// 	// 	UpdateTime: time.Now().Unix(),
+// 	// }
 
-	if msg.MsgID < 0 {
-		return nil, ErrNoAssistantData
-	}
+// 	// if msg.MsgID < 0 {
+// 	// 	return nil, ErrNoAssistantData
+// 	// }
 
-	err := db.updMsg(msg)
-	if err != nil {
-		return nil, err
-	}
+// 	err := db.updMsg(msg)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	err = db.updAssistantData(db.dat)
-	if err != nil {
-		return nil, err
-	}
+// 	err = db.updAssistantData(db.dat)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return msg, nil
-}
+// 	return msg, nil
+// }
 
 // Start - start
 func (db *AssistantDB) Start(ctx context.Context) error {

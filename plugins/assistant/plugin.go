@@ -2,16 +2,14 @@ package pluginassistant
 
 import (
 	"context"
-	"fmt"
 	"path"
-	"strconv"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/zhs007/jarviscore/base"
-	"go.uber.org/zap"
+	"github.com/spf13/pflag"
 
-	"github.com/zhs007/jarvistelebot/assistantdb"
+	"github.com/zhs007/jarvistelebot/assistant"
 	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/plugins/assistant/proto"
 )
 
 // PluginName - plugin name
@@ -27,7 +25,9 @@ type inputParams struct {
 
 // assistantPlugin - assistant plugin
 type assistantPlugin struct {
-	db *assistantdb.AssistantDB
+	mgr assistant.Mgr
+
+	// db *assistantdb.AssistantDB
 }
 
 // NewPlugin - reg assistant plugin
@@ -36,13 +36,13 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 	cfg := loadConfig(path.Join(cfgPath, "assistant.yaml"))
 
-	db, err := assistantdb.NewAssistantDB(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
+	mgr, err := assistant.NewAssistantMgr(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
 	if err != nil {
 		return nil, err
 	}
 
 	return &assistantPlugin{
-		db: db,
+		mgr: mgr,
 	}, nil
 }
 
@@ -72,39 +72,58 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 	}
 
 	if params.ChatBot.IsMaster(from) {
-		ip := p.parseInput(params)
-
-		if ip != nil {
-			// str := fmt.Sprintf("%+v", ip)
-			// jarvisbase.Debug("assistantPlugin.OnMessage:parseInput", zap.String("ret", str))
-
-			if ip.isSave {
-				msg, err := p.db.NewMsg(ip.dat, ip.keys)
-				if err != nil {
-					jarvisbase.Warn("assistantPlugin.OnMessage:NewMsg", zap.Error(err))
-
-					return false, err
-				}
-
-				chatbot.SendTextMsg(params.ChatBot, from, fmt.Sprintf("ok. current msg is %+v", msg))
-				// params.ChatBot.SendMsg(from, fmt.Sprintf("ok. current msg is %+v", msg))
-
-				return true, nil
+		if params.CommandLine != nil {
+			notecmd, ok := params.CommandLine.(*pluginassistanepb.NoteCommand)
+			if !ok {
+				return false, chatbot.ErrInvalidCommandLine
 			}
 
-			msg, err := p.db.GetMsg(ip.msgid)
+			cn, err := p.mgr.NewNote(from.GetUserID())
 			if err != nil {
-				jarvisbase.Warn("assistantPlugin.OnMessage:GetMsg", zap.Error(err))
+				chatbot.SendTextMsg(params.ChatBot, from, err.Error())
 
-				return false, err
+				return false, chatbot.ErrInvalidCommandLine
 			}
 
-			chatbot.SendTextMsg(params.ChatBot, from, fmt.Sprintf("ok. msg is %+v", msg))
-			// params.ChatBot.SendMsg(from, fmt.Sprintf("ok. msg is %+v", msg))
-
-			return true, nil
-
+			if len(notecmd.Keys) > 0 {
+				for _, v := range notecmd.Keys {
+					cn.Keys = append(notecmd.Keys, v)
+				}
+			}
 		}
+		// // ip := p.parseInput(params)
+
+		// if ip != nil {
+		// 	// str := fmt.Sprintf("%+v", ip)
+		// 	// jarvisbase.Debug("assistantPlugin.OnMessage:parseInput", zap.String("ret", str))
+
+		// 	if ip.isSave {
+		// 		msg, err := p.db.NewMsg(ip.dat, ip.keys)
+		// 		if err != nil {
+		// 			jarvisbase.Warn("assistantPlugin.OnMessage:NewMsg", zap.Error(err))
+
+		// 			return false, err
+		// 		}
+
+		// 		chatbot.SendTextMsg(params.ChatBot, from, fmt.Sprintf("ok. current msg is %+v", msg))
+		// 		// params.ChatBot.SendMsg(from, fmt.Sprintf("ok. current msg is %+v", msg))
+
+		// 		return true, nil
+		// 	}
+
+		// 	msg, err := p.db.GetMsg(ip.msgid)
+		// 	if err != nil {
+		// 		jarvisbase.Warn("assistantPlugin.OnMessage:GetMsg", zap.Error(err))
+
+		// 		return false, err
+		// 	}
+
+		// 	chatbot.SendTextMsg(params.ChatBot, from, fmt.Sprintf("ok. msg is %+v", msg))
+		// 	// params.ChatBot.SendMsg(from, fmt.Sprintf("ok. msg is %+v", msg))
+
+		// 	return true, nil
+
+		// }
 	} else {
 		chatbot.SendTextMsg(params.ChatBot, from, "sorry, you are not my master.")
 		// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
@@ -138,64 +157,64 @@ func (p *assistantPlugin) GetPluginName() string {
 // 	return false
 // }
 
-// parseInput
-func (p *assistantPlugin) parseInput(params *chatbot.MessageParams) *inputParams {
-	if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
-		ip := &inputParams{
-			isSave: true,
-		}
+// // parseInput
+// func (p *assistantPlugin) parseInput(params *chatbot.MessageParams) *inputParams {
+// 	if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
+// 		ip := &inputParams{
+// 			isSave: true,
+// 		}
 
-		ck := ""
+// 		ck := ""
 
-		for i := 1; i < len(params.LstStr)-1; i++ {
-			if params.LstStr[i] == ">" {
-				if ck == "" {
-					return nil
-				}
+// 		for i := 1; i < len(params.LstStr)-1; i++ {
+// 			if params.LstStr[i] == ">" {
+// 				if ck == "" {
+// 					return nil
+// 				}
 
-				ip.keys = append(ip.keys, ck)
+// 				ip.keys = append(ip.keys, ck)
 
-				ip.dat = ""
-				for j := i + 1; j < len(params.LstStr); j++ {
-					if ip.dat == "" {
-						ip.dat += params.LstStr[j]
-					} else {
-						ip.dat += " " + params.LstStr[j]
-					}
+// 				ip.dat = ""
+// 				for j := i + 1; j < len(params.LstStr); j++ {
+// 					if ip.dat == "" {
+// 						ip.dat += params.LstStr[j]
+// 					} else {
+// 						ip.dat += " " + params.LstStr[j]
+// 					}
 
-				}
+// 				}
 
-				return nil
-			}
+// 				return nil
+// 			}
 
-			if ck == "" {
-				ck += params.LstStr[i]
-			} else {
-				ck += " " + params.LstStr[i]
-			}
-		}
+// 			if ck == "" {
+// 				ck += params.LstStr[i]
+// 			} else {
+// 				ck += " " + params.LstStr[i]
+// 			}
+// 		}
 
-		return ip
-	}
+// 		return ip
+// 	}
 
-	if len(params.LstStr) == 3 && params.LstStr[0] == "<<" && params.LstStr[1] == "@" {
-		msgid, err := strconv.ParseInt(params.LstStr[2], 10, 64)
-		if err != nil {
-			return nil
-		}
+// 	if len(params.LstStr) == 3 && params.LstStr[0] == "<<" && params.LstStr[1] == "@" {
+// 		msgid, err := strconv.ParseInt(params.LstStr[2], 10, 64)
+// 		if err != nil {
+// 			return nil
+// 		}
 
-		return &inputParams{
-			isSave: false,
-			msgid:  msgid,
-		}
-	}
+// 		return &inputParams{
+// 			isSave: false,
+// 			msgid:  msgid,
+// 		}
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 // OnStart - on start
 func (p *assistantPlugin) OnStart(ctx context.Context) error {
-	return p.db.Start(ctx)
+	return p.mgr.Start(ctx)
 }
 
 // GetPluginType - get pluginType
@@ -206,5 +225,26 @@ func (p *assistantPlugin) GetPluginType() int {
 // ParseMessage - If this message is what I can process,
 //	it will return to the command line, otherwise it will return an error.
 func (p *assistantPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
+	if len(params.LstStr) >= 1 && params.LstStr[0] == ">>" {
+		if params.LstStr[1] == "note" {
+			if len(params.LstStr) >= 2 {
+				flagset := pflag.NewFlagSet("note", pflag.ContinueOnError)
+
+				var keys = flagset.StringSliceP("key", "k", []string{}, "you can set keywords")
+
+				err := flagset.Parse(params.LstStr[2:])
+				if err != nil {
+					return nil, err
+				}
+
+				return &pluginassistanepb.NoteCommand{
+					Keys: *keys,
+				}, nil
+			}
+
+			return &pluginassistanepb.NoteCommand{}, nil
+		}
+	}
+
 	return nil, chatbot.ErrMsgNotMine
 }

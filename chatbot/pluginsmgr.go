@@ -28,6 +28,8 @@ type PluginsMgr interface {
 
 	// OnMessage
 	OnMessage(ctx context.Context, bot ChatBot, msg Message) error
+	// SetCurPlugin
+	SetCurPlugin(plugin Plugin)
 	// GetCurPlugin
 	GetCurPlugin() Plugin
 	// OnStart - on start
@@ -296,4 +298,9 @@ func (mgr *pluginsMgr) GetPlugins() []string {
 	}
 
 	return lst
+}
+
+// SetCurPlugin
+func (mgr *pluginsMgr) SetCurPlugin(plugin Plugin) {
+	mgr.curPlugin = plugin
 }

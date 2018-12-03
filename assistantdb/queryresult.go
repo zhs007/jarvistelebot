@@ -4,86 +4,86 @@ import (
 	pb "github.com/zhs007/jarvistelebot/assistantdb/proto"
 )
 
-// ResultAssistantData -
-type ResultAssistantData struct {
-	AssistantData struct {
-		MaxMsgID int64    `json:"maxMsgID"`
-		Keys     []string `json:"keys"`
-	} `json:"assistantData"`
+// ResultUserAssistantInfo -
+type ResultUserAssistantInfo struct {
+	UserAssistantInfo struct {
+		MaxNoteID int64    `json:"maxNoteID"`
+		Keys      []string `json:"keys"`
+	} `json:"userAssistantInfo"`
 }
 
-// ResultUpdMsg -
-type ResultUpdMsg struct {
-	UpdMsg struct {
-		MsgID      int64    `json:"msgID"`
-		Data       string   `json:"data"`
+// ResultUpdNote -
+type ResultUpdNote struct {
+	UpdNote struct {
+		NoteID     int64    `json:"noteID"`
+		Data       []string `json:"data"`
 		Keys       []string `json:"keys"`
 		CreateTime int64    `json:"createTime"`
 		UpdateTime int64    `json:"updateTime"`
-	} `json:"updMsg"`
+	} `json:"updNote"`
 }
 
-// ResultUpdAssistantData -
-type ResultUpdAssistantData struct {
-	UpdAssistantData struct {
-		MaxMsgID int64    `json:"maxMsgID"`
-		Keys     []string `json:"keys"`
-	} `json:"updAssistantData"`
+// ResultUpdUserAssistantInfo -
+type ResultUpdUserAssistantInfo struct {
+	UpdUserAssistantInfo struct {
+		MaxNoteID int64    `json:"maxNoteID"`
+		Keys      []string `json:"keys"`
+	} `json:"updUserAssistantInfo"`
 }
 
-// ResultMsg -
-type ResultMsg struct {
-	Msg struct {
-		MsgID      int64    `json:"msgID"`
-		Data       string   `json:"data"`
+// ResultNote -
+type ResultNote struct {
+	Note struct {
+		NoteID     int64    `json:"noteID"`
+		Data       []string `json:"data"`
 		Keys       []string `json:"keys"`
 		CreateTime int64    `json:"createTime"`
 		UpdateTime int64    `json:"updateTime"`
-	} `json:"msg"`
+	} `json:"note"`
 }
 
-// ResultAssistantData2AssistantData - ResultAssistantData -> AssistantData
-func ResultAssistantData2AssistantData(result *ResultAssistantData) *pb.AssistantData {
-	dat := &pb.AssistantData{
-		MaxMsgID: result.AssistantData.MaxMsgID,
-		Keys:     result.AssistantData.Keys,
+// ResultUserAssistantInfo2UserAssistantInfo - ResultUserAssistantInfo -> UserAssistantInfo
+func ResultUserAssistantInfo2UserAssistantInfo(result *ResultUserAssistantInfo) *pb.UserAssistantInfo {
+	dat := &pb.UserAssistantInfo{
+		MaxNoteID: result.UserAssistantInfo.MaxNoteID,
+		Keys:      result.UserAssistantInfo.Keys,
 	}
 
 	return dat
 }
 
-// ResultUpdAssistantData2AssistantData - ResultUpdAssistantData -> AssistantData
-func ResultUpdAssistantData2AssistantData(result *ResultUpdAssistantData) *pb.AssistantData {
-	dat := &pb.AssistantData{
-		MaxMsgID: result.UpdAssistantData.MaxMsgID,
-		Keys:     result.UpdAssistantData.Keys,
+// ResultUpdUserAssistantInfo2UserAssistantInfo - ResultUpdUserAssistantInfo -> UserAssistantInfo
+func ResultUpdUserAssistantInfo2UserAssistantInfo(result *ResultUpdUserAssistantInfo) *pb.UserAssistantInfo {
+	dat := &pb.UserAssistantInfo{
+		MaxNoteID: result.UpdUserAssistantInfo.MaxNoteID,
+		Keys:      result.UpdUserAssistantInfo.Keys,
 	}
 
 	return dat
 }
 
-// ResultUpdMsg2Msg - ResultUpdMsg -> Message
-func ResultUpdMsg2Msg(result *ResultUpdMsg) *pb.Message {
-	msg := &pb.Message{
-		MsgID:      result.UpdMsg.MsgID,
-		Data:       result.UpdMsg.Data,
-		Keys:       result.UpdMsg.Keys,
-		CreateTime: result.UpdMsg.CreateTime,
-		UpdateTime: result.UpdMsg.UpdateTime,
+// ResultUpdNote2Note - ResultUpdNote -> Note
+func ResultUpdNote2Note(result *ResultUpdNote) *pb.Note {
+	note := &pb.Note{
+		NoteID:     result.UpdNote.NoteID,
+		Data:       result.UpdNote.Data,
+		Keys:       result.UpdNote.Keys,
+		CreateTime: result.UpdNote.CreateTime,
+		UpdateTime: result.UpdNote.UpdateTime,
 	}
 
-	return msg
+	return note
 }
 
-// ResultMsg2Msg - ResultMsg -> Message
-func ResultMsg2Msg(result *ResultMsg) *pb.Message {
-	msg := &pb.Message{
-		MsgID:      result.Msg.MsgID,
-		Data:       result.Msg.Data,
-		Keys:       result.Msg.Keys,
-		CreateTime: result.Msg.CreateTime,
-		UpdateTime: result.Msg.UpdateTime,
+// ResultNote2Note - ResultNote -> Message
+func ResultNote2Note(result *ResultNote) *pb.Note {
+	note := &pb.Note{
+		NoteID:     result.Note.NoteID,
+		Data:       result.Note.Data,
+		Keys:       result.Note.Keys,
+		CreateTime: result.Note.CreateTime,
+		UpdateTime: result.Note.UpdateTime,
 	}
 
-	return msg
+	return note
 }

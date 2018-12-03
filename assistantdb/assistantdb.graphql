@@ -1,24 +1,28 @@
-type Message {
-    msgID: Int64
-    data: String 
+type Note {
+    noteID: Int64
+    data: [String] 
     keys: [String]
     createTime: Int64
     updateTime: Int64
 }
 
-type AssistantData {
-    maxMsgID: Int64
+type KeyInfo {
+    noteID: [Int64]
+}
+
+type UserAssistantInfo {
+    maxNoteID: Int64
     keys: [String]
 }
 
 type Query {
-    msg(msgID: Int64!): Message!
+    note(userID: ID!, noteID: Int64!): Note!
 
-    assistantData(): AssistantData!
+    userAssistantInfo(userID: ID!): UserAssistantInfo!
 }
 
 type Mutation {
-    updMsg(msg: Message!): Message!
+    updNote(userID: ID!, note: Note!): Note!
 
-    updAssistantData(dat: AssistantData!): AssistantData!
+    updUserAssistantInfo(userID: ID!, uai: UserAssistantInfo!): UserAssistantInfo!
 }

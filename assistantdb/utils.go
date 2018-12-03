@@ -4,13 +4,13 @@ import (
 	"fmt"
 )
 
-const keyAssistantData = "assistantdata"
-const prefixKeyMessage = "msg:"
+const prefixUserAssistantInfo = "uai:"
+const prefixKeyNote = "note:"
 
-func makeMessageKey(msgID int64) string {
-	return fmt.Sprintf("%v%v", prefixKeyMessage, msgID)
+func makeNoteKey(userID string, noteID int64) string {
+	return fmt.Sprintf("%v%v:%v", prefixKeyNote, userID, noteID)
 }
 
-func makeAssistantDataKey() string {
-	return keyAssistantData
+func makeUserAssistantInfoKey(userID string) string {
+	return fmt.Sprintf("%v%v", prefixKeyNote, userID)
 }

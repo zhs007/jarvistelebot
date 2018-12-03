@@ -3,18 +3,22 @@ package assistantdb
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
+	"github.com/zhs007/ankadb/graphqlext"
 	pb "github.com/zhs007/jarvistelebot/assistantdb/proto"
 )
 
 var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Mutation",
 	Fields: graphql.Fields{
-		"updMsg": &graphql.Field{
-			Type:        typeMessage,
-			Description: "update message",
+		"updNote": &graphql.Field{
+			Type:        typeNote,
+			Description: "update note",
 			Args: graphql.FieldConfigArgument{
-				"msg": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(inputTypeMessage),
+				"userID": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphqlext.Int64),
+				},
+				"note": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(inputTypeNote),
 				},
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
@@ -28,25 +32,30 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxCurDB
 				}
 
-				msg := &pb.Message{}
-				err := ankadb.GetMsgFromParam(params, "msg", msg)
+				userID := params.Args["userID"].(string)
+
+				note := &pb.Note{}
+				err := ankadb.GetMsgFromParam(params, "note", note)
 				if err != nil {
 					return nil, err
 				}
 
-				err = ankadb.PutMsg2DB(curdb, []byte(makeMessageKey(msg.MsgID)), msg)
+				err = ankadb.PutMsg2DB(curdb, []byte(makeNoteKey(userID, note.NoteID)), note)
 				if err != nil {
 					return nil, err
 				}
 
-				return msg, nil
+				return note, nil
 			},
 		},
-		"updAssistantData": &graphql.Field{
-			Type:        typeAssistantData,
-			Description: "update AssistantData",
+		"updUserAssistantInfo": &graphql.Field{
+			Type:        typeUserAssistantInfo,
+			Description: "update UserAssistantInfo",
 			Args: graphql.FieldConfigArgument{
-				"dat": &graphql.ArgumentConfig{
+				"userID": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphqlext.Int64),
+				},
+				"uai": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(inputTypeAssistantData),
 				},
 			},
@@ -61,18 +70,20 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxCurDB
 				}
 
-				dat := &pb.AssistantData{}
-				err := ankadb.GetMsgFromParam(params, "dat", dat)
+				userID := params.Args["userID"].(string)
+
+				uai := &pb.UserAssistantInfo{}
+				err := ankadb.GetMsgFromParam(params, "uai", uai)
 				if err != nil {
 					return nil, err
 				}
 
-				err = ankadb.PutMsg2DB(curdb, []byte(makeAssistantDataKey()), dat)
+				err = ankadb.PutMsg2DB(curdb, []byte(makeUserAssistantInfoKey(userID)), uai)
 				if err != nil {
 					return nil, err
 				}
 
-				return dat, nil
+				return uai, nil
 			},
 		},
 	},

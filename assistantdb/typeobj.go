@@ -5,17 +5,17 @@ import (
 	"github.com/zhs007/ankadb/graphqlext"
 )
 
-// typeMessage - Message
+// typeNote - Note
 //		you can see assistantdb.graphql
-var typeMessage = graphql.NewObject(
+var typeNote = graphql.NewObject(
 	graphql.ObjectConfig{
-		Name: "Message",
+		Name: "Note",
 		Fields: graphql.Fields{
-			"msgID": &graphql.Field{
+			"noteID": &graphql.Field{
 				Type: graphql.NewNonNull(graphqlext.Int64),
 			},
 			"data": &graphql.Field{
-				Type: graphql.NewNonNull(graphql.String),
+				Type: graphql.NewList(graphql.String),
 			},
 			"keys": &graphql.Field{
 				Type: graphql.NewList(graphql.String),
@@ -30,17 +30,30 @@ var typeMessage = graphql.NewObject(
 	},
 )
 
-// typeAssistantData - AssistantData
+// typeUserAssistantInfo - UserAssistantInfo
 //		you can see assistantdb.graphql
-var typeAssistantData = graphql.NewObject(
+var typeUserAssistantInfo = graphql.NewObject(
 	graphql.ObjectConfig{
-		Name: "AssistantData",
+		Name: "UserAssistantInfo",
 		Fields: graphql.Fields{
-			"maxMsgID": &graphql.Field{
+			"maxNoteID": &graphql.Field{
 				Type: graphql.NewNonNull(graphqlext.Int64),
 			},
 			"keys": &graphql.Field{
 				Type: graphql.NewList(graphql.String),
+			},
+		},
+	},
+)
+
+// typeKeyInfo - KeyInfo
+//		you can see assistantdb.graphql
+var typeKeyInfo = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "KeyInfo",
+		Fields: graphql.Fields{
+			"noteID": &graphql.Field{
+				Type: graphql.NewList(graphqlext.Int64),
 			},
 		},
 	},

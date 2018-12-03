@@ -11,10 +11,13 @@ var typeQuery = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
-			"msg": &graphql.Field{
-				Type: typeMessage,
+			"note": &graphql.Field{
+				Type: typeNote,
 				Args: graphql.FieldConfigArgument{
-					"msgID": &graphql.ArgumentConfig{
+					"userID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"noteID": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphqlext.Int64),
 					},
 				},
@@ -29,20 +32,25 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxCurDB
 					}
 
-					msgID := params.Args["msgID"].(int64)
+					userID := params.Args["userID"].(string)
+					noteID := params.Args["noteID"].(int64)
 
-					msg := &pb.Message{}
-					err := ankadb.GetMsgFromDB(curdb, []byte(makeMessageKey(msgID)), msg)
+					note := &pb.Note{}
+					err := ankadb.GetMsgFromDB(curdb, []byte(makeNoteKey(userID, noteID)), note)
 					if err != nil {
 						return nil, err
 					}
 
-					return msg, nil
+					return note, nil
 				},
 			},
-			"assistantData": &graphql.Field{
-				Type: typeAssistantData,
-				Args: graphql.FieldConfigArgument{},
+			"userAssistantInfo": &graphql.Field{
+				Type: typeUserAssistantInfo,
+				Args: graphql.FieldConfigArgument{
+					"userID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
 					if anka == nil {
@@ -54,26 +62,28 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxCurDB
 					}
 
-					haskey, err := curdb.Has([]byte(makeAssistantDataKey()))
+					userID := params.Args["userID"].(string)
+
+					haskey, err := curdb.Has([]byte(makeUserAssistantInfoKey(userID)))
 					if err != nil {
 						return nil, err
 					}
 
 					if !haskey {
-						dat := &pb.AssistantData{
-							MaxMsgID: 0,
+						uai := &pb.UserAssistantInfo{
+							MaxNoteID: 0,
 						}
 
-						return dat, nil
+						return uai, nil
 					}
 
-					dat := &pb.AssistantData{}
-					err = ankadb.GetMsgFromDB(curdb, []byte(makeAssistantDataKey()), dat)
+					uai := &pb.UserAssistantInfo{}
+					err = ankadb.GetMsgFromDB(curdb, []byte(makeUserAssistantInfoKey(userID)), uai)
 					if err != nil {
 						return nil, err
 					}
 
-					return dat, nil
+					return uai, nil
 				},
 			},
 		},

@@ -5,17 +5,17 @@ import (
 	"github.com/zhs007/ankadb/graphqlext"
 )
 
-// inputTypeMessage - Message
-//		you can see coredb.graphql
-var inputTypeMessage = graphql.NewInputObject(
+// inputTypeNote - Note
+//		you can see assistantdb.graphql
+var inputTypeNote = graphql.NewInputObject(
 	graphql.InputObjectConfig{
-		Name: "MessageInput",
+		Name: "NoteInput",
 		Fields: graphql.InputObjectConfigFieldMap{
-			"msgID": &graphql.InputObjectFieldConfig{
+			"noteID": &graphql.InputObjectFieldConfig{
 				Type: graphql.NewNonNull(graphqlext.Int64),
 			},
 			"data": &graphql.InputObjectFieldConfig{
-				Type: graphql.NewNonNull(graphql.String),
+				Type: graphql.NewList(graphql.String),
 			},
 			"keys": &graphql.InputObjectFieldConfig{
 				Type: graphql.NewList(graphql.String),

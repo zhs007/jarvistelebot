@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package pluginassistanepb;
+
+// NoteCommand - note command
+message NoteCommand {
+    // keys
+    repeated string keys = 1;
+}
