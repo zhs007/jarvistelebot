@@ -77,7 +77,7 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 	}
 
 	if params.ChatBot.IsMaster(from) {
-		if len(params.LstStr) > 2 && params.LstStr[0] == ">>" {
+		if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
 			p.cmd.Run(ctx, params.LstStr[1], params)
 
 			return true, nil

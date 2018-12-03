@@ -54,6 +54,8 @@ func (cmd *cmdNote) RunCommand(ctx context.Context, params *chatbot.MessageParam
 			}
 		}
 
+		params.MgrPlugins.SetCurPlugin(pluginAssistant)
+
 		chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me what this note is for recording.")
 		chatbot.SendTextMsg(params.ChatBot, from, "You can input multiple segments for this note.")
 		chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop recording, you can send ``>> endnote``.")
@@ -66,7 +68,7 @@ func (cmd *cmdNote) RunCommand(ctx context.Context, params *chatbot.MessageParam
 func (cmd *cmdNote) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
 		if params.LstStr[1] == "note" {
-			if len(params.LstStr) >= 2 {
+			if len(params.LstStr) >= 3 {
 				flagset := pflag.NewFlagSet("note", pflag.ContinueOnError)
 
 				var keys = flagset.StringSliceP("key", "k", []string{}, "you can set keywords")

@@ -126,6 +126,8 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 
 		r, err := mgr.curPlugin.OnMessage(ctx, params)
 		if err != nil {
+			mgr.curPlugin = nil
+
 			return err
 		}
 
