@@ -48,7 +48,7 @@ type Mgr interface {
 
 // assistantMgr - assistant manager
 type assistantMgr struct {
-	sync.Locker
+	sync.Mutex
 
 	mapUser sync.Map
 	db      *assistantdb.AssistantDB
