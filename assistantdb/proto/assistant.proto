@@ -11,7 +11,7 @@ message Note {
 }
 
 message KeyInfo {
-    repeated int64 noteID = 1;
+    repeated int64 noteIDs = 1;
 }
 
 message UserAssistantInfo {

@@ -7,7 +7,7 @@ type Note {
 }
 
 type KeyInfo {
-    noteID: [Int64]
+    noteIDs: [Int64]
 }
 
 type UserAssistantInfo {
@@ -25,4 +25,6 @@ type Mutation {
     updNote(userID: ID!, note: Note!): Note!
 
     updUserAssistantInfo(userID: ID!, uai: UserAssistantInfo!): UserAssistantInfo!
+
+    updKeyInfo(userID: ID!, key: String!, keyinfo: KeyInfo!): KeyInfo!
 }

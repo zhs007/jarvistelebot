@@ -19,6 +19,28 @@ const (
 	ModeInputKey = 2
 )
 
+// keyInfoMap - keyinfo map
+type keyInfoMap struct {
+	mapKeyInfo map[string]*assistantdbpb.KeyInfo
+}
+
+func newKeyInfoMap() *keyInfoMap {
+	return &keyInfoMap{
+		mapKeyInfo: make(map[string]*assistantdbpb.KeyInfo),
+	}
+}
+
+func (m *keyInfoMap) addKey(key string, noteid int64) {
+	v, ok := m.mapKeyInfo[key]
+	if !ok {
+		m.mapKeyInfo[key] = &assistantdbpb.KeyInfo{
+			NoteIDs: []int64{noteid},
+		}
+	}
+
+	v.NoteIDs = append(v.NoteIDs, noteid)
+}
+
 // UserAssistantInfo - user's assistant info
 type UserAssistantInfo struct {
 	MaxNoteID   int64               `json:"maxNoteID"`
@@ -46,6 +68,10 @@ type Mgr interface {
 	GetCurNoteMode(userID string) int
 	// GetUserAssistantInfo - get user assistant info
 	GetUserAssistantInfo(userID string) (*UserAssistantInfo, error)
+	// GetNote - get note
+	GetNote(userID string, noteID int64) (*assistantdbpb.Note, error)
+	// RebuildKeys - rebuild note keywords
+	RebuildKeys(userID string) (int64, int, error)
 }
 
 // assistantMgr - assistant manager
@@ -186,6 +212,17 @@ func (mgr *assistantMgr) Start(ctx context.Context) error {
 	return mgr.db.Start(ctx)
 }
 
+// insertKey - insert key to UserAssistantInfo
+func (mgr *assistantMgr) insertKey(uai *UserAssistantInfo, key string) {
+	for _, v := range uai.Keys {
+		if v == key {
+			return
+		}
+	}
+
+	uai.Keys = append(uai.Keys, key)
+}
+
 // SaveCurNote - save current note
 func (mgr *assistantMgr) SaveCurNote(userID string) (*assistantdbpb.Note, error) {
 	uai := mgr.getUserAssistantInfo(userID)
@@ -197,7 +234,21 @@ func (mgr *assistantMgr) SaveCurNote(userID string) (*assistantdbpb.Note, error)
 		return nil, ErrNoCurNote
 	}
 
-	return mgr.db.UpdNote(userID, uai.CurNote)
+	note, err := mgr.db.UpdNote(userID, uai.CurNote)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range note.Keys {
+		mgr.insertKey(uai, v)
+	}
+
+	_, err = mgr.updUserAssistant(userID, uai)
+	if err != nil {
+		return nil, err
+	}
+
+	return note, nil
 }
 
 // AddCurNoteData - save current note
@@ -275,4 +326,42 @@ func (mgr *assistantMgr) GetUserAssistantInfo(userID string) (*UserAssistantInfo
 	}
 
 	return uai, nil
+}
+
+// GetNote - get note
+func (mgr *assistantMgr) GetNote(userID string, noteID int64) (*assistantdbpb.Note, error) {
+	return mgr.db.GetNote(userID, noteID)
+}
+
+// RebuildKeys - rebuild note keywords
+func (mgr *assistantMgr) RebuildKeys(userID string) (int64, int, error) {
+	mapKeyInfo := newKeyInfoMap()
+	uai, err := mgr.GetUserAssistantInfo(userID)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	var i int64
+	for i = 1; i < uai.MaxNoteID; i++ {
+		note, err := mgr.GetNote(userID, i)
+		if err != nil {
+			continue
+		}
+
+		for _, v := range note.Keys {
+			mapKeyInfo.addKey(v, i)
+		}
+	}
+
+	keynums := 0
+	for k, v := range mapKeyInfo.mapKeyInfo {
+		_, e := mgr.db.UpdKeyInfo(userID, k, v)
+		if e != nil {
+			err = e
+		}
+
+		keynums++
+	}
+
+	return uai.MaxNoteID, keynums, nil
 }

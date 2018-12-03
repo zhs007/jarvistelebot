@@ -85,5 +85,47 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				return uai, nil
 			},
 		},
+		"updKeyInfo": &graphql.Field{
+			Type:        typeKeyInfo,
+			Description: "update keyinfo",
+			Args: graphql.FieldConfigArgument{
+				"userID": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+				"key": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.String),
+				},
+				"keyinfo": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(inputTypeKeyInfo),
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+				if anka == nil {
+					return nil, ankadb.ErrCtxAnkaDB
+				}
+
+				curdb := anka.MgrDB.GetDB("assistantdb")
+				if curdb == nil {
+					return nil, ankadb.ErrCtxCurDB
+				}
+
+				userID := params.Args["userID"].(string)
+				key := params.Args["key"].(string)
+
+				keyinfo := &pb.KeyInfo{}
+				err := ankadb.GetMsgFromParam(params, "keyinfo", keyinfo)
+				if err != nil {
+					return nil, err
+				}
+
+				err = ankadb.PutMsg2DB(curdb, []byte(makeKeyInfoKey(userID, key)), keyinfo)
+				if err != nil {
+					return nil, err
+				}
+
+				return keyinfo, nil
+			},
+		},
 	},
 })

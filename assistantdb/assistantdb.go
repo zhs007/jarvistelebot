@@ -37,6 +37,12 @@ const queryUpdNote = `mutation UpdNote($userID: ID!, $note: NoteInput!) {
 	}
 }`
 
+const queryUpdKeyInfo = `mutation UpdKeyInfo($userID: ID!, $key: String!, $keyinfo: KeyInfoInput!) {
+	updKeyInfo(userID: $userID, key: $key, keyinfo: $keyinfo) {
+		noteIDs
+	}
+}`
+
 const queryUpdAssistantData = `mutation UpdUserAssistantInfo($userID: ID!, $uai: UserAssistantInfoInput!) {
 	updUserAssistantInfo(userID: $userID, uai: $uai) {
 		maxNoteID
@@ -251,4 +257,38 @@ func (db *AssistantDB) GetNote(userID string, noteID int64) (*pb.Note, error) {
 // Start - start
 func (db *AssistantDB) Start(ctx context.Context) error {
 	return db.ankaDB.Start(ctx)
+}
+
+// UpdKeyInfo - update keyinfo to db
+func (db *AssistantDB) UpdKeyInfo(userID string, key string, keyinfo *pb.KeyInfo) (*pb.KeyInfo, error) {
+	params := make(map[string]interface{})
+
+	params["userID"] = userID
+	params["key"] = key
+
+	err := ankadb.MakeParamsFromMsg(params, "keyinfo", keyinfo)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := db.ankaDB.LocalQuery(context.Background(), queryUpdKeyInfo, params)
+	if err != nil {
+		return nil, err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		return nil, err
+	}
+
+	jarvisbase.Info("AssistantDB.UpdKeyInfo",
+		jarvisbase.JSON("result", result))
+
+	ruki := &ResultUpdKeyInfo{}
+	err = ankadb.MakeObjFromResult(result, ruki)
+	if err != nil {
+		return nil, err
+	}
+
+	return ResultUpdKeyInfo2KeyInfo(ruki), nil
 }

@@ -52,7 +52,7 @@ var typeKeyInfo = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "KeyInfo",
 		Fields: graphql.Fields{
-			"noteID": &graphql.Field{
+			"noteIDs": &graphql.Field{
 				Type: graphql.NewList(graphqlext.Int64),
 			},
 		},

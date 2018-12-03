@@ -46,6 +46,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("endnote", &cmdEndNote{})
 	cmd.AddCommand("endkey", &cmdEndKey{})
 	cmd.AddCommand("mynotes", &cmdMyNotes{})
+	cmd.AddCommand("rebuildkeywords", &cmdRebuildKeywords{})
 
 	return &assistantPlugin{
 		mgr: mgr,
@@ -158,10 +159,10 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		// 	return true, nil
 
 		// }
-	} else {
-		chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.")
-		// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 	}
+
+	chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.")
+	// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 
 	return false, nil
 }

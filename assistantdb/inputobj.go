@@ -45,3 +45,16 @@ var inputTypeUserAssistantInfo = graphql.NewInputObject(
 		},
 	},
 )
+
+// inputTypeKeyInfo - KeyInfoInput
+//		you can see assistantdb.graphql
+var inputTypeKeyInfo = graphql.NewInputObject(
+	graphql.InputObjectConfig{
+		Name: "KeyInfoInput",
+		Fields: graphql.InputObjectConfigFieldMap{
+			"noteIDs": &graphql.InputObjectFieldConfig{
+				Type: graphql.NewList(graphqlext.Int64),
+			},
+		},
+	},
+)
