@@ -44,6 +44,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 	cmd.AddCommand("note", &cmdNote{})
 	cmd.AddCommand("endnote", &cmdEndNote{})
+	cmd.AddCommand("endkey", &cmdEndKey{})
 
 	return &assistantPlugin{
 		mgr: mgr,
@@ -90,8 +91,12 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 			return true, assistant.ErrInvalidCurNoteMode
 		} else if ct == assistant.ModeInputData {
 			p.mgr.AddCurNoteData(from.GetUserID(), params.Msg.GetText())
+
+			chatbot.SendTextMsg(params.ChatBot, from, "I recorded for note, and then?")
 		} else if ct == assistant.ModeInputKey {
 			p.mgr.AddCurNoteKey(from.GetUserID(), params.Msg.GetText())
+
+			chatbot.SendTextMsg(params.ChatBot, from, "I recorded key for note, and then?")
 		}
 
 		return true, nil
