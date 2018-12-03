@@ -96,8 +96,13 @@ func (db *AssistantDB) LoadUserAssistantInfo(userID string) (*pb.UserAssistantIn
 		return nil, err
 	}
 
-	jarvisbase.Info("AssistantDB.LoadUserAssistantInfo",
-		jarvisbase.JSON("result", result))
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		return nil, err
+	}
+
+	// jarvisbase.Info("AssistantDB.LoadUserAssistantInfo",
+	// 	jarvisbase.JSON("result", result))
 
 	ruai := &ResultUserAssistantInfo{}
 	err = ankadb.MakeObjFromResult(result, ruai)
@@ -137,6 +142,11 @@ func (db *AssistantDB) UpdNote(userID string, note *pb.Note) (*pb.Note, error) {
 		return nil, err
 	}
 
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		return nil, err
+	}
+
 	jarvisbase.Info("AssistantDB.UpdNote",
 		jarvisbase.JSON("result", result))
 
@@ -165,6 +175,11 @@ func (db *AssistantDB) UpdUserAssistantInfo(userID string, uai *pb.UserAssistant
 		return nil, err
 	}
 
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		return nil, err
+	}
+
 	jarvisbase.Info("AssistantDB.UpdUserAssistantInfo",
 		jarvisbase.JSON("result", result))
 
@@ -185,6 +200,11 @@ func (db *AssistantDB) GetNote(userID string, noteID int64) (*pb.Note, error) {
 	params["noteID"] = noteID
 
 	result, err := db.ankaDB.LocalQuery(context.Background(), queryGetNote, params)
+	if err != nil {
+		return nil, err
+	}
+
+	err = ankadb.GetResultError(result)
 	if err != nil {
 		return nil, err
 	}

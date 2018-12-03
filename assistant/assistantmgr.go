@@ -21,10 +21,10 @@ const (
 
 // UserAssistantInfo - user's assistant info
 type UserAssistantInfo struct {
-	MaxNoteID   int64    `json:"maxNoteID"`
-	Keys        []string `json:"keys"`
-	CurNote     *assistantdbpb.Note
-	CurNoteMode int
+	MaxNoteID   int64               `json:"maxNoteID"`
+	Keys        []string            `json:"keys"`
+	CurNote     *assistantdbpb.Note `json:"-"`
+	CurNoteMode int                 `json:"-"`
 }
 
 // Mgr - assistant manager
