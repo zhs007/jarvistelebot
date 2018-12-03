@@ -55,7 +55,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					Type: graphql.NewNonNull(graphql.ID),
 				},
 				"uai": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(inputTypeAssistantData),
+					Type: graphql.NewNonNull(inputTypeUserAssistantInfo),
 				},
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {

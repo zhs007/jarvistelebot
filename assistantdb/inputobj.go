@@ -30,13 +30,13 @@ var inputTypeNote = graphql.NewInputObject(
 	},
 )
 
-// inputTypeAssistantData - AssistantData
+// inputTypeUserAssistantInfo - UserAssistantInfoInput
 //		you can see coredb.graphql
-var inputTypeAssistantData = graphql.NewInputObject(
+var inputTypeUserAssistantInfo = graphql.NewInputObject(
 	graphql.InputObjectConfig{
-		Name: "AssistantDataInput",
+		Name: "UserAssistantInfoInput",
 		Fields: graphql.InputObjectConfigFieldMap{
-			"maxMsgID": &graphql.InputObjectFieldConfig{
+			"maxNoteID": &graphql.InputObjectFieldConfig{
 				Type: graphql.NewNonNull(graphqlext.Int64),
 			},
 			"keys": &graphql.InputObjectFieldConfig{
