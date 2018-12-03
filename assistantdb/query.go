@@ -15,7 +15,7 @@ var typeQuery = graphql.NewObject(
 				Type: typeNote,
 				Args: graphql.FieldConfigArgument{
 					"userID": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
+						Type: graphql.NewNonNull(graphql.ID),
 					},
 					"noteID": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphqlext.Int64),
@@ -48,7 +48,7 @@ var typeQuery = graphql.NewObject(
 				Type: typeUserAssistantInfo,
 				Args: graphql.FieldConfigArgument{
 					"userID": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
+						Type: graphql.NewNonNull(graphql.ID),
 					},
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {

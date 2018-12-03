@@ -3,7 +3,6 @@ package assistantdb
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
-	"github.com/zhs007/ankadb/graphqlext"
 	pb "github.com/zhs007/jarvistelebot/assistantdb/proto"
 )
 
@@ -15,7 +14,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 			Description: "update note",
 			Args: graphql.FieldConfigArgument{
 				"userID": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphqlext.Int64),
+					Type: graphql.NewNonNull(graphql.ID),
 				},
 				"note": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(inputTypeNote),
@@ -53,7 +52,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 			Description: "update UserAssistantInfo",
 			Args: graphql.FieldConfigArgument{
 				"userID": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphqlext.Int64),
+					Type: graphql.NewNonNull(graphql.ID),
 				},
 				"uai": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(inputTypeAssistantData),
