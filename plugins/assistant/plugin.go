@@ -245,7 +245,7 @@ func (p *assistantPlugin) OnStart(ctx context.Context) error {
 
 // GetPluginType - get pluginType
 func (p *assistantPlugin) GetPluginType() int {
-	return chatbot.PluginTypeCommand
+	return chatbot.PluginTypeWritableCommand
 }
 
 // ParseMessage - If this message is what I can process,
