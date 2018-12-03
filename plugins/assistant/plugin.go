@@ -94,6 +94,8 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 			p.mgr.AddCurNoteKey(from.GetUserID(), params.Msg.GetText())
 		}
 
+		return true, nil
+
 		// if params.CommandLine != nil {
 		// 	notecmd, ok := params.CommandLine.(*pluginassistanepb.NoteCommand)
 		// 	if !ok {
