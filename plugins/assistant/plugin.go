@@ -5,11 +5,9 @@ import (
 	"path"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/spf13/pflag"
 
 	"github.com/zhs007/jarvistelebot/assistant"
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/plugins/assistant/proto"
 )
 
 // PluginName - plugin name
@@ -26,6 +24,7 @@ type inputParams struct {
 // assistantPlugin - assistant plugin
 type assistantPlugin struct {
 	mgr assistant.Mgr
+	cmd *chatbot.CommandMap
 
 	// db *assistantdb.AssistantDB
 }
@@ -41,8 +40,14 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 		return nil, err
 	}
 
+	cmd := chatbot.NewCommandMap()
+
+	cmd.AddCommand("note", &cmdNote{})
+	cmd.AddCommand("endnote", &cmdEndNote{})
+
 	return &assistantPlugin{
 		mgr: mgr,
+		cmd: cmd,
 	}, nil
 }
 
@@ -72,25 +77,46 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 	}
 
 	if params.ChatBot.IsMaster(from) {
-		if params.CommandLine != nil {
-			notecmd, ok := params.CommandLine.(*pluginassistanepb.NoteCommand)
-			if !ok {
-				return false, chatbot.ErrInvalidCommandLine
-			}
+		if len(params.LstStr) > 2 && params.LstStr[0] == ">>" {
+			p.cmd.Run(ctx, params.LstStr[1], params)
 
-			cn, err := p.mgr.NewNote(from.GetUserID())
-			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, from, err.Error())
-
-				return false, chatbot.ErrInvalidCommandLine
-			}
-
-			if len(notecmd.Keys) > 0 {
-				for _, v := range notecmd.Keys {
-					cn.Keys = append(notecmd.Keys, v)
-				}
-			}
+			return true, nil
 		}
+
+		ct := p.mgr.GetCurNoteMode(from.GetUserID())
+		if ct == assistant.ModeInvalidType {
+			chatbot.SendTextMsg(params.ChatBot, from, "Sorry, I found some problems, please restart.")
+
+			return true, assistant.ErrInvalidCurNoteMode
+		} else if ct == assistant.ModeInputData {
+			p.mgr.AddCurNoteData(from.GetUserID(), params.Msg.GetText())
+		} else if ct == assistant.ModeInputKey {
+			p.mgr.AddCurNoteKey(from.GetUserID(), params.Msg.GetText())
+		}
+
+		// if params.CommandLine != nil {
+		// 	notecmd, ok := params.CommandLine.(*pluginassistanepb.NoteCommand)
+		// 	if !ok {
+		// 		return false, chatbot.ErrInvalidCommandLine
+		// 	}
+
+		// 	cn, err := p.mgr.NewNote(from.GetUserID())
+		// 	if err != nil {
+		// 		chatbot.SendTextMsg(params.ChatBot, from, err.Error())
+
+		// 		return false, chatbot.ErrInvalidCommandLine
+		// 	}
+
+		// 	if len(notecmd.Keys) > 0 {
+		// 		for _, v := range notecmd.Keys {
+		// 			cn.Keys = append(notecmd.Keys, v)
+		// 		}
+		// 	}
+
+		// 	chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me what to record.")
+		// } else {
+
+		// }
 		// // ip := p.parseInput(params)
 
 		// if ip != nil {
@@ -125,7 +151,7 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 
 		// }
 	} else {
-		chatbot.SendTextMsg(params.ChatBot, from, "sorry, you are not my master.")
+		chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.")
 		// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 	}
 
@@ -225,26 +251,32 @@ func (p *assistantPlugin) GetPluginType() int {
 // ParseMessage - If this message is what I can process,
 //	it will return to the command line, otherwise it will return an error.
 func (p *assistantPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) >= 1 && params.LstStr[0] == ">>" {
-		if params.LstStr[1] == "note" {
-			if len(params.LstStr) >= 2 {
-				flagset := pflag.NewFlagSet("note", pflag.ContinueOnError)
-
-				var keys = flagset.StringSliceP("key", "k", []string{}, "you can set keywords")
-
-				err := flagset.Parse(params.LstStr[2:])
-				if err != nil {
-					return nil, err
-				}
-
-				return &pluginassistanepb.NoteCommand{
-					Keys: *keys,
-				}, nil
-			}
-
-			return &pluginassistanepb.NoteCommand{}, nil
+	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
+		if p.cmd.HasCommand(params.LstStr[1]) {
+			return p.cmd.ParseCommandLine(params.LstStr[1], params)
 		}
 	}
+
+	// if len(params.LstStr) >= 1 && params.LstStr[0] == ">>" {
+	// 	if params.LstStr[1] == "note" {
+	// 		if len(params.LstStr) >= 2 {
+	// 			flagset := pflag.NewFlagSet("note", pflag.ContinueOnError)
+
+	// 			var keys = flagset.StringSliceP("key", "k", []string{}, "you can set keywords")
+
+	// 			err := flagset.Parse(params.LstStr[2:])
+	// 			if err != nil {
+	// 				return nil, err
+	// 			}
+
+	// 			return &pluginassistanepb.NoteCommand{
+	// 				Keys: *keys,
+	// 			}, nil
+	// 		}
+
+	// 		return &pluginassistanepb.NoteCommand{}, nil
+	// 	}
+	// }
 
 	return nil, chatbot.ErrMsgNotMine
 }

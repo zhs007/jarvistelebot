@@ -10,19 +10,40 @@ import (
 	"github.com/zhs007/jarvistelebot/assistantdb/proto"
 )
 
+const (
+	// ModeInvalidType - invalid mode
+	ModeInvalidType = 0
+	// ModeInputData - input note data
+	ModeInputData = 1
+	// ModeInputKey - input note key
+	ModeInputKey = 2
+)
+
 // UserAssistantInfo - user's assistant info
 type UserAssistantInfo struct {
-	MaxNoteID int64
-	Keys      []string
-	CurNode   *assistantdbpb.Note
+	MaxNoteID   int64
+	Keys        []string
+	CurNote     *assistantdbpb.Note
+	CurNoteMode int
 }
 
 // Mgr - assistant manager
 type Mgr interface {
 	// Start - start
 	Start(ctx context.Context) error
+
 	// NewNote - new Note
 	NewNote(userID string) (*assistantdbpb.Note, error)
+	// SaveCurNote - save current note
+	SaveCurNote(userID string) (*assistantdbpb.Note, error)
+	// AddCurNoteData - save current note
+	AddCurNoteData(userID string, dat string) (*assistantdbpb.Note, error)
+	// AddCurNoteKey - save current key
+	AddCurNoteKey(userID string, key string) (*assistantdbpb.Note, error)
+	// ChgCurNoteMode - change current note mode, mode likes ModeInputData or ModeInputKey
+	ChgCurNoteMode(userID string, mode int) error
+	// GetCurNoteMode - get current note mode
+	GetCurNoteMode(userID string) int
 }
 
 // assistantMgr - assistant manager
@@ -78,22 +99,25 @@ func (mgr *assistantMgr) updUserAssistant(userID string, uai *UserAssistantInfo)
 	return uai, nil
 }
 
-// NewNote - new Note
-func (mgr *assistantMgr) NewNote(userID string) (*assistantdbpb.Note, error) {
+// getUserAssistantInfo
+func (mgr *assistantMgr) getUserAssistantInfo(userID string) *UserAssistantInfo {
 	uaii, ok := mgr.mapUser.Load(userID)
 	if !ok {
-		uai, err := mgr.loadUserAssistant(userID)
-		if err != nil {
-			return nil, err
-		}
-
-		mgr.mapUser.Store(userID, uai)
-
-		return mgr.newNote(userID, uai)
+		return nil
 	}
 
 	uai, ok := uaii.(*UserAssistantInfo)
 	if !ok {
+		return nil
+	}
+
+	return uai
+}
+
+// NewNote - new Note
+func (mgr *assistantMgr) NewNote(userID string) (*assistantdbpb.Note, error) {
+	uai := mgr.getUserAssistantInfo(userID)
+	if uai == nil {
 		uai, err := mgr.loadUserAssistant(userID)
 		if err != nil {
 			return nil, err
@@ -103,6 +127,30 @@ func (mgr *assistantMgr) NewNote(userID string) (*assistantdbpb.Note, error) {
 
 		return mgr.newNote(userID, uai)
 	}
+
+	// uaii, ok := mgr.mapUser.Load(userID)
+	// if !ok {
+	// 	uai, err := mgr.loadUserAssistant(userID)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+
+	// 	mgr.mapUser.Store(userID, uai)
+
+	// 	return mgr.newNote(userID, uai)
+	// }
+
+	// uai, ok := uaii.(*UserAssistantInfo)
+	// if !ok {
+	// 	uai, err := mgr.loadUserAssistant(userID)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+
+	// 	mgr.mapUser.Store(userID, uai)
+
+	// 	return mgr.newNote(userID, uai)
+	// }
 
 	return mgr.newNote(userID, uai)
 }
@@ -125,7 +173,8 @@ func (mgr *assistantMgr) newNote(userID string, uai *UserAssistantInfo) (*assist
 		UpdateTime: time.Now().Unix(),
 	}
 
-	uai.CurNode = note
+	uai.CurNote = note
+	uai.CurNoteMode = ModeInputData
 
 	return note, nil
 }
@@ -133,4 +182,80 @@ func (mgr *assistantMgr) newNote(userID string, uai *UserAssistantInfo) (*assist
 // Start - start
 func (mgr *assistantMgr) Start(ctx context.Context) error {
 	return mgr.db.Start(ctx)
+}
+
+// SaveCurNote - save current note
+func (mgr *assistantMgr) SaveCurNote(userID string) (*assistantdbpb.Note, error) {
+	uai := mgr.getUserAssistantInfo(userID)
+	if uai == nil {
+		return nil, ErrNoUserAssistantInfo
+	}
+
+	if uai.CurNote == nil {
+		return nil, ErrNoCurNote
+	}
+
+	return mgr.db.UpdNote(userID, uai.CurNote)
+}
+
+// AddCurNoteData - save current note
+func (mgr *assistantMgr) AddCurNoteData(userID string, dat string) (*assistantdbpb.Note, error) {
+	uai := mgr.getUserAssistantInfo(userID)
+	if uai == nil {
+		return nil, ErrNoUserAssistantInfo
+	}
+
+	if uai.CurNote == nil {
+		return nil, ErrNoCurNote
+	}
+
+	uai.CurNote.Data = append(uai.CurNote.Data, dat)
+
+	return nil, nil
+}
+
+// AddCurNoteKey - save current key
+func (mgr *assistantMgr) AddCurNoteKey(userID string, key string) (*assistantdbpb.Note, error) {
+	uai := mgr.getUserAssistantInfo(userID)
+	if uai == nil {
+		return nil, ErrNoUserAssistantInfo
+	}
+
+	if uai.CurNote == nil {
+		return nil, ErrNoCurNote
+	}
+
+	uai.CurNote.Keys = append(uai.CurNote.Keys, key)
+
+	return nil, nil
+}
+
+// ChgCurNoteMode - change current note mode, mode likes ModeInputData or ModeInputKey
+func (mgr *assistantMgr) ChgCurNoteMode(userID string, mode int) error {
+	uai := mgr.getUserAssistantInfo(userID)
+	if uai == nil {
+		return ErrNoUserAssistantInfo
+	}
+
+	if uai.CurNote == nil {
+		return ErrNoCurNote
+	}
+
+	uai.CurNoteMode = mode
+
+	return nil
+}
+
+// GetCurNoteMode - get current note mode
+func (mgr *assistantMgr) GetCurNoteMode(userID string) int {
+	uai := mgr.getUserAssistantInfo(userID)
+	if uai == nil {
+		return ModeInvalidType
+	}
+
+	if uai.CurNote == nil {
+		return ModeInvalidType
+	}
+
+	return uai.CurNoteMode
 }

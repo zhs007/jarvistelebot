@@ -59,4 +59,8 @@ var (
 	ErrInvalidCommandLine = errors.New("Invalid command line")
 	// ErrNoJarvisNode - Can't find jarvisnode
 	ErrNoJarvisNode = errors.New("Can't find jarvisnode")
+	// ErrInvalidParamsNoCurPlugin - Invalid params: no current plugin
+	ErrInvalidParamsNoCurPlugin = errors.New("Invalid params: no current plugin")
+	// ErrInvalidParamsInvalidCurPlugin - Invalid params: invalid current plugin
+	ErrInvalidParamsInvalidCurPlugin = errors.New("Invalid params: invalid current plugin")
 )

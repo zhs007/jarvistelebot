@@ -119,6 +119,11 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 	}
 
 	if mgr.curPlugin != nil {
+		cmdline, _ := mgr.curPlugin.ParseMessage(params)
+
+		params.CurPlugin = mgr.curPlugin
+		params.CommandLine = cmdline
+
 		r, err := mgr.curPlugin.OnMessage(ctx, params)
 		if err != nil {
 			return err
@@ -168,6 +173,7 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 	}
 
 	if len(lstppi) > 0 {
+		params.CurPlugin = lstppi[0].plugin
 		params.CommandLine = lstppi[0].cmdline
 		r, err := lstppi[0].plugin.OnMessage(ctx, params)
 		if err != nil {
@@ -179,6 +185,7 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 		}
 	}
 
+	params.CurPlugin = mgr.defaultPlugin
 	r, err := mgr.defaultPlugin.OnMessage(ctx, params)
 	if err != nil {
 		return err

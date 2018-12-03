@@ -13,6 +13,7 @@ type MessageParams struct {
 	Msg         Message
 	LstStr      []string
 	CommandLine proto.Message
+	CurPlugin   Plugin
 }
 
 // // FuncCommand - func ([]string)
