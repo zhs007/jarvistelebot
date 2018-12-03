@@ -38,6 +38,8 @@ func (cmd *cmdEndKey) RunCommand(ctx context.Context, params *chatbot.MessagePar
 		return false
 	}
 
+	params.MgrPlugins.SetCurPlugin(nil)
+
 	chatbot.SendTextMsg(params.ChatBot, from, "I get it.")
 
 	// if params.CommandLine != nil {
