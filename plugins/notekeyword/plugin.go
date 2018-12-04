@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/plugins/assistant"
 	"github.com/zhs007/jarvistelebot/plugins/notekeyword/proto"
@@ -144,18 +143,18 @@ func (p *notekeywordPlugin) GetPluginType() int {
 // ParseMessage - If this message is what I can process,
 //	it will return to the command line, otherwise it will return an error.
 func (p *notekeywordPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
-	jarvisbase.Debug("notekeywordPlugin.ParseMessage")
+	// jarvisbase.Debug("notekeywordPlugin.ParseMessage")
 	from := params.Msg.GetFrom()
 	if from != nil && len(params.LstStr) == 1 {
-		jarvisbase.Debug("notekeywordPlugin.ParseMessage:1")
+		// jarvisbase.Debug("notekeywordPlugin.ParseMessage:1")
 		plugin := params.MgrPlugins.FindPlugin(pluginassistant.PluginName)
 		if plugin != nil {
-			jarvisbase.Debug("notekeywordPlugin.ParseMessage:2")
+			// jarvisbase.Debug("notekeywordPlugin.ParseMessage:2")
 			pluginAssistant, ok := plugin.(*pluginassistant.AssistantPlugin)
 			if ok {
-				jarvisbase.Debug("notekeywordPlugin.ParseMessage:3")
+				// jarvisbase.Debug("notekeywordPlugin.ParseMessage:3")
 				if pluginAssistant.Mgr.HasKeyword(from.GetUserID(), params.LstStr[0]) {
-					jarvisbase.Debug("notekeywordPlugin.ParseMessage:4")
+					// jarvisbase.Debug("notekeywordPlugin.ParseMessage:4")
 					return &pluginnotekeywordpb.NoteKeywordCommand{
 						Keyword: params.LstStr[0],
 					}, nil
