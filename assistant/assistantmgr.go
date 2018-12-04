@@ -36,6 +36,8 @@ func (m *keyInfoMap) addKey(key string, noteid int64) {
 		m.mapKeyInfo[key] = &assistantdbpb.KeyInfo{
 			NoteIDs: []int64{noteid},
 		}
+
+		return
 	}
 
 	v.NoteIDs = append(v.NoteIDs, noteid)
