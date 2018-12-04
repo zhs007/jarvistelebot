@@ -342,9 +342,11 @@ func (mgr *assistantMgr) RebuildKeys(userID string) (int64, int, error) {
 	}
 
 	var i int64
-	for i = 1; i < uai.MaxNoteID; i++ {
-		note, err := mgr.GetNote(userID, i)
-		if err != nil {
+	for i = 1; i <= uai.MaxNoteID; i++ {
+		note, e := mgr.GetNote(userID, i)
+		if e != nil {
+			err = e
+
 			continue
 		}
 
@@ -363,5 +365,5 @@ func (mgr *assistantMgr) RebuildKeys(userID string) (int64, int, error) {
 		keynums++
 	}
 
-	return uai.MaxNoteID, keynums, nil
+	return uai.MaxNoteID, keynums, err
 }
