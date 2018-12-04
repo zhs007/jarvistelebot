@@ -17,8 +17,8 @@ const queryUserAssistantInfo = `query UserAssistantInfo($userID: ID!) {
 	}
 }`
 
-const queryGetNote = `mutation Note($userID: ID!, $noteID: Int64!) {
-	msg(userID: $userID, noteID: $noteID) {
+const queryGetNote = `query Note($userID: ID!, $noteID: Int64!) {
+	note(userID: $userID, noteID: $noteID) {
 		noteID
 		data
 		keys
