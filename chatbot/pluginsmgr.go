@@ -98,13 +98,19 @@ func (mgr *pluginsMgr) NewPlugin(pluginName string) error {
 	if pt == PluginTypeNormal {
 		mgr.lstNormal = append(mgr.lstNormal, plugin)
 
+		mgr.mapPlugin[pluginName] = plugin
+
 		return nil
 	} else if pt == PluginTypeCommand {
 		mgr.lstCommand = append(mgr.lstCommand, plugin)
 
+		mgr.mapPlugin[pluginName] = plugin
+
 		return nil
 	} else if pt == PluginTypeWritableCommand {
 		mgr.lstWritableCommand = append(mgr.lstWritableCommand, plugin)
+
+		mgr.mapPlugin[pluginName] = plugin
 
 		return nil
 	}

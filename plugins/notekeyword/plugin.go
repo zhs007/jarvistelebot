@@ -38,7 +38,7 @@ func (p *notekeywordPlugin) OnMessage(ctx context.Context, params *chatbot.Messa
 			return false, chatbot.ErrInvalidCommandLine
 		}
 
-		plugin := params.MgrPlugins.FindPlugin("assistant")
+		plugin := params.MgrPlugins.FindPlugin(pluginassistant.PluginName)
 		if plugin != nil {
 			pluginAssistant, ok := params.CurPlugin.(*pluginassistant.AssistantPlugin)
 			if ok {
@@ -148,7 +148,7 @@ func (p *notekeywordPlugin) ParseMessage(params *chatbot.MessageParams) (proto.M
 	from := params.Msg.GetFrom()
 	if from != nil && len(params.LstStr) == 1 {
 		jarvisbase.Debug("notekeywordPlugin.ParseMessage:1")
-		plugin := params.MgrPlugins.FindPlugin("assistant")
+		plugin := params.MgrPlugins.FindPlugin(pluginassistant.PluginName)
 		if plugin != nil {
 			jarvisbase.Debug("notekeywordPlugin.ParseMessage:2")
 			pluginAssistant, ok := params.CurPlugin.(*pluginassistant.AssistantPlugin)
