@@ -24,14 +24,14 @@ func (cmd *cmdMyNotes) RunCommand(ctx context.Context, params *chatbot.MessagePa
 		return false
 	}
 
-	pluginAssistant, ok := params.CurPlugin.(*assistantPlugin)
+	pluginAssistant, ok := params.CurPlugin.(*AssistantPlugin)
 	if !ok {
 		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error())
 
 		return false
 	}
 
-	uai, err := pluginAssistant.mgr.GetUserAssistantInfo(from.GetUserID())
+	uai, err := pluginAssistant.Mgr.GetUserAssistantInfo(from.GetUserID())
 	if err != nil {
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
 

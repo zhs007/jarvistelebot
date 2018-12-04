@@ -26,7 +26,7 @@ func (cmd *cmdNote) RunCommand(ctx context.Context, params *chatbot.MessageParam
 		return false
 	}
 
-	pluginAssistant, ok := params.CurPlugin.(*assistantPlugin)
+	pluginAssistant, ok := params.CurPlugin.(*AssistantPlugin)
 	if !ok {
 		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error())
 
@@ -41,7 +41,7 @@ func (cmd *cmdNote) RunCommand(ctx context.Context, params *chatbot.MessageParam
 			return false
 		}
 
-		cn, err := pluginAssistant.mgr.NewNote(from.GetUserID())
+		cn, err := pluginAssistant.Mgr.NewNote(from.GetUserID())
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, from, err.Error())
 

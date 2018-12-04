@@ -86,6 +86,51 @@ var typeQuery = graphql.NewObject(
 					return uai, nil
 				},
 			},
+			"keyInfo": &graphql.Field{
+				Type: typeKeyInfo,
+				Args: graphql.FieldConfigArgument{
+					"userID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.ID),
+					},
+					"key": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+					if anka == nil {
+						return nil, ankadb.ErrCtxAnkaDB
+					}
+
+					curdb := anka.MgrDB.GetDB("assistantdb")
+					if curdb == nil {
+						return nil, ankadb.ErrCtxCurDB
+					}
+
+					userID := params.Args["userID"].(string)
+					key := params.Args["key"].(string)
+
+					dbkey := []byte(makeKeyInfoKey(userID, key))
+					haskey, err := curdb.Has(dbkey)
+					if err != nil {
+						return nil, err
+					}
+
+					if !haskey {
+						ki := &pb.KeyInfo{}
+
+						return ki, nil
+					}
+
+					ki := &pb.KeyInfo{}
+					err = ankadb.GetMsgFromDB(curdb, []byte(dbkey), ki)
+					if err != nil {
+						return nil, err
+					}
+
+					return ki, nil
+				},
+			},
 		},
 	},
 )

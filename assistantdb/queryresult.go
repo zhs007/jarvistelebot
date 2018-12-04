@@ -49,6 +49,13 @@ type ResultUpdKeyInfo struct {
 	} `json:"updKeyInfo"`
 }
 
+// ResultKeyInfo -
+type ResultKeyInfo struct {
+	KeyInfo struct {
+		NoteIDs []int64 `json:"noteIDs"`
+	} `json:"keyInfo"`
+}
+
 // ResultUserAssistantInfo2UserAssistantInfo - ResultUserAssistantInfo -> UserAssistantInfo
 func ResultUserAssistantInfo2UserAssistantInfo(result *ResultUserAssistantInfo) *pb.UserAssistantInfo {
 	dat := &pb.UserAssistantInfo{
@@ -99,6 +106,15 @@ func ResultNote2Note(result *ResultNote) *pb.Note {
 func ResultUpdKeyInfo2KeyInfo(result *ResultUpdKeyInfo) *pb.KeyInfo {
 	keyinfo := &pb.KeyInfo{
 		NoteIDs: result.UpdKeyInfo.NoteIDs,
+	}
+
+	return keyinfo
+}
+
+// ResultKeyInfo2KeyInfo - ResultKeyInfo -> KeyInfo
+func ResultKeyInfo2KeyInfo(result *ResultKeyInfo) *pb.KeyInfo {
+	keyinfo := &pb.KeyInfo{
+		NoteIDs: result.KeyInfo.NoteIDs,
 	}
 
 	return keyinfo

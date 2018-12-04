@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package pluginnotekeywordpb;
+
+// NoteKeywordCommand - note keyword command
+message NoteKeywordCommand {
+    // keyword - keyword
+    string keyword = 1;
+}

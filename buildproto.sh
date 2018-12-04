@@ -6,3 +6,4 @@ protoc -I plugins/usermgr/proto/ plugins/usermgr/proto/usermgr.proto --go_out=pl
 protoc -I plugins/userscript/proto/ plugins/userscript/proto/userscript.proto --go_out=plugins=grpc:plugins/userscript/proto
 protoc -I plugins/filetemplate/proto/ plugins/filetemplate/proto/filetemplate.proto --go_out=plugins=grpc:plugins/filetemplate/proto
 protoc -I plugins/assistant/proto/ plugins/assistant/proto/assistant.proto --go_out=plugins=grpc:plugins/assistant/proto
+protoc -I plugins/notekeyword/proto/ plugins/notekeyword/proto/notekeyword.proto --go_out=plugins=grpc:plugins/notekeyword/proto

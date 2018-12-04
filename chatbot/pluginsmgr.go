@@ -42,6 +42,8 @@ type PluginsMgr interface {
 
 	// HasPlugin - has a plugin
 	HasPlugin(pluginName string) bool
+	// FindPlugin - find a plugin
+	FindPlugin(pluginName string) Plugin
 
 	// GetPlugins - get plugins
 	GetPlugins() []string
@@ -288,6 +290,16 @@ func (mgr *pluginsMgr) CanNewPlugin(pluginName string) bool {
 func (mgr *pluginsMgr) HasPlugin(pluginName string) bool {
 	_, ok := mgr.mapPlugin[pluginName]
 	return ok
+}
+
+// FindPlugin - find a plugin
+func (mgr *pluginsMgr) FindPlugin(pluginName string) Plugin {
+	plugin, ok := mgr.mapPlugin[pluginName]
+	if ok {
+		return plugin
+	}
+
+	return nil
 }
 
 // GetPlugins - get plugins

@@ -25,14 +25,14 @@ func (cmd *cmdRebuildKeywords) RunCommand(ctx context.Context, params *chatbot.M
 		return false
 	}
 
-	pluginAssistant, ok := params.CurPlugin.(*assistantPlugin)
+	pluginAssistant, ok := params.CurPlugin.(*AssistantPlugin)
 	if !ok {
 		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error())
 
 		return false
 	}
 
-	notenums, keynums, err := pluginAssistant.mgr.RebuildKeys(from.GetUserID())
+	notenums, keynums, err := pluginAssistant.Mgr.RebuildKeys(from.GetUserID())
 	if err != nil {
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
 

@@ -23,6 +23,7 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnodeex"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
+	"github.com/zhs007/jarvistelebot/plugins/notekeyword"
 	"github.com/zhs007/jarvistelebot/plugins/timestamp"
 	"github.com/zhs007/jarvistelebot/plugins/usermgr"
 	"github.com/zhs007/jarvistelebot/plugins/userscript"
@@ -55,6 +56,7 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(pluginusermgr.PluginName, pluginusermgr.NewPlugin)
 	mgrPlugins.RegPlugin(pluginuserscript.PluginName, pluginuserscript.NewPlugin)
 	mgrPlugins.RegPlugin(pluginfiletemplate.PluginName, pluginfiletemplate.NewPlugin)
+	mgrPlugins.RegPlugin(pluginnotekeyword.PluginName, pluginnotekeyword.NewPlugin)
 
 	mgrPlugins.SetDefaultPlugin(cfg.DefaultPlugin)
 

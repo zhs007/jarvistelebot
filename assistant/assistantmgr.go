@@ -72,8 +72,13 @@ type Mgr interface {
 	GetUserAssistantInfo(userID string) (*UserAssistantInfo, error)
 	// GetNote - get note
 	GetNote(userID string, noteID int64) (*assistantdbpb.Note, error)
+
 	// RebuildKeys - rebuild note keywords
 	RebuildKeys(userID string) (int64, int, error)
+	// HasKeyword - has key
+	HasKeyword(userID string, key string) bool
+	// FindNoteWithKeyword - find note with keyword
+	FindNoteWithKeyword(userID string, key string) ([]*assistantdbpb.Note, error)
 }
 
 // assistantMgr - assistant manager
@@ -368,4 +373,43 @@ func (mgr *assistantMgr) RebuildKeys(userID string) (int64, int, error) {
 	}
 
 	return uai.MaxNoteID, keynums, err
+}
+
+// HasKeyword - has key
+func (mgr *assistantMgr) HasKeyword(userID string, key string) bool {
+	uai, err := mgr.GetUserAssistantInfo(userID)
+	if err != nil {
+		return false
+	}
+
+	for _, v := range uai.Keys {
+		if v == key {
+			return true
+		}
+	}
+
+	return false
+}
+
+// FindNoteWithKeyword - find note with keyword
+func (mgr *assistantMgr) FindNoteWithKeyword(userID string, key string) ([]*assistantdbpb.Note, error) {
+	var lst []*assistantdbpb.Note
+
+	ki, err := mgr.db.GetKeyInfo(userID, key)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range ki.NoteIDs {
+		note, e := mgr.GetNote(userID, v)
+		if e != nil {
+			err = e
+
+			continue
+		}
+
+		lst = append(lst, note)
+	}
+
+	return lst, nil
 }

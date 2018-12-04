@@ -26,14 +26,14 @@ func (cmd *cmdEndNote) RunCommand(ctx context.Context, params *chatbot.MessagePa
 		return false
 	}
 
-	pluginAssistant, ok := params.CurPlugin.(*assistantPlugin)
+	pluginAssistant, ok := params.CurPlugin.(*AssistantPlugin)
 	if !ok {
 		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error())
 
 		return false
 	}
 
-	pluginAssistant.mgr.ChgCurNoteMode(from.GetUserID(), assistant.ModeInputKey)
+	pluginAssistant.Mgr.ChgCurNoteMode(from.GetUserID(), assistant.ModeInputKey)
 
 	chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me the keywords of this note, one at a time.")
 	chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop inputing keywords, you can send ``>> endkey``.")

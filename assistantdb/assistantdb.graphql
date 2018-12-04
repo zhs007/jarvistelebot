@@ -19,6 +19,8 @@ type Query {
     note(userID: ID!, noteID: Int64!): Note!
 
     userAssistantInfo(userID: ID!): UserAssistantInfo!
+
+    keyInfo(userID: ID!, key: String!): KeyInfo!
 }
 
 type Mutation {

@@ -21,9 +21,9 @@ type inputParams struct {
 	msgid  int64
 }
 
-// assistantPlugin - assistant plugin
-type assistantPlugin struct {
-	mgr assistant.Mgr
+// AssistantPlugin - assistant plugin
+type AssistantPlugin struct {
+	Mgr assistant.Mgr
 	cmd *chatbot.CommandMap
 
 	// db *assistantdb.AssistantDB
@@ -31,7 +31,7 @@ type assistantPlugin struct {
 
 // NewPlugin - reg assistant plugin
 func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
-	chatbot.Info("NewPlugin - assistantPlugin")
+	chatbot.Info("NewPlugin - AssistantPlugin")
 
 	cfg := loadConfig(path.Join(cfgPath, "assistant.yaml"))
 
@@ -48,8 +48,8 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("mynotes", &cmdMyNotes{})
 	cmd.AddCommand("rebuildkeywords", &cmdRebuildKeywords{})
 
-	return &assistantPlugin{
-		mgr: mgr,
+	return &AssistantPlugin{
+		Mgr: mgr,
 		cmd: cmd,
 	}, nil
 }
@@ -73,7 +73,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 // }
 
 // OnMessage - get message
-func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
+func (p *AssistantPlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
 	from := params.Msg.GetFrom()
 	if from == nil {
 		return false, chatbot.ErrMsgNoFrom
@@ -86,17 +86,17 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 			return true, nil
 		}
 
-		ct := p.mgr.GetCurNoteMode(from.GetUserID())
+		ct := p.Mgr.GetCurNoteMode(from.GetUserID())
 		if ct == assistant.ModeInvalidType {
 			chatbot.SendTextMsg(params.ChatBot, from, "Sorry, I found some problems, please restart.")
 
 			return true, assistant.ErrInvalidCurNoteMode
 		} else if ct == assistant.ModeInputData {
-			p.mgr.AddCurNoteData(from.GetUserID(), params.Msg.GetText())
+			p.Mgr.AddCurNoteData(from.GetUserID(), params.Msg.GetText())
 
 			chatbot.SendTextMsg(params.ChatBot, from, "I recorded for note, and then?")
 		} else if ct == assistant.ModeInputKey {
-			p.mgr.AddCurNoteKey(from.GetUserID(), params.Msg.GetText())
+			p.Mgr.AddCurNoteKey(from.GetUserID(), params.Msg.GetText())
 
 			chatbot.SendTextMsg(params.ChatBot, from, "I recorded key for note, and then?")
 		}
@@ -168,7 +168,7 @@ func (p *assistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 }
 
 // GetPluginName - get plugin name
-func (p *assistantPlugin) GetPluginName() string {
+func (p *AssistantPlugin) GetPluginName() string {
 	return PluginName
 }
 
@@ -248,18 +248,18 @@ func (p *assistantPlugin) GetPluginName() string {
 // }
 
 // OnStart - on start
-func (p *assistantPlugin) OnStart(ctx context.Context) error {
-	return p.mgr.Start(ctx)
+func (p *AssistantPlugin) OnStart(ctx context.Context) error {
+	return p.Mgr.Start(ctx)
 }
 
 // GetPluginType - get pluginType
-func (p *assistantPlugin) GetPluginType() int {
+func (p *AssistantPlugin) GetPluginType() int {
 	return chatbot.PluginTypeWritableCommand
 }
 
 // ParseMessage - If this message is what I can process,
 //	it will return to the command line, otherwise it will return an error.
-func (p *assistantPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
+func (p *AssistantPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
 		if p.cmd.HasCommand(params.LstStr[1]) {
 			return p.cmd.ParseCommandLine(params.LstStr[1], params)
