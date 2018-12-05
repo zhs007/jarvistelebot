@@ -43,6 +43,12 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 			user = userbyuid
 		}
 
+		if user == nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+
+			return false
+		}
+
 		us, err := params.ChatBot.GetChatBotDB().GetUserScript(user.UserID, sscmd.ScriptName)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())

@@ -44,6 +44,12 @@ func (cmd *cmdShowFileTemplate) RunCommand(ctx context.Context, params *chatbot.
 			user = userbyuid
 		}
 
+		if user == nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+
+			return false
+		}
+
 		ft, err := params.ChatBot.GetChatBotDB().GetFileTemplate(user.UserID, sftcmd.FileTemplateName)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())

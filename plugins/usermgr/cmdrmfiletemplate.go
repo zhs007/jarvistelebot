@@ -43,6 +43,12 @@ func (cmd *cmdRmFileTemplate) RunCommand(ctx context.Context, params *chatbot.Me
 			user = userbyuid
 		}
 
+		if user == nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+
+			return false
+		}
+
 		err := params.ChatBot.GetChatBotDB().RemoveFileTemplate(user.UserID, rmftcmd.FileTemplateName)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())

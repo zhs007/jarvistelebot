@@ -44,6 +44,12 @@ func (cmd *cmdUpdFileTemplate) RunCommand(ctx context.Context, params *chatbot.M
 			user = userbyuid
 		}
 
+		if user == nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+
+			return false
+		}
+
 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(uftcmd.JarvisNodeName)
 		if curnode == nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this node.")
