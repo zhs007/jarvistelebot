@@ -27,7 +27,7 @@ func (cmd *cmdShowFileTemplate) RunCommand(ctx context.Context, params *chatbot.
 		if sftcmd.UserID != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(sftcmd.UserID)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -36,7 +36,7 @@ func (cmd *cmdShowFileTemplate) RunCommand(ctx context.Context, params *chatbot.
 		} else if sftcmd.UserName != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(sftcmd.UserName)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -45,21 +45,21 @@ func (cmd *cmdShowFileTemplate) RunCommand(ctx context.Context, params *chatbot.
 		}
 
 		if user == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.", params.Msg)
 
 			return false
 		}
 
 		ft, err := params.ChatBot.GetChatBotDB().GetFileTemplate(user.UserID, sftcmd.FileTemplateName)
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 			return false
 		}
 
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 			fmt.Sprintf("If you send %v to me, I will send the file to %v:%v",
-				ft.FileTemplateName, ft.JarvisNodeName, ft.FullPath))
+				ft.FileTemplateName, ft.JarvisNodeName, ft.FullPath), params.Msg)
 
 		return true
 	}

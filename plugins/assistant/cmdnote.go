@@ -21,14 +21,14 @@ func (cmd *cmdNote) RunCommand(ctx context.Context, params *chatbot.MessageParam
 	}
 
 	if params.CurPlugin == nil {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error(), params.Msg)
 
 		return false
 	}
 
 	pluginAssistant, ok := params.CurPlugin.(*AssistantPlugin)
 	if !ok {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error(), params.Msg)
 
 		return false
 	}
@@ -36,14 +36,14 @@ func (cmd *cmdNote) RunCommand(ctx context.Context, params *chatbot.MessageParam
 	if params.CommandLine != nil {
 		notecmd, ok := params.CommandLine.(*pluginassistanepb.NoteCommand)
 		if !ok {
-			chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidCommandLine.Error())
+			chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidCommandLine.Error(), params.Msg)
 
 			return false
 		}
 
 		cn, err := pluginAssistant.Mgr.NewNote(from.GetUserID())
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, from, err.Error())
+			chatbot.SendTextMsg(params.ChatBot, from, err.Error(), params.Msg)
 
 			return false
 		}
@@ -56,9 +56,9 @@ func (cmd *cmdNote) RunCommand(ctx context.Context, params *chatbot.MessageParam
 
 		params.MgrPlugins.SetCurPlugin(pluginAssistant)
 
-		chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me what this note is for recording.")
-		chatbot.SendTextMsg(params.ChatBot, from, "You can input multiple segments for this note.")
-		chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop recording, you can send ``>> endnote``.")
+		chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me what this note is for recording.", params.Msg)
+		chatbot.SendTextMsg(params.ChatBot, from, "You can input multiple segments for this note.", params.Msg)
+		chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop recording, you can send ``>> endnote``.", params.Msg)
 	}
 
 	return true

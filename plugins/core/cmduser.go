@@ -26,7 +26,7 @@ func (cmd *cmdUser) RunCommand(ctx context.Context, params *chatbot.MessageParam
 		if usercmd.UserID != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(usercmd.UserID)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -35,7 +35,7 @@ func (cmd *cmdUser) RunCommand(ctx context.Context, params *chatbot.MessageParam
 		} else if usercmd.UserName != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(usercmd.UserName)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -46,15 +46,15 @@ func (cmd *cmdUser) RunCommand(ctx context.Context, params *chatbot.MessageParam
 		if user != nil {
 			strret, err := chatbot.FormatJSONObj(user)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 			} else {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
 			}
 
 			return true
 		}
 
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this user.")
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this user.", params.Msg)
 
 		return true
 	}

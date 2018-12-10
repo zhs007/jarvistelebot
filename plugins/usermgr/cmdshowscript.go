@@ -26,7 +26,7 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 		if sscmd.UserID != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(sscmd.UserID)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -35,7 +35,7 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 		} else if sscmd.UserName != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(sscmd.UserName)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -44,24 +44,24 @@ func (cmd *cmdShowScript) RunCommand(ctx context.Context, params *chatbot.Messag
 		}
 
 		if user == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.", params.Msg)
 
 			return false
 		}
 
 		us, err := params.ChatBot.GetChatBotDB().GetUserScript(user.UserID, sscmd.ScriptName)
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 			return false
 		}
 
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-			"This script is prepared for "+us.JarvisNodeName)
+			"This script is prepared for "+us.JarvisNodeName, params.Msg)
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-			"The script data:")
+			"The script data:", params.Msg)
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-			string(us.File.Data))
+			string(us.File.Data), params.Msg)
 
 		return true
 	}

@@ -21,22 +21,22 @@ func (cmd *cmdEndNote) RunCommand(ctx context.Context, params *chatbot.MessagePa
 	}
 
 	if params.CurPlugin == nil {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error(), params.Msg)
 
 		return false
 	}
 
 	pluginAssistant, ok := params.CurPlugin.(*AssistantPlugin)
 	if !ok {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error(), params.Msg)
 
 		return false
 	}
 
 	pluginAssistant.Mgr.ChgCurNoteMode(from.GetUserID(), assistant.ModeInputKey)
 
-	chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me the keywords of this note, one at a time.")
-	chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop inputing keywords, you can send ``>> endkey``.")
+	chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me the keywords of this note, one at a time.", params.Msg)
+	chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop inputing keywords, you can send ``>> endkey``.", params.Msg)
 
 	// if params.CommandLine != nil {
 	// 	notecmd, ok := params.CommandLine.(*pluginassistanepb.NoteCommand)

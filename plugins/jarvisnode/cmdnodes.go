@@ -26,9 +26,9 @@ func (cmd *cmdNodes) RunCommand(ctx context.Context, params *chatbot.MessagePara
 		str, _ := coredb.GetNodes(int(nodescmd.Nums))
 		strret, err := chatbot.FormatJSON(str)
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str, params.Msg)
 		} else {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
 		}
 	}
 

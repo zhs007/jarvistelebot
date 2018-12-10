@@ -13,7 +13,7 @@ type cmdVersion struct {
 
 // RunCommand - run command
 func (cmd *cmdVersion) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
-	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), params.ChatBot.GetVersion())
+	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), params.ChatBot.GetVersion(), params.Msg)
 
 	return true
 }

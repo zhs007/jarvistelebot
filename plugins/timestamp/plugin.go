@@ -51,21 +51,21 @@ func (p *timestampPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		if err == nil {
 			tm := time.Unix(ts, 0)
 			// params.ChatBot.SendMsg(from, tm.Format("2006-01-02 15:04:05"))
-			chatbot.SendTextMsg(params.ChatBot, from, tm.Format("2006-01-02 15:04:05"))
+			chatbot.SendTextMsg(params.ChatBot, from, tm.Format("2006-01-02 15:04:05"), params.Msg)
 
 			return true, nil
 		}
 
 		tm2, err := time.Parse("2006-01-02 15:04:05", params.Msg.GetText())
 		if err == nil {
-			chatbot.SendTextMsg(params.ChatBot, from, strconv.FormatInt(tm2.Unix(), 10))
+			chatbot.SendTextMsg(params.ChatBot, from, strconv.FormatInt(tm2.Unix(), 10), params.Msg)
 			// params.ChatBot.SendMsg(from, strconv.FormatInt(tm2.Unix(), 10))
 
 			return true, nil
 		}
 
 	} else {
-		chatbot.SendTextMsg(params.ChatBot, from, "sorry, you are not my master.")
+		chatbot.SendTextMsg(params.ChatBot, from, "sorry, you are not my master.", params.Msg)
 		// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 	}
 

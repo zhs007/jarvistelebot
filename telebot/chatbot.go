@@ -255,7 +255,7 @@ func (cb *teleChatBot) procCallbackQuery(ctx context.Context, query *tgbotapi.Ca
 		}
 
 		if msg.GetSelected() > 0 {
-			chatbot.SendTextMsg(cb, user, "Sorry, you have made a choice.")
+			chatbot.SendTextMsg(cb, user, "Sorry, you have made a choice.", nil)
 
 			return nil
 		}
@@ -271,7 +271,7 @@ func (cb *teleChatBot) procCallbackQuery(ctx context.Context, query *tgbotapi.Ca
 		if err != nil {
 			chatbot.Warn("teleChatBot.procCallbackQuery:ProcMsgCallback", zap.Error(err))
 
-			chatbot.SendTextMsg(cb, user, "Sorry, I found some problems, please start over.")
+			chatbot.SendTextMsg(cb, user, "Sorry, I found some problems, please start over.", nil)
 
 			return err
 		}
@@ -476,6 +476,15 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 	chatid, err := strconv.ParseInt(to.GetUserID(), 10, 64)
 	if err != nil {
 		return nil, err
+	}
+
+	if msg.InGroup() {
+		chatid1, err1 := strconv.ParseInt(msg.GetChatID(), 10, 64)
+		if err1 != nil {
+			return nil, err1
+		}
+
+		chatid = chatid1
 	}
 
 	fd := msg.GetFile()

@@ -18,10 +18,10 @@ func (cmd *cmdMyState) RunCommand(ctx context.Context, params *chatbot.MessagePa
 	str, _ := coredb.GetMyState()
 	strret, err := chatbot.FormatJSON(str)
 	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str, params.Msg)
 		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
 	} else {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
 		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
 	}
 

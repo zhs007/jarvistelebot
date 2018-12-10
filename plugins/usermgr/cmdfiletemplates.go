@@ -26,7 +26,7 @@ func (cmd *cmdFileTemplates) RunCommand(ctx context.Context, params *chatbot.Mes
 		if ftcmd.UserID != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(ftcmd.UserID)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -35,7 +35,7 @@ func (cmd *cmdFileTemplates) RunCommand(ctx context.Context, params *chatbot.Mes
 		} else if ftcmd.UserName != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(ftcmd.UserName)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -44,23 +44,23 @@ func (cmd *cmdFileTemplates) RunCommand(ctx context.Context, params *chatbot.Mes
 		}
 
 		if user == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.", params.Msg)
 
 			return false
 		}
 
 		lst, err := params.ChatBot.GetChatBotDB().GetFileTemplates(user.UserID, ftcmd.JarvisNodeName)
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 			return false
 		}
 
 		strret, err := chatbot.FormatJSONObj(lst)
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 		} else {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
 		}
 
 		return true

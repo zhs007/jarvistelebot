@@ -12,7 +12,7 @@ func onEventStarted(ctx context.Context, chatbot ChatBot, eventid string) error 
 
 	user := chatbot.GetMaster()
 	if user != nil {
-		err := SendTextMsg(chatbot, user, "Master, I am restarted.")
+		err := SendTextMsg(chatbot, user, "Master, I am restarted.", nil)
 		if err != nil {
 			jarvisbase.Warn("onEventStarted:SendTextMsg", zap.Error(err))
 		}

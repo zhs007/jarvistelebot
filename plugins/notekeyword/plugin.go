@@ -43,26 +43,26 @@ func (p *notekeywordPlugin) OnMessage(ctx context.Context, params *chatbot.Messa
 			if ok {
 				lst, err := pluginAssistant.Mgr.FindNoteWithKeyword(from.GetUserID(), nkcmd.Keyword)
 				if err != nil {
-					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 				}
 
 				if lst != nil {
 					if len(lst) == 1 {
-						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "I get a note.")
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "I get a note.", params.Msg)
 
 						for _, v := range lst[0].Data {
-							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), v)
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), v, params.Msg)
 						}
 					} else {
 						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-							fmt.Sprintf("I got %v notes.", len(lst)))
+							fmt.Sprintf("I got %v notes.", len(lst)), params.Msg)
 
 						for i, v := range lst {
 							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-								fmt.Sprintf("note %v is ", i+1))
+								fmt.Sprintf("note %v is ", i+1), params.Msg)
 
 							for _, vd := range v.Data {
-								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), vd)
+								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), vd, params.Msg)
 							}
 						}
 					}

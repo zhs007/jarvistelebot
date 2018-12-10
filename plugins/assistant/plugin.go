@@ -88,17 +88,17 @@ func (p *AssistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 
 		ct := p.Mgr.GetCurNoteMode(from.GetUserID())
 		if ct == assistant.ModeInvalidType {
-			chatbot.SendTextMsg(params.ChatBot, from, "Sorry, I found some problems, please restart.")
+			chatbot.SendTextMsg(params.ChatBot, from, "Sorry, I found some problems, please restart.", params.Msg)
 
 			return true, assistant.ErrInvalidCurNoteMode
 		} else if ct == assistant.ModeInputData {
 			p.Mgr.AddCurNoteData(from.GetUserID(), params.Msg.GetText())
 
-			chatbot.SendTextMsg(params.ChatBot, from, "I recorded for note, and then?")
+			chatbot.SendTextMsg(params.ChatBot, from, "I recorded for note, and then?", params.Msg)
 		} else if ct == assistant.ModeInputKey {
 			p.Mgr.AddCurNoteKey(from.GetUserID(), params.Msg.GetText())
 
-			chatbot.SendTextMsg(params.ChatBot, from, "I recorded key for note, and then?")
+			chatbot.SendTextMsg(params.ChatBot, from, "I recorded key for note, and then?", params.Msg)
 		}
 
 		return true, nil
@@ -161,7 +161,7 @@ func (p *AssistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		// }
 	}
 
-	chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.")
+	chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.", params.Msg)
 	// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 
 	return false, nil

@@ -43,7 +43,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 
 		ft, err := params.ChatBot.GetChatBotDB().GetFileTemplate(from.GetUserID(), ftcmd.FileTemplateName)
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 			return false, err
 		}
@@ -51,11 +51,11 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 		file := params.Msg.GetFile()
 		if file != nil {
 			chatbot.SendTextMsg(params.ChatBot, from,
-				fmt.Sprintf("I will send %v to %v.", ft.FullPath, ft.JarvisNodeName))
+				fmt.Sprintf("I will send %v to %v.", ft.FullPath, ft.JarvisNodeName), params.Msg)
 
 			curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(ft.JarvisNodeName)
 			if curnode == nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrNoJarvisNode.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrNoJarvisNode.Error(), params.Msg)
 
 				return false, chatbot.ErrNoJarvisNode
 			}
@@ -71,11 +71,11 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 		}
 
 		chatbot.SendTextMsg(params.ChatBot, from,
-			fmt.Sprintf("I will get %v:%v.", ft.JarvisNodeName, ft.FullPath))
+			fmt.Sprintf("I will get %v:%v.", ft.JarvisNodeName, ft.FullPath), params.Msg)
 
 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(ft.JarvisNodeName)
 		if curnode == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrNoJarvisNode.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrNoJarvisNode.Error(), params.Msg)
 
 			return false, chatbot.ErrNoJarvisNode
 		}

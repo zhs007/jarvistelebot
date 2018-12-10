@@ -27,7 +27,7 @@ func (cmd *cmdUpdFileTemplate) RunCommand(ctx context.Context, params *chatbot.M
 		if uftcmd.UserID != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(uftcmd.UserID)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -36,7 +36,7 @@ func (cmd *cmdUpdFileTemplate) RunCommand(ctx context.Context, params *chatbot.M
 		} else if uftcmd.UserName != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(uftcmd.UserName)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -45,14 +45,14 @@ func (cmd *cmdUpdFileTemplate) RunCommand(ctx context.Context, params *chatbot.M
 		}
 
 		if user == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.", params.Msg)
 
 			return false
 		}
 
 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(uftcmd.JarvisNodeName)
 		if curnode == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this node.")
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this node.", params.Msg)
 
 			return false
 		}
@@ -68,9 +68,9 @@ func (cmd *cmdUpdFileTemplate) RunCommand(ctx context.Context, params *chatbot.M
 
 			// strret, err := chatbot.FormatJSONObj(user)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 			} else {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "OK, It is done.")
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "OK, It is done.", params.Msg)
 			}
 
 			params.ChatBot.OnUserEvent(ctx, params.ChatBot, chatbot.UserEventOnChgUserFileTemplate, user.UserID)
@@ -78,7 +78,7 @@ func (cmd *cmdUpdFileTemplate) RunCommand(ctx context.Context, params *chatbot.M
 			return true
 		}
 
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this user.")
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this user.", params.Msg)
 
 		return true
 	}

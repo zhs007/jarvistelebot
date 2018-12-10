@@ -42,17 +42,17 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 
 		us, err := params.ChatBot.GetChatBotDB().GetUserScript(from.GetUserID(), rscmd.ScriptName)
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 			return false, err
 		}
 
 		chatbot.SendTextMsg(params.ChatBot, from,
-			"I will execute the script "+rscmd.ScriptName+" for "+us.JarvisNodeName)
+			"I will execute the script "+rscmd.ScriptName+" for "+us.JarvisNodeName, params.Msg)
 
 		ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, us.File.Filename, us.File.Data, "")
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 			// jarvisbase.Warn("userscriptPlugin.OnMessage", zap.Error(err))
 
 			return false, err
@@ -60,7 +60,7 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 
 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(us.JarvisNodeName)
 		if curnode == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrNoJarvisNode.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrNoJarvisNode.Error(), params.Msg)
 
 			return false, chatbot.ErrNoJarvisNode
 		}
@@ -70,7 +70,7 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 			cr := msg.GetCtrlResult()
 
-			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)
+			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
 
 			return nil
 		})

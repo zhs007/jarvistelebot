@@ -26,7 +26,7 @@ func (cmd *cmdRmFileTemplate) RunCommand(ctx context.Context, params *chatbot.Me
 		if rmftcmd.UserID != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(rmftcmd.UserID)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -35,7 +35,7 @@ func (cmd *cmdRmFileTemplate) RunCommand(ctx context.Context, params *chatbot.Me
 		} else if rmftcmd.UserName != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(rmftcmd.UserName)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -44,19 +44,19 @@ func (cmd *cmdRmFileTemplate) RunCommand(ctx context.Context, params *chatbot.Me
 		}
 
 		if user == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.", params.Msg)
 
 			return false
 		}
 
 		err := params.ChatBot.GetChatBotDB().RemoveFileTemplate(user.UserID, rmftcmd.FileTemplateName)
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 			return false
 		}
 
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "OK, It is done.")
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "OK, It is done.", params.Msg)
 
 		params.ChatBot.OnUserEvent(ctx, params.ChatBot, chatbot.UserEventOnChgUserFileTemplate, user.UserID)
 

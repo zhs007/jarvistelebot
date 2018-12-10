@@ -16,7 +16,7 @@ type cmdPlugins struct {
 func (cmd *cmdPlugins) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
 	lst := params.ChatBot.GetPluginsMgr().GetPlugins()
 
-	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), fmt.Sprintf("%+v", lst))
+	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), fmt.Sprintf("%+v", lst), params.Msg)
 
 	return true
 }

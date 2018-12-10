@@ -31,7 +31,7 @@ func (cmd *cmdUpdScript) RunCommand(ctx context.Context, params *chatbot.Message
 		if uscmd.UserID != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(uscmd.UserID)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -40,7 +40,7 @@ func (cmd *cmdUpdScript) RunCommand(ctx context.Context, params *chatbot.Message
 		} else if uscmd.UserName != "" {
 			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(uscmd.UserName)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 				return false
 			}
@@ -49,14 +49,14 @@ func (cmd *cmdUpdScript) RunCommand(ctx context.Context, params *chatbot.Message
 		}
 
 		if user == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.")
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, could not find this user.", params.Msg)
 
 			return false
 		}
 
 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(uscmd.JarvisNodeName)
 		if curnode == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this node.")
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this node.", params.Msg)
 
 			return false
 		}
@@ -72,9 +72,9 @@ func (cmd *cmdUpdScript) RunCommand(ctx context.Context, params *chatbot.Message
 
 			// strret, err := chatbot.FormatJSONObj(user)
 			if err != nil {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 			} else {
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "OK, It is done.")
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "OK, It is done.", params.Msg)
 			}
 
 			params.ChatBot.OnUserEvent(ctx, params.ChatBot, chatbot.UserEventOnChgUserScript, user.UserID)
@@ -82,7 +82,7 @@ func (cmd *cmdUpdScript) RunCommand(ctx context.Context, params *chatbot.Message
 			return true
 		}
 
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this user.")
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this user.", params.Msg)
 
 		return true
 	}

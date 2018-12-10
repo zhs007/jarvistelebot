@@ -26,7 +26,7 @@ func (cmd *cmdRequestFile) RunCommand(ctx context.Context, params *chatbot.Messa
 
 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(rfcmd.JarvisNodeName)
 		if curnode == nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this node.")
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "Sorry, I can't find this node.", params.Msg)
 
 			return true
 		}

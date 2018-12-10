@@ -19,28 +19,28 @@ func (cmd *cmdEndKey) RunCommand(ctx context.Context, params *chatbot.MessagePar
 	}
 
 	if params.CurPlugin == nil {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error(), params.Msg)
 
 		return false
 	}
 
 	pluginAssistant, ok := params.CurPlugin.(*AssistantPlugin)
 	if !ok {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error(), params.Msg)
 
 		return false
 	}
 
 	_, err := pluginAssistant.Mgr.SaveCurNote(from.GetUserID())
 	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, from, err.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, err.Error(), params.Msg)
 
 		return false
 	}
 
 	params.MgrPlugins.SetCurPlugin(nil)
 
-	chatbot.SendTextMsg(params.ChatBot, from, "I get it.")
+	chatbot.SendTextMsg(params.ChatBot, from, "I get it.", params.Msg)
 
 	// if params.CommandLine != nil {
 	// 	notecmd, ok := params.CommandLine.(*pluginassistanepb.NoteCommand)

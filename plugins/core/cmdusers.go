@@ -23,16 +23,16 @@ func (cmd *cmdUsers) RunCommand(ctx context.Context, params *chatbot.MessagePara
 
 		lst, err := params.ChatBot.GetChatBotDB().GetUsers(int(userscmd.Nums))
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 			return true
 		}
 
 		strret, err := chatbot.FormatJSONObj(lst)
 		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 		} else {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
 		}
 
 		return true

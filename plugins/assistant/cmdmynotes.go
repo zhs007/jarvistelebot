@@ -19,30 +19,30 @@ func (cmd *cmdMyNotes) RunCommand(ctx context.Context, params *chatbot.MessagePa
 	}
 
 	if params.CurPlugin == nil {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error(), params.Msg)
 
 		return false
 	}
 
 	pluginAssistant, ok := params.CurPlugin.(*AssistantPlugin)
 	if !ok {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error(), params.Msg)
 
 		return false
 	}
 
 	uai, err := pluginAssistant.Mgr.GetUserAssistantInfo(from.GetUserID())
 	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 		return false
 	}
 
 	strret, err := chatbot.FormatJSONObj(uai)
 	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 	} else {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
 	}
 
 	// chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me the keywords of this note, one at a time.")

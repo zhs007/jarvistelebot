@@ -40,7 +40,7 @@ func FormatJSONObj(obj interface{}) (string, error) {
 }
 
 // SendTextMsg - sendmsg
-func SendTextMsg(bot ChatBot, user User, text string) error {
+func SendTextMsg(bot ChatBot, user User, text string, srcmsg Message) error {
 	if len(text) >= basedef.MaxTextMessageSize {
 		return SendFileMsg(bot, user, &chatbotdbpb.File{
 			Filename: GetMD5String([]byte(text)) + ".txt",
@@ -49,6 +49,9 @@ func SendTextMsg(bot ChatBot, user User, text string) error {
 	}
 
 	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
+	if srcmsg != nil && srcmsg.InGroup() {
+		msg.SetGroupID(srcmsg.GetGroupID())
+	}
 
 	_, err := bot.SendMsg(msg)
 

@@ -20,27 +20,27 @@ func (cmd *cmdRebuildKeywords) RunCommand(ctx context.Context, params *chatbot.M
 	}
 
 	if params.CurPlugin == nil {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsNoCurPlugin.Error(), params.Msg)
 
 		return false
 	}
 
 	pluginAssistant, ok := params.CurPlugin.(*AssistantPlugin)
 	if !ok {
-		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error())
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error(), params.Msg)
 
 		return false
 	}
 
 	notenums, keynums, err := pluginAssistant.Mgr.RebuildKeys(from.GetUserID())
 	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
 		return false
 	}
 
 	chatbot.SendTextMsg(params.ChatBot, from,
-		fmt.Sprintf("Rebuild OK! Total notes is %v, keyword nums is %v", notenums, keynums))
+		fmt.Sprintf("Rebuild OK! Total notes is %v, keyword nums is %v", notenums, keynums), params.Msg)
 
 	// strret, err := chatbot.FormatJSONObj(uai)
 	// if err != nil {
