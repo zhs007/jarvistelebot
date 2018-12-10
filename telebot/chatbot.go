@@ -481,14 +481,14 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 	}
 
 	if msg.InGroup() {
-		chatid1, err1 := strconv.ParseInt(msg.GetChatID(), 10, 64)
+		groupid, err1 := strconv.ParseInt(msg.GetGroupID(), 10, 64)
 		if err1 != nil {
 			return nil, err1
 		}
 
-		chatid = chatid1
+		chatid = groupid
 
-		jarvisbase.Debug("teleChatBot.SendMsg", zap.Int64("chatid", chatid))
+		jarvisbase.Debug("teleChatBot.SendMsg", zap.Int64("groupid", groupid))
 	}
 
 	fd := msg.GetFile()
