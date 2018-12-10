@@ -41,6 +41,8 @@ func FormatJSONObj(obj interface{}) (string, error) {
 
 // SendTextMsg - sendmsg
 func SendTextMsg(bot ChatBot, user User, text string, srcmsg Message) error {
+	jarvisbase.Debug("SendTextMsg", zap.String("text", text))
+
 	if len(text) >= basedef.MaxTextMessageSize {
 		return SendFileMsg(bot, user, &chatbotdbpb.File{
 			Filename: GetMD5String([]byte(text)) + ".txt",
@@ -50,10 +52,15 @@ func SendTextMsg(bot ChatBot, user User, text string, srcmsg Message) error {
 
 	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
 	if srcmsg != nil && srcmsg.InGroup() {
+		jarvisbase.Debug("SendTextMsg", zap.String("groupid", srcmsg.GetGroupID()))
+
 		msg.SetGroupID(srcmsg.GetGroupID())
 	}
 
 	_, err := bot.SendMsg(msg)
+	if err != nil {
+		jarvisbase.Debug("SendTextMsg", zap.Error(err))
+	}
 
 	return err
 }
@@ -100,6 +107,9 @@ func SendFileMsg(bot ChatBot, user User, fd *chatbotdbpb.File) error {
 	msg.SetFile(fd)
 
 	_, err := bot.SendMsg(msg)
+	if err != nil {
+		jarvisbase.Debug("SendFileMsg", zap.Error(err))
+	}
 
 	return err
 }
