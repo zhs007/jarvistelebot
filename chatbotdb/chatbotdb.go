@@ -215,8 +215,8 @@ func (db *ChatBotDB) SaveMsg(msg *pb.Message) error {
 		return err
 	}
 
-	jarvisbase.Debug("ChatBotDB.saveMsg",
-		jarvisbase.JSON("result", result))
+	// jarvisbase.Debug("ChatBotDB.saveMsg",
+	// 	jarvisbase.JSON("result", result))
 
 	return nil
 }
@@ -244,7 +244,7 @@ func (db *ChatBotDB) GetMsg(chatid string) (*pb.Message, error) {
 		return nil, err
 	}
 
-	jarvisbase.Debug("ChatBotDB.GetMsg", jarvisbase.JSON("result", result))
+	// jarvisbase.Debug("ChatBotDB.GetMsg", jarvisbase.JSON("result", result))
 
 	rmsg := &ResultMsg{}
 	err = ankadb.MakeObjFromResult(result, rmsg)
@@ -292,8 +292,8 @@ func (db *ChatBotDB) UpdUser(user *pb.User) error {
 		return err
 	}
 
-	jarvisbase.Debug("ChatBotDB.updUser",
-		jarvisbase.JSON("result", result))
+	// jarvisbase.Debug("ChatBotDB.updUser",
+	// 	jarvisbase.JSON("result", result))
 
 	return nil
 }

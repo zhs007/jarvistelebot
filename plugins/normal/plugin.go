@@ -73,7 +73,10 @@ func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePar
 		// params.ChatBot.SendMsg(from, "Yes, master.")
 		// }
 	} else {
-		chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.", params.Msg)
+		if !params.Msg.InGroup() {
+			chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.", params.Msg)
+		}
+
 		// params.ChatBot.SendMsg(from, "sorry, you are not my master.")
 	}
 

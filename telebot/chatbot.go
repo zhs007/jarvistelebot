@@ -126,7 +126,7 @@ func NewTeleChatBot(cfg *Config) (chatbot.ChatBot, error) {
 // }
 
 func (cb *teleChatBot) procDocumentWithMsg(msg chatbot.Message, doc *tgbotapi.Document) error {
-	jarvisbase.Debug("teleChatBot.procDocument")
+	// jarvisbase.Debug("teleChatBot.procDocument")
 
 	file, err := cb.teleBotAPI.GetFile(tgbotapi.FileConfig{
 		FileID: doc.FileID,
@@ -182,7 +182,7 @@ func (cb *teleChatBot) procDocumentWithMsg(msg chatbot.Message, doc *tgbotapi.Do
 }
 
 func (cb *teleChatBot) procPhotoWithMsg(msg chatbot.Message, photo *tgbotapi.PhotoSize) error {
-	jarvisbase.Debug("teleChatBot.procPhotoWithMsg")
+	// jarvisbase.Debug("teleChatBot.procPhotoWithMsg")
 
 	file, err := cb.teleBotAPI.GetFile(tgbotapi.FileConfig{
 		FileID: photo.FileID,
@@ -218,7 +218,7 @@ func (cb *teleChatBot) procGroup(msg chatbot.Message, tgmsg *tgbotapi.Message) {
 		groupid := strconv.FormatInt(tgmsg.Chat.ID, 10)
 		msg.SetGroupID(groupid)
 
-		jarvisbase.Debug("teleChatBot.procGroup", zap.String("groupid", groupid))
+		// jarvisbase.Debug("teleChatBot.procGroup", zap.String("groupid", groupid))
 	}
 }
 
@@ -488,7 +488,7 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 
 		chatid = groupid
 
-		jarvisbase.Debug("teleChatBot.SendMsg", zap.Int64("groupid", groupid))
+		// jarvisbase.Debug("teleChatBot.SendMsg", zap.Int64("groupid", groupid))
 	}
 
 	fd := msg.GetFile()
@@ -498,9 +498,9 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 			Bytes: fd.Data,
 		}
 
-		jarvisbase.Debug("teleChatBot.SendMsg:file",
-			zap.String("filename", fb.Name),
-			zap.Int("datalen", len(fb.Bytes)))
+		// jarvisbase.Debug("teleChatBot.SendMsg:file",
+		// 	zap.String("filename", fb.Name),
+		// 	zap.Int("datalen", len(fb.Bytes)))
 
 		telemsg := tgbotapi.NewDocumentUpload(chatid, fb)
 
