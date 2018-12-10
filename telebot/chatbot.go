@@ -217,6 +217,8 @@ func (cb *teleChatBot) procGroup(msg chatbot.Message, tgmsg *tgbotapi.Message) {
 	if tgmsg.Chat != nil && tgmsg.Chat.Type == "group" {
 		groupid := strconv.FormatInt(tgmsg.Chat.ID, 10)
 		msg.SetGroupID(groupid)
+
+		jarvisbase.Debug("teleChatBot.procGroup", zap.String("groupid", groupid))
 	}
 }
 
@@ -485,6 +487,8 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 		}
 
 		chatid = chatid1
+
+		jarvisbase.Debug("teleChatBot.SendMsg", zap.Int64("chatid", chatid))
 	}
 
 	fd := msg.GetFile()
