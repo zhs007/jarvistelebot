@@ -60,7 +60,9 @@ func (p *normalPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePar
 		// 		// params.ChatBot.SendMsg(from, "nil.")
 		// 	}
 		// } else {
-		chatbot.SendTextMsg(params.ChatBot, from, "Sorry, I can't understand.", params.Msg)
+		if !params.Msg.InGroup() {
+			chatbot.SendTextMsg(params.ChatBot, from, "Sorry, I can't understand.", params.Msg)
+		}
 
 		// lstOp := []string{"yes", "no"}
 		// chatbot.SendMsgWithOptions(params.ChatBot, from, "Yes, master.", lstOp,
