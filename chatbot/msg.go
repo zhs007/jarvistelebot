@@ -40,6 +40,13 @@ type Message interface {
 	// SetText - set text
 	SetText(text string)
 
+	// SetGroupID - set groupID
+	SetGroupID(groupID string)
+	// GetGroupID - get groupID
+	GetGroupID() string
+	// InGroup - this message is from a group
+	InGroup() bool
+
 	// AddOption - add option
 	AddOption(text string) (int, error)
 	// HasOptions - has any options

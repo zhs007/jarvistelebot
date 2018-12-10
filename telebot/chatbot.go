@@ -212,6 +212,14 @@ func (cb *teleChatBot) procPhotoWithMsg(msg chatbot.Message, photo *tgbotapi.Pho
 	return nil
 }
 
+// procGroup
+func (cb *teleChatBot) procGroup(msg chatbot.Message, tgmsg *tgbotapi.Message) {
+	if tgmsg.Chat != nil && tgmsg.Chat.Type == "group" {
+		groupid := strconv.FormatInt(tgmsg.Chat.ID, 10)
+		msg.SetGroupID(groupid)
+	}
+}
+
 // procMessageUser
 func (cb *teleChatBot) procMessageUser(user *tgbotapi.User) (chatbot.User, error) {
 	userid := strconv.Itoa(user.ID)
@@ -356,6 +364,8 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 		msgid := strconv.Itoa(update.Message.MessageID)
 		msg := cb.NewMsg(chatbot.MakeChatID(user.GetUserID(), msgid), msgid, user, nil,
 			update.Message.Text, int64(update.Message.Date))
+
+		cb.procGroup(msg, update.Message)
 
 		if update.Message.Document != nil {
 			err = cb.procDocumentWithMsg(msg, update.Message.Document)

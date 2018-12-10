@@ -15,6 +15,7 @@ type teleMsg struct {
 	to        chatbot.User
 	text      string
 	timeStamp int64
+	groupID   string
 }
 
 // func newMsg(msgID string, from chatbot.User, text string, date int) *teleMsg {
@@ -97,4 +98,19 @@ func (msg *teleMsg) SetChatID(chatid string) {
 // SetText - set text
 func (msg *teleMsg) SetText(text string) {
 	msg.text = text
+}
+
+// SetGroupID - set groupID
+func (msg *teleMsg) SetGroupID(groupID string) {
+	msg.groupID = groupID
+}
+
+// GetGroupID - get groupID
+func (msg *teleMsg) GetGroupID() string {
+	return msg.groupID
+}
+
+// InGroup - this message is from a group
+func (msg *teleMsg) InGroup() bool {
+	return msg.groupID != ""
 }
