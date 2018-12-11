@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package chatbotpb;
+
+// EmptyCommand - empty command
+message EmptyCommand {
+    // cmd
+    string cmd = 1;
+}

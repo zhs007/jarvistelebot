@@ -23,5 +23,9 @@ func (cmd *cmdPlugins) RunCommand(ctx context.Context, params *chatbot.MessagePa
 
 // Parse - parse command line
 func (cmd *cmdPlugins) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	return nil, nil
+	if len(params.LstStr) == 1 && params.LstStr[0] == "plugins" {
+		return chatbot.NewEmptyCommandLine("plugins"), nil
+	}
+
+	return nil, chatbot.ErrMsgNotMine
 }

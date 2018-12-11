@@ -20,5 +20,9 @@ func (cmd *cmdVersion) RunCommand(ctx context.Context, params *chatbot.MessagePa
 
 // Parse - parse command line
 func (cmd *cmdVersion) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	return nil, nil
+	if len(params.LstStr) == 1 && params.LstStr[0] == "version" {
+		return chatbot.NewEmptyCommandLine("version"), nil
+	}
+
+	return nil, chatbot.ErrMsgNotMine
 }

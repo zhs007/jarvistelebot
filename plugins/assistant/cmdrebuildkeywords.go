@@ -59,9 +59,9 @@ func (cmd *cmdRebuildKeywords) RunCommand(ctx context.Context, params *chatbot.M
 func (cmd *cmdRebuildKeywords) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) >= 1 {
 		if params.LstStr[0] == "rebuildkeywords" {
-			return nil, nil
+			return chatbot.NewEmptyCommandLine("rebuildkeywords"), nil
 		}
 	}
 
-	return nil, nil
+	return nil, chatbot.ErrMsgNotMine
 }

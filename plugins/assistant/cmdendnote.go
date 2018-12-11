@@ -69,9 +69,9 @@ func (cmd *cmdEndNote) RunCommand(ctx context.Context, params *chatbot.MessagePa
 func (cmd *cmdEndNote) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) >= 1 {
 		if params.LstStr[0] == "endnote" {
-			return nil, nil
+			return chatbot.NewEmptyCommandLine("endnote"), nil
 		}
 	}
 
-	return nil, nil
+	return nil, chatbot.ErrMsgNotMine
 }

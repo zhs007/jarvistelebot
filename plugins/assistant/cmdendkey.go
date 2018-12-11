@@ -73,9 +73,9 @@ func (cmd *cmdEndKey) RunCommand(ctx context.Context, params *chatbot.MessagePar
 func (cmd *cmdEndKey) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) >= 1 {
 		if params.LstStr[0] == "endkey" {
-			return nil, nil
+			return chatbot.NewEmptyCommandLine("endkey"), nil
 		}
 	}
 
-	return nil, nil
+	return nil, chatbot.ErrMsgNotMine
 }

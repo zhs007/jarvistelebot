@@ -30,5 +30,9 @@ func (cmd *cmdMyState) RunCommand(ctx context.Context, params *chatbot.MessagePa
 
 // Parse - parse command line
 func (cmd *cmdMyState) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	return nil, nil
+	if len(params.LstStr) == 1 && params.LstStr[0] == "mystate" {
+		return chatbot.NewEmptyCommandLine("mystate"), nil
+	}
+
+	return nil, chatbot.ErrMsgNotMine
 }

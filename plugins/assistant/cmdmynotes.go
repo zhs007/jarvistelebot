@@ -55,9 +55,9 @@ func (cmd *cmdMyNotes) RunCommand(ctx context.Context, params *chatbot.MessagePa
 func (cmd *cmdMyNotes) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) >= 1 {
 		if params.LstStr[0] == "mynotes" {
-			return nil, nil
+			return chatbot.NewEmptyCommandLine("mynotes"), nil
 		}
 	}
 
-	return nil, nil
+	return nil, chatbot.ErrMsgNotMine
 }

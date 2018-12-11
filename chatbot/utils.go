@@ -7,8 +7,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarvistelebot/basedef"
+	"github.com/zhs007/jarvistelebot/chatbot/proto"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 	"go.uber.org/zap"
 )
@@ -139,4 +141,11 @@ func GetFileNameFromFullPathNoExt(fullname string) string {
 	}
 
 	return strings.Join(arr[:len(arr)-1], ".")
+}
+
+// NewEmptyCommandLine - new EmptyMessage
+func NewEmptyCommandLine(cmd string) proto.Message {
+	return &chatbotpb.EmptyCommand{
+		Cmd: cmd,
+	}
 }

@@ -87,5 +87,5 @@ func (cmd *cmdNote) ParseCommandLine(params *chatbot.MessageParams) (proto.Messa
 		}
 	}
 
-	return nil, nil
+	return nil, chatbot.ErrMsgNotMine
 }
