@@ -213,6 +213,8 @@ func (db *AssistantDB) GetNote(userID string, noteID int64) (*pb.Note, error) {
 
 	result, err := db.ankaDB.LocalQuery(context.Background(), queryGetNote, params)
 	if err != nil {
+		jarvisbase.Warn("AssistantDB.GetNote", zap.Error(err), jarvisbase.JSON("params", params))
+
 		return nil, err
 	}
 
@@ -221,8 +223,8 @@ func (db *AssistantDB) GetNote(userID string, noteID int64) (*pb.Note, error) {
 		return nil, err
 	}
 
-	jarvisbase.Info("AssistantDB.GetNote",
-		jarvisbase.JSON("result", result))
+	// jarvisbase.Info("AssistantDB.GetNote",
+	// 	jarvisbase.JSON("result", result))
 
 	rn := &ResultNote{}
 	err = ankadb.MakeObjFromResult(result, rn)
@@ -274,6 +276,8 @@ func (db *AssistantDB) UpdKeyInfo(userID string, key string, keyinfo *pb.KeyInfo
 
 	err := ankadb.MakeParamsFromMsg(params, "keyinfo", keyinfo)
 	if err != nil {
+		jarvisbase.Warn("AssistantDB.UpdKeyInfo", zap.Error(err), jarvisbase.JSON("params", params))
+
 		return nil, err
 	}
 
@@ -287,8 +291,8 @@ func (db *AssistantDB) UpdKeyInfo(userID string, key string, keyinfo *pb.KeyInfo
 		return nil, err
 	}
 
-	jarvisbase.Info("AssistantDB.UpdKeyInfo",
-		jarvisbase.JSON("result", result))
+	// jarvisbase.Info("AssistantDB.UpdKeyInfo",
+	// 	jarvisbase.JSON("result", result))
 
 	ruki := &ResultUpdKeyInfo{}
 	err = ankadb.MakeObjFromResult(result, ruki)
