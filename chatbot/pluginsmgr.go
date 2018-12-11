@@ -127,9 +127,11 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 	}
 
 	if mgr.curPlugin != nil {
+		params.CurPlugin = mgr.curPlugin
+
 		cmdline, _ := mgr.curPlugin.ParseMessage(params)
 
-		params.CurPlugin = mgr.curPlugin
+		// params.CurPlugin = mgr.curPlugin
 		params.CommandLine = cmdline
 
 		r, err := mgr.curPlugin.OnMessage(ctx, params)

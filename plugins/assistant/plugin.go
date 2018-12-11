@@ -80,7 +80,7 @@ func (p *AssistantPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 	}
 
 	if params.ChatBot.IsMaster(from) {
-		if len(params.LstStr) >= 1 {
+		if params.CommandLine != nil {
 			p.cmd.Run(ctx, params.LstStr[0], params)
 
 			return true, nil
@@ -131,6 +131,10 @@ func (p *AssistantPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Mes
 		if p.cmd.HasCommand(params.LstStr[0]) {
 			return p.cmd.ParseCommandLine(params.LstStr[0], params)
 		}
+	}
+
+	if params.CurPlugin == p {
+		return nil, nil
 	}
 
 	return nil, chatbot.ErrMsgNotMine
