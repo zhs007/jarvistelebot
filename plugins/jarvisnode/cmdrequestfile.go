@@ -89,7 +89,7 @@ func (cmd *cmdRequestFile) RunCommand(ctx context.Context, params *chatbot.Messa
 
 // Parse - parse command line
 func (cmd *cmdRequestFile) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) < 2 {
+	if len(params.LstStr) < 1 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
@@ -98,7 +98,7 @@ func (cmd *cmdRequestFile) ParseCommandLine(params *chatbot.MessageParams) (prot
 	var nodename = flagset.StringP("nodename", "n", "", "you want request file from this node")
 	var fullpath = flagset.StringP("filepath", "f", "", "you want request this file")
 
-	err := flagset.Parse(params.LstStr[2:])
+	err := flagset.Parse(params.LstStr[1:])
 	if err != nil {
 		return nil, err
 	}

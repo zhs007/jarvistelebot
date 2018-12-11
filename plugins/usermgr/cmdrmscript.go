@@ -68,7 +68,7 @@ func (cmd *cmdRmScript) RunCommand(ctx context.Context, params *chatbot.MessageP
 
 // Parse - parse command line
 func (cmd *cmdRmScript) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) < 2 {
+	if len(params.LstStr) < 1 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
@@ -78,7 +78,7 @@ func (cmd *cmdRmScript) ParseCommandLine(params *chatbot.MessageParams) (proto.M
 	var uname = flagset.StringP("username", "u", "", "you can use username")
 	var scriptname = flagset.StringP("scriptname", "s", "", "you can remove script name")
 
-	err := flagset.Parse(params.LstStr[2:])
+	err := flagset.Parse(params.LstStr[1:])
 	if err != nil {
 		return nil, err
 	}

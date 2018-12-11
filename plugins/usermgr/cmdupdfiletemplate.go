@@ -88,7 +88,7 @@ func (cmd *cmdUpdFileTemplate) RunCommand(ctx context.Context, params *chatbot.M
 
 // Parse - parse command line
 func (cmd *cmdUpdFileTemplate) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) < 2 {
+	if len(params.LstStr) < 1 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
@@ -100,7 +100,7 @@ func (cmd *cmdUpdFileTemplate) ParseCommandLine(params *chatbot.MessageParams) (
 	var nodename = flagset.StringP("nodename", "n", "", "you can use jarvis node name")
 	var fullpath = flagset.StringP("path", "p", "", "you can use full path")
 
-	err := flagset.Parse(params.LstStr[2:])
+	err := flagset.Parse(params.LstStr[1:])
 	if err != nil {
 		return nil, err
 	}

@@ -68,7 +68,7 @@ func (cmd *cmdRmFileTemplate) RunCommand(ctx context.Context, params *chatbot.Me
 
 // Parse - parse command line
 func (cmd *cmdRmFileTemplate) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) < 2 {
+	if len(params.LstStr) < 1 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
@@ -78,7 +78,7 @@ func (cmd *cmdRmFileTemplate) ParseCommandLine(params *chatbot.MessageParams) (p
 	var uname = flagset.StringP("username", "u", "", "you can use username")
 	var filetemplatename = flagset.StringP("filetemplatename", "f", "", "you can remove file template name")
 
-	err := flagset.Parse(params.LstStr[2:])
+	err := flagset.Parse(params.LstStr[1:])
 	if err != nil {
 		return nil, err
 	}

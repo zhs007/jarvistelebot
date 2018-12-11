@@ -35,10 +35,20 @@ var typeQuery = graphql.NewObject(
 					userID := params.Args["userID"].(string)
 					noteID := params.Args["noteID"].(int64)
 
+					curkey := []byte(makeNoteKey(userID, noteID))
+
 					note := &pb.Note{}
-					err := ankadb.GetMsgFromDB(curdb, []byte(makeNoteKey(userID, noteID)), note)
+
+					has, err := curdb.Has(curkey)
 					if err != nil {
 						return nil, err
+					}
+
+					if has {
+						err := ankadb.GetMsgFromDB(curdb, curkey, note)
+						if err != nil {
+							return nil, err
+						}
 					}
 
 					return note, nil

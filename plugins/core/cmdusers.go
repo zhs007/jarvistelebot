@@ -43,7 +43,7 @@ func (cmd *cmdUsers) RunCommand(ctx context.Context, params *chatbot.MessagePara
 
 // Parse - parse command line
 func (cmd *cmdUsers) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) < 2 {
+	if len(params.LstStr) < 1 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
@@ -51,7 +51,7 @@ func (cmd *cmdUsers) ParseCommandLine(params *chatbot.MessageParams) (proto.Mess
 
 	var nums = flagset.Int32P("nums", "n", 128, "you need see numbers")
 
-	err := flagset.Parse(params.LstStr[2:])
+	err := flagset.Parse(params.LstStr[1:])
 	if err != nil {
 		return nil, err
 	}
