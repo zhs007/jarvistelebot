@@ -36,7 +36,7 @@ func (cmd *cmdEndNote) RunCommand(ctx context.Context, params *chatbot.MessagePa
 	pluginAssistant.Mgr.ChgCurNoteMode(from.GetUserID(), assistant.ModeInputKey)
 
 	chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me the keywords of this note, one at a time.", params.Msg)
-	chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop inputing keywords, you can send ``>> endkey``.", params.Msg)
+	chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop inputing keywords, you can send ``endkey``.", params.Msg)
 
 	// if params.CommandLine != nil {
 	// 	notecmd, ok := params.CommandLine.(*pluginassistanepb.NoteCommand)
@@ -67,8 +67,8 @@ func (cmd *cmdEndNote) RunCommand(ctx context.Context, params *chatbot.MessagePa
 
 // Parse - parse command line
 func (cmd *cmdEndNote) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
-		if params.LstStr[1] == "endnote" {
+	if len(params.LstStr) >= 1 {
+		if params.LstStr[0] == "endnote" {
 			return nil, nil
 		}
 	}

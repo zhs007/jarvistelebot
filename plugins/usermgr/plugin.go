@@ -49,8 +49,8 @@ func (p *usermgrPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePa
 		return false, nil
 	}
 
-	if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
-		p.cmd.Run(ctx, params.LstStr[1], params)
+	if len(params.LstStr) >= 1 {
+		p.cmd.Run(ctx, params.LstStr[0], params)
 
 		return true, nil
 	}
@@ -76,9 +76,9 @@ func (p *usermgrPlugin) GetPluginType() int {
 // ParseMessage - If this message is what I can process,
 //	it will return to the command line, otherwise it will return an error.
 func (p *usermgrPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
-		if p.cmd.HasCommand(params.LstStr[1]) {
-			return p.cmd.ParseCommandLine(params.LstStr[1], params)
+	if len(params.LstStr) >= 1 {
+		if p.cmd.HasCommand(params.LstStr[0]) {
+			return p.cmd.ParseCommandLine(params.LstStr[0], params)
 		}
 	}
 

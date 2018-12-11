@@ -58,7 +58,7 @@ func (cmd *cmdNote) RunCommand(ctx context.Context, params *chatbot.MessageParam
 
 		chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me what this note is for recording.", params.Msg)
 		chatbot.SendTextMsg(params.ChatBot, from, "You can input multiple segments for this note.", params.Msg)
-		chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop recording, you can send ``>> endnote``.", params.Msg)
+		chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop recording, you can send ``endnote``.", params.Msg)
 	}
 
 	return true
@@ -66,14 +66,14 @@ func (cmd *cmdNote) RunCommand(ctx context.Context, params *chatbot.MessageParam
 
 // Parse - parse command line
 func (cmd *cmdNote) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
-		if params.LstStr[1] == "note" {
-			if len(params.LstStr) >= 3 {
+	if len(params.LstStr) >= 1 {
+		if params.LstStr[0] == "note" {
+			if len(params.LstStr) >= 2 {
 				flagset := pflag.NewFlagSet("note", pflag.ContinueOnError)
 
 				var keys = flagset.StringSliceP("key", "k", []string{}, "you can set keywords")
 
-				err := flagset.Parse(params.LstStr[2:])
+				err := flagset.Parse(params.LstStr[1:])
 				if err != nil {
 					return nil, err
 				}

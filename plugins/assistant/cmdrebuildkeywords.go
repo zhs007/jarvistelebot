@@ -50,15 +50,15 @@ func (cmd *cmdRebuildKeywords) RunCommand(ctx context.Context, params *chatbot.M
 	// }
 
 	// chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me the keywords of this note, one at a time.")
-	// chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop inputing keywords, you can send ``>> endkey``.")
+	// chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop inputing keywords, you can send ``endkey``.")
 
 	return true
 }
 
 // Parse - parse command line
 func (cmd *cmdRebuildKeywords) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
-		if params.LstStr[1] == "rebuildkeywords" {
+	if len(params.LstStr) >= 1 {
+		if params.LstStr[0] == "rebuildkeywords" {
 			return nil, nil
 		}
 	}

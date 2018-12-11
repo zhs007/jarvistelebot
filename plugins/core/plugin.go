@@ -33,15 +33,6 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	return p, nil
 }
 
-// // RegPlugin - reg timestamp plugin
-// func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
-// 	chatbot.Info("RegPlugin - jarvisnodePlugin")
-
-// 	mgr.RegPlugin(newPlugin())
-
-// 	return nil
-// }
-
 // OnMessage - get message
 func (p *corePlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
 	// jarvisbase.Debug("jarvisnodePlugin.OnMessage", zap.String("params", fmt.Sprintf("%+v", params)))
@@ -55,8 +46,8 @@ func (p *corePlugin) OnMessage(ctx context.Context, params *chatbot.MessageParam
 		return false, nil
 	}
 
-	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
-		p.cmd.Run(ctx, params.LstStr[1], params)
+	if len(params.LstStr) >= 1 {
+		p.cmd.Run(ctx, params.LstStr[0], params)
 
 		return true, nil
 	}
@@ -68,15 +59,6 @@ func (p *corePlugin) OnMessage(ctx context.Context, params *chatbot.MessageParam
 func (p *corePlugin) GetPluginName() string {
 	return PluginName
 }
-
-// // IsMyMessage
-// func (p *corePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-// 	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
-// 		return p.cmd.HasCommand(params.LstStr[1])
-// 	}
-
-// 	return false
-// }
 
 // OnStart - on start
 func (p *corePlugin) OnStart(ctx context.Context) error {
@@ -91,9 +73,9 @@ func (p *corePlugin) GetPluginType() int {
 // ParseMessage - If this message is what I can process,
 //	it will return to the command line, otherwise it will return an error.
 func (p *corePlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
-		if p.cmd.HasCommand(params.LstStr[1]) {
-			return p.cmd.ParseCommandLine(params.LstStr[1], params)
+	if len(params.LstStr) >= 1 {
+		if p.cmd.HasCommand(params.LstStr[0]) {
+			return p.cmd.ParseCommandLine(params.LstStr[0], params)
 		}
 	}
 

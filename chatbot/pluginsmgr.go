@@ -148,29 +148,29 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 
 	var lstppi []*pluginParsingInfo
 
-	if mgr.isWritableCommand(params) {
-		for _, v := range mgr.lstWritableCommand {
-			cmdline, err := v.ParseMessage(params)
-			if err == nil {
-				lstppi = append(lstppi, &pluginParsingInfo{
-					plugin:  v,
-					cmdline: cmdline,
-				})
-			}
+	// if mgr.isWritableCommand(params) {
+	for _, v := range mgr.lstWritableCommand {
+		cmdline, err := v.ParseMessage(params)
+		if err == nil {
+			lstppi = append(lstppi, &pluginParsingInfo{
+				plugin:  v,
+				cmdline: cmdline,
+			})
 		}
 	}
+	// }
 
-	if mgr.isCommand(params) {
-		for _, v := range mgr.lstCommand {
-			cmdline, err := v.ParseMessage(params)
-			if err == nil {
-				lstppi = append(lstppi, &pluginParsingInfo{
-					plugin:  v,
-					cmdline: cmdline,
-				})
-			}
+	// if mgr.isCommand(params) {
+	for _, v := range mgr.lstCommand {
+		cmdline, err := v.ParseMessage(params)
+		if err == nil {
+			lstppi = append(lstppi, &pluginParsingInfo{
+				plugin:  v,
+				cmdline: cmdline,
+			})
 		}
 	}
+	// }
 
 	for _, v := range mgr.lstNormal {
 		cmdline, err := v.ParseMessage(params)
@@ -224,32 +224,6 @@ func (mgr *pluginsMgr) OnStart(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-// isCommand - is command
-func (mgr *pluginsMgr) isCommand(params *MessageParams) bool {
-	if params.Msg.GetFile() != nil {
-		return true
-	}
-
-	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
-		return true
-	}
-
-	return false
-}
-
-// isWritableCommand - is writable command
-func (mgr *pluginsMgr) isWritableCommand(params *MessageParams) bool {
-	if params.Msg.GetFile() != nil {
-		return true
-	}
-
-	if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
-		return true
-	}
-
-	return false
 }
 
 // RegPlugin - Registered a new plugin

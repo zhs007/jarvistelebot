@@ -89,8 +89,8 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 	// 	return false, nil
 	// }
 
-	if len(params.LstStr) > 1 && params.LstStr[0] == ">" {
-		p.cmd.Run(ctx, params.LstStr[1], params)
+	if len(params.LstStr) >= 1 {
+		p.cmd.Run(ctx, params.LstStr[0], params)
 
 		return true, nil
 	}
@@ -102,24 +102,6 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 func (p *jarvisnodePlugin) GetPluginName() string {
 	return PluginName
 }
-
-// // IsMyMessage
-// func (p *jarvisnodePlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-// 	file := params.Msg.GetFile()
-// 	if file != nil {
-// 		if file.FileType == chatbot.FileTypeShellScript {
-// 			if len(params.LstStr) == 1 {
-// 				return true
-// 			}
-// 		}
-// 	}
-
-// 	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
-// 		return p.cmd.HasCommand(params.LstStr[1])
-// 	}
-
-// 	return false
-// }
 
 // OnStart - on start
 func (p *jarvisnodePlugin) OnStart(ctx context.Context) error {
@@ -143,9 +125,9 @@ func (p *jarvisnodePlugin) ParseMessage(params *chatbot.MessageParams) (proto.Me
 		}
 	}
 
-	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
-		if p.cmd.HasCommand(params.LstStr[1]) {
-			return p.cmd.ParseCommandLine(params.LstStr[1], params)
+	if len(params.LstStr) >= 1 {
+		if p.cmd.HasCommand(params.LstStr[0]) {
+			return p.cmd.ParseCommandLine(params.LstStr[0], params)
 		}
 	}
 

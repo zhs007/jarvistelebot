@@ -71,6 +71,21 @@ func (msg *testMessage) GetOption(id int) string {
 	return ""
 }
 
+// SetGroupID - set groupID
+func (msg *testMessage) SetGroupID(groupID string) {
+
+}
+
+// GetGroupID - get groupID
+func (msg *testMessage) GetGroupID() string {
+	return ""
+}
+
+// InGroup - this message is from a group
+func (msg *testMessage) InGroup() bool {
+	return false
+}
+
 func Test_corePlugin_IsMyMessage(t *testing.T) {
 	chatbot.InitLogger(zapcore.InfoLevel, true, "./")
 
@@ -79,7 +94,15 @@ func Test_corePlugin_IsMyMessage(t *testing.T) {
 		t.Fatalf("Test_corePlugin_IsMyMessage NewPlugin Err")
 	}
 
-	arrOK := []string{"> version", "   > version    ", "> version", "> users", "> users 100", "> user 123 --username 456", "> user 123 -n 456"}
+	arrOK := []string{
+		"version",
+		"   version    ",
+		" version",
+		" users",
+		" users 100",
+		" user 123 --username 456",
+		" user 123 -n 456",
+	}
 	for i := range arrOK {
 		curmsg := &testMessage{
 			strText: arrOK[i],
@@ -98,7 +121,7 @@ func Test_corePlugin_IsMyMessage(t *testing.T) {
 		}
 	}
 
-	arrErr := []string{"123", ">> haha", ">   ", ">haha", "> help", "> user -userid 123 -n 456"}
+	arrErr := []string{"123", "haha", ">   ", ">haha", "help", "user -userid 123 -n 456"}
 	for i := range arrErr {
 		curmsg := &testMessage{
 			strText: arrErr[i],

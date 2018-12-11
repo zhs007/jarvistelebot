@@ -86,8 +86,8 @@ func (p *jarvisnodeexPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 		return false, nil
 	}
 
-	if len(params.LstStr) > 1 && params.LstStr[0] == ">>" {
-		p.cmd.Run(ctx, params.LstStr[1], params)
+	if len(params.LstStr) >= 1 {
+		p.cmd.Run(ctx, params.LstStr[0], params)
 
 		return true, nil
 	}
@@ -99,27 +99,6 @@ func (p *jarvisnodeexPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 func (p *jarvisnodeexPlugin) GetPluginName() string {
 	return PluginName
 }
-
-// // IsMyMessage
-// func (p *jarvisnodeexPlugin) IsMyMessage(params *chatbot.MessageParams) bool {
-// 	file := params.Msg.GetFile()
-// 	if file != nil {
-// 		if file.FileType == chatbot.FileTypeShellScript {
-// 			if len(params.LstStr) == 1 {
-// 				arr := strings.Split(params.Msg.GetText(), ":")
-// 				if len(arr) == 1 {
-// 					return true
-// 				}
-// 			}
-// 		}
-// 	}
-
-// 	if len(params.LstStr) >= 2 && params.LstStr[0] == ">>" {
-// 		return p.cmd.HasCommand(params.LstStr[1])
-// 	}
-
-// 	return false
-// }
 
 // OnStart - on start
 func (p *jarvisnodeexPlugin) OnStart(ctx context.Context) error {
@@ -148,9 +127,9 @@ func (p *jarvisnodeexPlugin) ParseMessage(params *chatbot.MessageParams) (proto.
 		return nil, chatbot.ErrMsgNotMine
 	}
 
-	if len(params.LstStr) >= 2 && params.LstStr[0] == ">" {
-		if p.cmd.HasCommand(params.LstStr[1]) {
-			return p.cmd.ParseCommandLine(params.LstStr[1], params)
+	if len(params.LstStr) >= 1 {
+		if p.cmd.HasCommand(params.LstStr[0]) {
+			return p.cmd.ParseCommandLine(params.LstStr[0], params)
 		}
 	}
 

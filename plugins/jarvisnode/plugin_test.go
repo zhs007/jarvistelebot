@@ -71,6 +71,21 @@ func (msg *testMessage) GetOption(id int) string {
 	return ""
 }
 
+// SetGroupID - set groupID
+func (msg *testMessage) SetGroupID(groupID string) {
+
+}
+
+// GetGroupID - get groupID
+func (msg *testMessage) GetGroupID() string {
+	return ""
+}
+
+// InGroup - this message is from a group
+func (msg *testMessage) InGroup() bool {
+	return false
+}
+
 func Test_jarvisnodePlugin_IsMyMessage(t *testing.T) {
 	chatbot.InitLogger(zapcore.InfoLevel, true, "./")
 
@@ -80,14 +95,14 @@ func Test_jarvisnodePlugin_IsMyMessage(t *testing.T) {
 	}
 
 	arrOK := []string{
-		"> mystate",
-		"   > mystate    ",
-		"> mystate",
-		"> requestfile a:b",
-		"> requestfile a b",
-		"> requestfile -n a -f b",
-		"> requestfile -n a a b",
-		"> requestfile -n a a:b",
+		" mystate",
+		"    mystate    ",
+		" mystate",
+		" requestfile a:b",
+		" requestfile a b",
+		" requestfile -n a -f b",
+		"requestfile -n a a b",
+		" requestfile -n a a:b",
 	}
 
 	for i := range arrOK {
@@ -110,12 +125,12 @@ func Test_jarvisnodePlugin_IsMyMessage(t *testing.T) {
 
 	arrErr := []string{
 		"123",
-		">> haha",
+		"haha",
 		">   ",
-		">haha",
-		"> help",
-		"> requestfile a",
-		"> requestfile a -n a",
+		"haha",
+		" help",
+		" requestfile a",
+		" requestfile a -n a",
 	}
 
 	for i := range arrErr {

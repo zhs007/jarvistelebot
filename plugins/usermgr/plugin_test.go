@@ -71,6 +71,21 @@ func (msg *testMessage) GetOption(id int) string {
 	return ""
 }
 
+// SetGroupID - set groupID
+func (msg *testMessage) SetGroupID(groupID string) {
+
+}
+
+// GetGroupID - get groupID
+func (msg *testMessage) GetGroupID() string {
+	return ""
+}
+
+// InGroup - this message is from a group
+func (msg *testMessage) InGroup() bool {
+	return false
+}
+
 func Test_usermgrPlugin_IsMyMessage(t *testing.T) {
 	chatbot.InitLogger(zapcore.InfoLevel, true, "./")
 
@@ -80,8 +95,8 @@ func Test_usermgrPlugin_IsMyMessage(t *testing.T) {
 	}
 
 	arrOK := []string{
-		">> userscripts --username 123",
-		">> updfiletemplate -u zeroz777 -f jarvisconfig.yaml -n jarvisrootsh -p /home/zhs007/jarvistelebot/cfg/config.yaml",
+		"userscripts --username 123",
+		"updfiletemplate -u zeroz777 -f jarvisconfig.yaml -n jarvisrootsh -p /home/zhs007/jarvistelebot/cfg/config.yaml",
 	}
 
 	for i := range arrOK {
@@ -104,13 +119,13 @@ func Test_usermgrPlugin_IsMyMessage(t *testing.T) {
 
 	arrErr := []string{
 		"123",
-		">> haha",
+		"haha",
 		">   ",
-		">haha",
-		"> help",
-		"> requestfile a",
-		"> requestfile a -n a",
-		">> updfiletemplate -u zeroz777 -f jarvisconfig.yaml -n jarvisrootsh",
+		"haha",
+		" help",
+		" requestfile a",
+		" requestfile a -n a",
+		" updfiletemplate -u zeroz777 -f jarvisconfig.yaml -n jarvisrootsh",
 	}
 
 	for i := range arrErr {

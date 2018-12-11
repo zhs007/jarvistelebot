@@ -56,7 +56,7 @@ func Test_cmdUser_Parse(t *testing.T) {
 	}
 
 	for _, v := range arrOK {
-		lstfullcmd := []string{">", "user"}
+		lstfullcmd := []string{"user"}
 		lstcmd := strings.Fields(v.cmd)
 
 		// t.Logf("%v", len(lstcmd))
