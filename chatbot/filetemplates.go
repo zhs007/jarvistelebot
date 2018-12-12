@@ -2,6 +2,7 @@ package chatbot
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/zhs007/jarviscore/base"
@@ -24,6 +25,8 @@ type FileTemplatesMgr struct {
 func (mgr *FileTemplatesMgr) init(chatbot ChatBot) {
 	chatbot.RegUserEventFunc(UserEventOnChgUserFileTemplate,
 		func(ctx context.Context, chatbot ChatBot, eventid string, userID string) error {
+			jarvisbase.Debug("UserEventOnChgUserFileTemplate")
+
 			mgr.Load(chatbot.GetChatBotDB(), userID)
 
 			return nil
@@ -46,6 +49,8 @@ func (mgr *FileTemplatesMgr) Load(db *chatbotdb.ChatBotDB, userID string) (*File
 	}
 
 	mgr.mapUser.Store(userID, ft)
+
+	jarvisbase.Debug("FileTemplatesMgr.Load", zap.String("ft", fmt.Sprintf("%v", ft)))
 
 	return ft, nil
 }
