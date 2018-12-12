@@ -87,3 +87,15 @@ message ShowFileTemplateCommand {
     // scriptName - script name
     string fileTemplateName = 3;
 }
+
+// MyScriptsCommand - myscripts command
+message MyScriptsCommand {
+    // jarvisNodeName - jarvis node name
+    string jarvisNodeName = 1;
+}
+
+// MyFileTemplatesCommand - myfiletemplates command
+message MyFileTemplatesCommand {
+    // jarvisNodeName - jarvis node name
+    string jarvisNodeName = 1;
+}

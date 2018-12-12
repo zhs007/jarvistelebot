@@ -97,6 +97,12 @@ func Test_usermgrPlugin_IsMyMessage(t *testing.T) {
 	arrOK := []string{
 		"userscripts --username 123",
 		"updfiletemplate -u zeroz777 -f jarvisconfig.yaml -n jarvisrootsh -p /home/zhs007/jarvistelebot/cfg/config.yaml",
+		"myscripts",
+		"myscripts -n dt159",
+		"myscripts --nodename dt159",
+		"myfiletemplates",
+		"myfiletemplates -n dt159",
+		"myfiletemplates -nodename dt159",
 	}
 
 	for i := range arrOK {
