@@ -49,6 +49,22 @@ func getObjName(obj interface{}) []string {
 	return lst
 }
 
+// getKind - get kind
+func getKind(val reflect.Value) reflect.Kind {
+	kind := val.Kind()
+
+	switch {
+	case kind >= reflect.Int && kind <= reflect.Int64:
+		return reflect.Int
+	case kind >= reflect.Uint && kind <= reflect.Uint64:
+		return reflect.Uint
+	case kind >= reflect.Float32 && kind <= reflect.Float64:
+		return reflect.Float32
+	default:
+		return kind
+	}
+}
+
 // obj2map - object to map
 func obj2map(obj interface{}) map[string]interface{} {
 	t := reflect.TypeOf(obj)
@@ -56,7 +72,19 @@ func obj2map(obj interface{}) map[string]interface{} {
 
 	var data = make(map[string]interface{})
 	for i := 0; i < t.NumField(); i++ {
-		data[t.Field(i).Name] = v.Field(i).Interface()
+		dataKind := getKind(v.Field(i))
+		switch dataKind {
+		case reflect.Bool:
+			data[t.Field(i).Name] = v.Field(i).Bool()
+		case reflect.String:
+			data[t.Field(i).Name] = v.Field(i).String()
+		case reflect.Int:
+			data[t.Field(i).Name] = v.Field(i).Int()
+		case reflect.Uint:
+			data[t.Field(i).Name] = v.Field(i).Uint()
+		case reflect.Float32:
+			data[t.Field(i).Name] = v.Field(i).Float()
+		}
 	}
 
 	return data

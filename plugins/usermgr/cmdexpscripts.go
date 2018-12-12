@@ -65,7 +65,7 @@ func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.Messag
 		var lstobj []interface{}
 
 		for _, v := range lst.Scripts {
-			o := &scriptInfo{
+			o := scriptInfo{
 				scriptname:     v.ScriptName,
 				jarvisnodename: v.JarvisNodeName,
 			}
