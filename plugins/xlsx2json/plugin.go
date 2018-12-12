@@ -38,9 +38,9 @@ func (p *xlsx2jsonPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		return false, chatbot.ErrMsgNoFrom
 	}
 
-	if !params.ChatBot.IsMaster(from) {
-		return false, nil
-	}
+	// if !params.ChatBot.IsMaster(from) {
+	// 	return false, nil
+	// }
 
 	file := params.Msg.GetFile()
 	if file != nil {
