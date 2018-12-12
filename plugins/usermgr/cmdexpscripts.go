@@ -10,6 +10,12 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/usermgr/proto"
 )
 
+type scriptInfo struct {
+	scriptname     string
+	jarvisnodename string
+	scriptinfo     string
+}
+
 // cmdExpScripts - expscripts
 type cmdExpScripts struct {
 }
@@ -56,12 +62,37 @@ func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.Messag
 			return false
 		}
 
-		strret, err := chatbot.FormatJSONObj(lst)
+		var lstobj []interface{}
+
+		for _, v := range lst.Scripts {
+			o := scriptInfo{
+				scriptname:     v.ScriptName,
+				jarvisnodename: v.JarvisNodeName,
+			}
+
+			if v.File != nil {
+				o.scriptinfo = string(v.File.Data)
+			}
+
+			lstobj = append(lstobj, o)
+		}
+
+		buf, err := chatbot.Array2xlsx(lstobj)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 		} else {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
+			chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+				Filename: "scripts.xlsx",
+				Data:     buf,
+			})
 		}
+
+		// strret, err := chatbot.FormatJSONObj(lst)
+		// if err != nil {
+		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+		// } else {
+		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
+		// }
 
 		return true
 	}
