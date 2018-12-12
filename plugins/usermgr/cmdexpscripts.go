@@ -3,6 +3,9 @@ package pluginusermgr
 import (
 	"context"
 
+	"github.com/zhs007/jarviscore/base"
+	"go.uber.org/zap"
+
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
 	"github.com/zhs007/jarvistelebot/chatbot"
@@ -66,12 +69,20 @@ func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.Messag
 
 		for _, v := range lst.Scripts {
 			o := scriptInfo{
-				scriptname:     v.ScriptName,
-				jarvisnodename: v.JarvisNodeName,
+				scriptname: v.ScriptName,
 			}
 
-			if v.File != nil {
-				o.scriptinfo = string(v.File.Data)
+			us, err := params.ChatBot.GetChatBotDB().GetUserScript(user.UserID, v.ScriptName)
+			if err != nil {
+				jarvisbase.Warn("cmdExpScripts.RunCommand:GetUserScript", zap.Error(err))
+
+				continue
+			}
+
+			o.jarvisnodename = us.JarvisNodeName
+
+			if us.File != nil {
+				o.scriptinfo = string(us.File.Data)
 			}
 
 			lstobj = append(lstobj, o)
