@@ -99,3 +99,13 @@ message MyFileTemplatesCommand {
     // jarvisNodeName - jarvis node name
     string jarvisNodeName = 1;
 }
+
+// ExpScriptsCommand - expscripts command
+message ExpScriptsCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+    // jarvisNodeName - jarvis node name
+    string jarvisNodeName = 3;
+}

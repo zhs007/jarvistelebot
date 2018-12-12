@@ -73,7 +73,7 @@ func (cmd *cmdMyScripts) RunCommand(ctx context.Context, params *chatbot.Message
 
 // Parse - parse command line
 func (cmd *cmdMyScripts) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) != 1 {
+	if len(params.LstStr) < 1 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
@@ -86,9 +86,13 @@ func (cmd *cmdMyScripts) ParseCommandLine(params *chatbot.MessageParams) (proto.
 		return nil, err
 	}
 
-	return &pluginusermgrpb.MyScriptsCommand{
-		JarvisNodeName: *nodename,
-	}, nil
+	if nodename != nil {
+		return &pluginusermgrpb.MyScriptsCommand{
+			JarvisNodeName: *nodename,
+		}, nil
+	}
+
+	return &pluginusermgrpb.MyScriptsCommand{}, nil
 
 	// if *uid != "" || *uname != "" {
 	// 	if *nodename != "" {

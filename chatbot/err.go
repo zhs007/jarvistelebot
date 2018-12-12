@@ -63,4 +63,6 @@ var (
 	ErrInvalidParamsNoCurPlugin = errors.New("Invalid params: no current plugin")
 	// ErrInvalidParamsInvalidCurPlugin - Invalid params: invalid current plugin
 	ErrInvalidParamsInvalidCurPlugin = errors.New("Invalid params: invalid current plugin")
+	// ErrEmptyArray - Empty array
+	ErrEmptyArray = errors.New("Empty array")
 )
