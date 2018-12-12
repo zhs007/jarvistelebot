@@ -103,6 +103,7 @@ func Test_usermgrPlugin_IsMyMessage(t *testing.T) {
 		"myfiletemplates",
 		"myfiletemplates -n dt159",
 		"myfiletemplates -nodename dt159",
+		"expscripts --username 123 --nodename 321",
 	}
 
 	for i := range arrOK {
