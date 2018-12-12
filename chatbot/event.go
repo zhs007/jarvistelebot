@@ -42,7 +42,7 @@ func (mgr *eventMgr) checkEventID(eventid string) bool {
 }
 
 func (mgr *eventMgr) checkUserEventID(eventid string) bool {
-	return eventid == UserEventOnChgUserScript
+	return eventid == UserEventOnChgUserScript || eventid == UserEventOnChgUserFileTemplate
 }
 
 func (mgr *eventMgr) regEventFunc(eventid string, eventfunc FuncEvent) error {
