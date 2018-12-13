@@ -387,6 +387,8 @@ func (mgr *assistantMgr) RebuildKeys(userID string) (int64, int, error) {
 		keynums++
 	}
 
+	mgr.updUserAssistant(userID, uai)
+
 	return uai.MaxNoteID, keynums, err
 }
 
