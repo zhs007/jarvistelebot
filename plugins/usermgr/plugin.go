@@ -32,6 +32,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("myscripts", &cmdMyScripts{})
 	cmd.AddCommand("myfiletemplates", &cmdMyFileTemplates{})
 	cmd.AddCommand("expscripts", &cmdExpScripts{})
+	cmd.AddCommand("expfiletemplates", &cmdExpFileTemplates{})
 
 	p := &usermgrPlugin{
 		cmd: cmd,

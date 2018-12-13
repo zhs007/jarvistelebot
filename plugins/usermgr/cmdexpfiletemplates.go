@@ -3,9 +3,6 @@ package pluginusermgr
 import (
 	"context"
 
-	"github.com/zhs007/jarviscore/base"
-	"go.uber.org/zap"
-
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
 	"github.com/zhs007/jarvistelebot/chatbot"
@@ -13,27 +10,27 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/usermgr/proto"
 )
 
-type scriptInfo struct {
-	scriptname     string
-	jarvisnodename string
-	scriptinfo     string
+type fileTemplateInfo struct {
+	filetemplatename string
+	jarvisnodename   string
+	fullpath         string
 }
 
-// cmdExpScripts - expscripts
-type cmdExpScripts struct {
+// cmdExpFileTemplates - expfiletemplates
+type cmdExpFileTemplates struct {
 }
 
 // RunCommand - run command
-func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
+func (cmd *cmdExpFileTemplates) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
 	if params.CommandLine != nil {
-		usscmd, ok := params.CommandLine.(*pluginusermgrpb.ExpScriptsCommand)
+		eftcmd, ok := params.CommandLine.(*pluginusermgrpb.ExpFileTemplatesCommand)
 		if !ok {
 			return false
 		}
 
 		var user *chatbotdbpb.User
-		if usscmd.UserID != "" {
-			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(usscmd.UserID)
+		if eftcmd.UserID != "" {
+			userbyuid, err := params.ChatBot.GetChatBotDB().GetUser(eftcmd.UserID)
 			if err != nil {
 				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
@@ -41,8 +38,8 @@ func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.Messag
 			}
 
 			user = userbyuid
-		} else if usscmd.UserName != "" {
-			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(usscmd.UserName)
+		} else if eftcmd.UserName != "" {
+			userbyuid, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(eftcmd.UserName)
 			if err != nil {
 				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
@@ -58,7 +55,7 @@ func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.Messag
 			return false
 		}
 
-		lst, err := params.ChatBot.GetChatBotDB().GetUserScripts(user.UserID, "")
+		lst, err := params.ChatBot.GetChatBotDB().GetFileTemplates(user.UserID, "")
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
@@ -67,23 +64,25 @@ func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.Messag
 
 		var lstobj []interface{}
 
-		for _, v := range lst.Scripts {
-			o := scriptInfo{
-				scriptname: v.ScriptName,
+		for _, v := range lst.Templates {
+			o := fileTemplateInfo{
+				filetemplatename: v.FileTemplateName,
+				jarvisnodename:   v.JarvisNodeName,
+				fullpath:         v.FullPath,
 			}
 
-			us, err := params.ChatBot.GetChatBotDB().GetUserScript(user.UserID, v.ScriptName)
-			if err != nil {
-				jarvisbase.Warn("cmdExpScripts.RunCommand:GetUserScript", zap.Error(err))
+			// us, err := params.ChatBot.GetChatBotDB().GetUserScript(user.UserID, v.ScriptName)
+			// if err != nil {
+			// 	jarvisbase.Warn("cmdExpScripts.RunCommand:GetUserScript", zap.Error(err))
 
-				continue
-			}
+			// 	continue
+			// }
 
-			o.jarvisnodename = us.JarvisNodeName
+			// o.jarvisnodename = us.JarvisNodeName
 
-			if us.File != nil {
-				o.scriptinfo = string(us.File.Data)
-			}
+			// if us.File != nil {
+			// 	o.scriptinfo = string(us.File.Data)
+			// }
 
 			lstobj = append(lstobj, o)
 		}
@@ -93,17 +92,10 @@ func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.Messag
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 		} else {
 			chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-				Filename: "scripts.xlsx",
+				Filename: "filetemplates.xlsx",
 				Data:     buf,
 			})
 		}
-
-		// strret, err := chatbot.FormatJSONObj(lst)
-		// if err != nil {
-		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
-		// } else {
-		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
-		// }
 
 		return true
 	}
@@ -112,12 +104,12 @@ func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.Messag
 }
 
 // Parse - parse command line
-func (cmd *cmdExpScripts) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
+func (cmd *cmdExpFileTemplates) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) < 1 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
-	flagset := pflag.NewFlagSet("expscripts", pflag.ContinueOnError)
+	flagset := pflag.NewFlagSet("updscripts", pflag.ContinueOnError)
 
 	var uid = flagset.StringP("userid", "i", "", "you can use userid")
 	var uname = flagset.StringP("username", "u", "", "you can use username")
@@ -128,7 +120,8 @@ func (cmd *cmdExpScripts) ParseCommandLine(params *chatbot.MessageParams) (proto
 	}
 
 	if *uid != "" || *uname != "" {
-		return &pluginusermgrpb.ExpScriptsCommand{
+
+		return &pluginusermgrpb.ExpFileTemplatesCommand{
 			UserID:   *uid,
 			UserName: *uname,
 		}, nil

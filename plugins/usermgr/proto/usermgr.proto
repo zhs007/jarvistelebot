@@ -106,6 +106,12 @@ message ExpScriptsCommand {
     string userID = 1;    
     // userName - userName
     string userName = 2;
-    // jarvisNodeName - jarvis node name
-    string jarvisNodeName = 3;
+}
+
+// ExpFileTemplatesCommand - expfiletemplates command
+message ExpFileTemplatesCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
 }
