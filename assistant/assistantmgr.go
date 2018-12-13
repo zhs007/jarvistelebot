@@ -374,12 +374,15 @@ func (mgr *assistantMgr) RebuildKeys(userID string) (int64, int, error) {
 		}
 	}
 
+	uai.Keys = nil
 	keynums := 0
 	for k, v := range mapKeyInfo.mapKeyInfo {
 		_, e := mgr.db.UpdKeyInfo(userID, k, v)
 		if e != nil {
 			err = e
 		}
+
+		uai.Keys = append(uai.Keys, k)
 
 		keynums++
 	}
