@@ -123,3 +123,53 @@ func Array2xlsx(arr []interface{}) ([]byte, error) {
 
 	return buf.Bytes(), nil
 }
+
+// getMapObjName - get object name
+func getMapObjName(arr [](map[string]interface{})) []string {
+	fm := make(map[string]int)
+
+	for _, v := range arr {
+		for k := range v {
+			fm[k] = 0
+		}
+	}
+
+	var lst []string
+	for k := range fm {
+		lst = append(lst, k)
+	}
+
+	return lst
+}
+
+// ArrayMap2xlsx - array to xlsx
+func ArrayMap2xlsx(arr [](map[string]interface{})) ([]byte, error) {
+	if len(arr) <= 0 {
+		return nil, ErrEmptyArray
+	}
+
+	xlsx := excelize.NewFile()
+	lsthead := getMapObjName(arr)
+
+	for x, v := range lsthead {
+		xlsx.SetCellValue("Sheet1", getCellName(x, 0), v)
+	}
+
+	for y, v := range arr {
+		for x, hv := range lsthead {
+			cv, ok := v[hv]
+			if ok {
+				xlsx.SetCellValue("Sheet1", getCellName(x, y+1), cv)
+			}
+		}
+	}
+
+	buf := new(bytes.Buffer)
+	w := bufio.NewWriter(buf)
+	err := xlsx.Write(w)
+	if err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
+}

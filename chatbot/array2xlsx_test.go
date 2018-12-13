@@ -1,6 +1,7 @@
 package chatbot
 
 import (
+	"strconv"
 	"testing"
 )
 
@@ -57,4 +58,30 @@ func Test_obj2map(t *testing.T) {
 	}
 
 	t.Logf("Test_obj2map OK")
+}
+
+func Test_getMapObjName(t *testing.T) {
+
+	mapobj0 := make(map[string]interface{})
+	mapobj0["a"] = 1
+	mapobj0["a"+strconv.Itoa(1)] = 2
+	mapobj0["a"+strconv.Itoa(2)] = 3
+
+	mapobj1 := make(map[string]interface{})
+	mapobj1["a"] = 1
+	mapobj1["a"+strconv.Itoa(1)] = 2
+	mapobj1["b"] = 4
+	mapobj1["a"+strconv.Itoa(3)] = 5
+
+	var arr [](map[string]interface{})
+
+	arr = append(arr, mapobj0)
+	arr = append(arr, mapobj1)
+
+	lst := getMapObjName(arr)
+	if len(lst) != 5 {
+		t.Fatalf("Test_getMapObjName Err %v", len(lst))
+	}
+
+	t.Logf("Test_getMapObjName OK")
 }

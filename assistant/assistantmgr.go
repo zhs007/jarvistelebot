@@ -2,6 +2,7 @@ package assistant
 
 import (
 	"context"
+	"strconv"
 	"sync"
 	"time"
 
@@ -79,6 +80,9 @@ type Mgr interface {
 	HasKeyword(userID string, key string) bool
 	// FindNoteWithKeyword - find note with keyword
 	FindNoteWithKeyword(userID string, key string) ([]*assistantdbpb.Note, error)
+
+	// Export - export all data
+	Export(userID string) ([](map[string]interface{}), error)
 }
 
 // assistantMgr - assistant manager
@@ -412,4 +416,37 @@ func (mgr *assistantMgr) FindNoteWithKeyword(userID string, key string) ([]*assi
 	}
 
 	return lst, nil
+}
+
+// Export - export all data
+func (mgr *assistantMgr) Export(userID string) ([](map[string]interface{}), error) {
+	var arr [](map[string]interface{})
+	uai, err := mgr.GetUserAssistantInfo(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var i int64
+	for i = 1; i <= uai.MaxNoteID; i++ {
+		note, e := mgr.GetNote(userID, i)
+		if e != nil {
+			err = e
+
+			continue
+		}
+
+		co := make(map[string]interface{})
+
+		for j, v := range note.Data {
+			co["data"+strconv.Itoa(j)] = v
+		}
+
+		for j, v := range note.Keys {
+			co["key"+strconv.Itoa(j)] = v
+		}
+
+		arr = append(arr, co)
+	}
+
+	return arr, nil
 }
