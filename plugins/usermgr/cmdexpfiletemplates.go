@@ -55,7 +55,7 @@ func (cmd *cmdExpFileTemplates) RunCommand(ctx context.Context, params *chatbot.
 			return false
 		}
 
-		lst, err := params.ChatBot.GetChatBotDB().GetFileTemplates(user.UserID, "")
+		lst, err := params.ChatBot.GetChatBotDB().GetFileTemplates(user.UserID, "", true)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 

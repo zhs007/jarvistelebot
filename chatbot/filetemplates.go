@@ -34,7 +34,7 @@ func (mgr *FileTemplatesMgr) init(chatbot ChatBot) {
 
 // Load - load user's scripts
 func (mgr *FileTemplatesMgr) Load(db *chatbotdb.ChatBotDB, userID string) (*FileTemplates, error) {
-	lst, err := db.GetFileTemplates(userID, "")
+	lst, err := db.GetFileTemplates(userID, "", false)
 	if err != nil {
 		jarvisbase.Warn("FileTemplatesMgr.Load:GetFileTemplates", zap.Error(err))
 
