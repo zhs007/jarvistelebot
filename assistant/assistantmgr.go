@@ -360,9 +360,10 @@ func (mgr *assistantMgr) RebuildKeys(userID string) (int64, int, error) {
 
 			continue
 		}
-
-		for _, v := range note.Keys {
-			mapKeyInfo.addKey(v, i)
+		if len(note.Data) > 0 {
+			for _, v := range note.Keys {
+				mapKeyInfo.addKey(v, i)
+			}
 		}
 	}
 
@@ -412,7 +413,9 @@ func (mgr *assistantMgr) FindNoteWithKeyword(userID string, key string) ([]*assi
 			continue
 		}
 
-		lst = append(lst, note)
+		if len(note.Data) > 0 {
+			lst = append(lst, note)
+		}
 	}
 
 	return lst, nil
@@ -435,17 +438,19 @@ func (mgr *assistantMgr) Export(userID string) ([](map[string]interface{}), erro
 			continue
 		}
 
-		co := make(map[string]interface{})
+		if len(note.Data) > 0 {
+			co := make(map[string]interface{})
 
-		for j, v := range note.Data {
-			co["data"+strconv.Itoa(j)] = v
+			for j, v := range note.Data {
+				co["data"+strconv.Itoa(j)] = v
+			}
+
+			for j, v := range note.Keys {
+				co["key"+strconv.Itoa(j)] = v
+			}
+
+			arr = append(arr, co)
 		}
-
-		for j, v := range note.Keys {
-			co["key"+strconv.Itoa(j)] = v
-		}
-
-		arr = append(arr, co)
 	}
 
 	return arr, nil
