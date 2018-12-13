@@ -115,3 +115,19 @@ message ExpFileTemplatesCommand {
     // userName - userName
     string userName = 2;
 }
+
+// ImpScriptsCommand - impscripts command
+message ImpScriptsCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+}
+
+// ImpFileTemplatesCommand - impfiletemplates command
+message ImpFileTemplatesCommand {
+    // userID - userID
+    string userID = 1;    
+    // userName - userName
+    string userName = 2;
+}
