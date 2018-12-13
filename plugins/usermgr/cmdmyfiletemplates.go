@@ -23,7 +23,7 @@ func (cmd *cmdMyFileTemplates) RunCommand(ctx context.Context, params *chatbot.M
 
 		from := params.Msg.GetFrom()
 		if from != nil {
-			lst, err := params.ChatBot.GetChatBotDB().GetFileTemplates(from.GetUserID(), myftcmd.JarvisNodeName, false)
+			lst, err := params.ChatBot.GetChatBotDB().GetFileTemplates(from.GetUserID(), myftcmd.JarvisNodeName)
 			if err != nil {
 				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 

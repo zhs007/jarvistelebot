@@ -140,15 +140,14 @@ const queryGetFileTemplates = `query FileTemplates($userID: String!, $jarvisNode
 	}
 }`
 
-const queryGetFileTemplatesFull = `query FileTemplates($userID: String!, $jarvisNodeName: String!) {
-	fileTemplates(userID: $userID, jarvisNodeName: $jarvisNodeName) {
-		templates {
-			fileTemplateName
-			jarvisNodeName
-			fullPath
-		}
-	}
-}`
+// const queryGetFileTemplatesFull = `query FileTemplates($userID: String!, $jarvisNodeName: String!) {
+// 	fileTemplates(userID: $userID, jarvisNodeName: $jarvisNodeName) {
+// 		templates {
+// 			fileTemplateName
+// 			fileTemplate(userID: $userID,)
+// 		}
+// 	}
+// }`
 
 // ChatBotDB - chatbotdb
 type ChatBotDB struct {
@@ -645,7 +644,7 @@ func (db *ChatBotDB) GetFileTemplate(userID string, fileTemplateName string) (*p
 }
 
 // GetFileTemplates - get user file templates
-func (db *ChatBotDB) GetFileTemplates(userID string, jarvisNodeName string, isFull bool) (*pb.UserFileTemplateList, error) {
+func (db *ChatBotDB) GetFileTemplates(userID string, jarvisNodeName string) (*pb.UserFileTemplateList, error) {
 	if db.db == nil {
 		return nil, ErrChatBotDBNil
 	}
@@ -655,9 +654,9 @@ func (db *ChatBotDB) GetFileTemplates(userID string, jarvisNodeName string, isFu
 	params["jarvisNodeName"] = jarvisNodeName
 
 	querystr := queryGetFileTemplates
-	if isFull {
-		querystr = queryGetFileTemplatesFull
-	}
+	// if isFull {
+	// 	querystr = queryGetFileTemplatesFull
+	// }
 
 	result, err := db.db.LocalQuery(context.Background(), querystr, params)
 	if err != nil {

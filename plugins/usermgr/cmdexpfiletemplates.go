@@ -5,9 +5,11 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
+	"github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 	"github.com/zhs007/jarvistelebot/plugins/usermgr/proto"
+	"go.uber.org/zap"
 )
 
 type fileTemplateInfo struct {
@@ -55,7 +57,7 @@ func (cmd *cmdExpFileTemplates) RunCommand(ctx context.Context, params *chatbot.
 			return false
 		}
 
-		lst, err := params.ChatBot.GetChatBotDB().GetFileTemplates(user.UserID, "", true)
+		lst, err := params.ChatBot.GetChatBotDB().GetFileTemplates(user.UserID, "")
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
@@ -67,22 +69,17 @@ func (cmd *cmdExpFileTemplates) RunCommand(ctx context.Context, params *chatbot.
 		for _, v := range lst.Templates {
 			o := fileTemplateInfo{
 				filetemplatename: v.FileTemplateName,
-				jarvisnodename:   v.JarvisNodeName,
-				fullpath:         v.FullPath,
 			}
 
-			// us, err := params.ChatBot.GetChatBotDB().GetUserScript(user.UserID, v.ScriptName)
-			// if err != nil {
-			// 	jarvisbase.Warn("cmdExpScripts.RunCommand:GetUserScript", zap.Error(err))
+			ft, err := params.ChatBot.GetChatBotDB().GetFileTemplate(user.UserID, v.FileTemplateName)
+			if err != nil {
+				jarvisbase.Warn("cmdExpFileTemplates.RunCommand:GetUserScript", zap.Error(err))
 
-			// 	continue
-			// }
+				continue
+			}
 
-			// o.jarvisnodename = us.JarvisNodeName
-
-			// if us.File != nil {
-			// 	o.scriptinfo = string(us.File.Data)
-			// }
+			o.jarvisnodename = ft.JarvisNodeName
+			o.fullpath = ft.FullPath
 
 			lstobj = append(lstobj, o)
 		}
