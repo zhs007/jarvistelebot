@@ -25,6 +25,7 @@ type Query {
 
 type Mutation {
     updNote(userID: ID!, note: Note!): Note!
+    rmNote(userID: ID!, noteID: Int64!): String!
 
     updUserAssistantInfo(userID: ID!, uai: UserAssistantInfo!): UserAssistantInfo!
 

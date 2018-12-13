@@ -37,6 +37,10 @@ const queryUpdNote = `mutation UpdNote($userID: ID!, $note: NoteInput!) {
 	}
 }`
 
+const queryRmNote = `mutation RmNote($userID: ID!, $noteID: Int64!) {
+	rmNote(userID: $userID, noteID: $noteID)
+}`
+
 const queryUpdKeyInfo = `mutation UpdKeyInfo($userID: ID!, $key: String!, $keyinfo: KeyInfoInput!) {
 	updKeyInfo(userID: $userID, key: $key, keyinfo: $keyinfo) {
 		noteIDs
@@ -169,6 +173,35 @@ func (db *AssistantDB) UpdNote(userID string, note *pb.Note) (*pb.Note, error) {
 	}
 
 	return ResultUpdNote2Note(run), nil
+}
+
+// RmNote - remove note to db
+func (db *AssistantDB) RmNote(userID string, noteID int64) (string, error) {
+	params := make(map[string]interface{})
+
+	params["userID"] = userID
+	params["noteID"] = noteID
+
+	result, err := db.ankaDB.LocalQuery(context.Background(), queryRmNote, params)
+	if err != nil {
+		return "", err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		return "", err
+	}
+
+	jarvisbase.Info("AssistantDB.RmNote",
+		jarvisbase.JSON("result", result))
+
+	run := &ResultRmNote{}
+	err = ankadb.MakeObjFromResult(result, run)
+	if err != nil {
+		return "", err
+	}
+
+	return ResultRmNote2String(run), nil
 }
 
 // UpdUserAssistantInfo - update AssistantData to db

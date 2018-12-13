@@ -3,6 +3,7 @@ package assistantdb
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
+	"github.com/zhs007/ankadb/graphqlext"
 	pb "github.com/zhs007/jarvistelebot/assistantdb/proto"
 )
 
@@ -45,6 +46,41 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				}
 
 				return note, nil
+			},
+		},
+		"rmNote": &graphql.Field{
+			Type:        graphql.String,
+			Description: "remove note",
+			Args: graphql.FieldConfigArgument{
+				"userID": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.ID),
+				},
+				"noteID": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphqlext.Int64),
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
+				if anka == nil {
+					return nil, ankadb.ErrCtxAnkaDB
+				}
+
+				curdb := anka.MgrDB.GetDB("assistantdb")
+				if curdb == nil {
+					return nil, ankadb.ErrCtxCurDB
+				}
+
+				userID := params.Args["userID"].(string)
+				noteID := params.Args["noteID"].(int64)
+
+				key := makeNoteKey(userID, noteID)
+
+				err := curdb.Delete([]byte(key))
+				if err != nil {
+					return nil, err
+				}
+
+				return key, nil
 			},
 		},
 		"updUserAssistantInfo": &graphql.Field{

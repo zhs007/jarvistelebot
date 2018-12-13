@@ -23,6 +23,11 @@ type ResultUpdNote struct {
 	} `json:"updNote"`
 }
 
+// ResultRmNote -
+type ResultRmNote struct {
+	RmNote string `json:"rmNote"`
+}
+
 // ResultUpdUserAssistantInfo -
 type ResultUpdUserAssistantInfo struct {
 	UpdUserAssistantInfo struct {
@@ -87,6 +92,11 @@ func ResultUpdNote2Note(result *ResultUpdNote) *pb.Note {
 	}
 
 	return note
+}
+
+// ResultRmNote2String - ResultRmNote -> string
+func ResultRmNote2String(result *ResultRmNote) string {
+	return result.RmNote
 }
 
 // ResultNote2Note - ResultNote -> Message

@@ -3,6 +3,7 @@ package assistant
 import (
 	"context"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -73,6 +74,10 @@ type Mgr interface {
 	GetUserAssistantInfo(userID string) (*UserAssistantInfo, error)
 	// GetNote - get note
 	GetNote(userID string, noteID int64) (*assistantdbpb.Note, error)
+	// RmNote - remove note
+	RmNote(userID string, noteID int64) (string, error)
+	// UpdNote - update user's note
+	UpdNote(userID string, note *assistantdbpb.Note) (*assistantdbpb.Note, error)
 
 	// RebuildKeys - rebuild note keywords
 	RebuildKeys(userID string) (int64, int, error)
@@ -83,6 +88,8 @@ type Mgr interface {
 
 	// Export - export all data
 	Export(userID string) ([](map[string]interface{}), error)
+	// Import - import all data
+	Import(userID string, arr [](map[string]interface{})) error
 }
 
 // assistantMgr - assistant manager
@@ -454,4 +461,93 @@ func (mgr *assistantMgr) Export(userID string) ([](map[string]interface{}), erro
 	}
 
 	return arr, nil
+}
+
+// Import - import all data
+func (mgr *assistantMgr) Import(userID string, arr [](map[string]interface{})) error {
+	uai, err := mgr.GetUserAssistantInfo(userID)
+	if err != nil {
+		return err
+	}
+
+	var cn int64
+	cn = int64(len(arr))
+	if cn < uai.MaxNoteID {
+		for i := cn + 1; i <= uai.MaxNoteID; i++ {
+			mgr.RmNote(userID, i)
+		}
+	}
+
+	uai.MaxNoteID = cn
+	_, err = mgr.updUserAssistant(userID, uai)
+	if err != nil {
+		return err
+	}
+
+	for i, v := range arr {
+		note := &assistantdbpb.Note{
+			NoteID:     int64(i) + 1,
+			CreateTime: time.Now().Unix(),
+			UpdateTime: time.Now().Unix(),
+		}
+
+		for k, ov := range v {
+			if strings.Contains(k, "key") {
+				note.Keys = append(note.Keys, ov.(string))
+			} else if strings.Contains(k, "data") {
+				note.Data = append(note.Data, ov.(string))
+			}
+		}
+
+		note, err := mgr.db.UpdNote(userID, note)
+		if err != nil {
+			return err
+		}
+	}
+
+	_, _, err = mgr.RebuildKeys(userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// RmNote - remove note
+func (mgr *assistantMgr) RmNote(userID string, noteID int64) (string, error) {
+	uai := mgr.getUserAssistantInfo(userID)
+	if uai == nil {
+		return "", ErrNoUserAssistantInfo
+	}
+
+	key, err := mgr.db.RmNote(userID, noteID)
+	if err != nil {
+		return "", err
+	}
+
+	return key, nil
+}
+
+// UpdNote - update user's note
+func (mgr *assistantMgr) UpdNote(userID string, note *assistantdbpb.Note) (*assistantdbpb.Note, error) {
+	uai := mgr.getUserAssistantInfo(userID)
+	if uai == nil {
+		return nil, ErrNoUserAssistantInfo
+	}
+
+	note, err := mgr.db.UpdNote(userID, note)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range note.Keys {
+		mgr.insertKey(uai, v)
+	}
+
+	_, err = mgr.updUserAssistant(userID, uai)
+	if err != nil {
+		return nil, err
+	}
+
+	return note, nil
 }
