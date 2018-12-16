@@ -1,6 +1,10 @@
 package chatbot
 
 import (
+	"sync"
+
+	"github.com/golang/protobuf/proto"
+
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
 
@@ -20,11 +24,17 @@ type User interface {
 	GetLastMsgID() int64
 	// UpdLastMsgID - update lastMsgID
 	UpdLastMsgID(lastmsgid int64)
+
+	// StorePluginData -
+	StorePluginData(pluginName string, data proto.Message)
+	// GetPluginData -
+	GetPluginData(pluginName string) (proto.Message, bool)
 }
 
 // BasicUser - basic User
 type BasicUser struct {
-	User *chatbotdbpb.User
+	User          *chatbotdbpb.User
+	mapPluginData sync.Map
 }
 
 // NewBasicUser - new BasicUser
@@ -67,4 +77,19 @@ func (bu *BasicUser) UpdLastMsgID(lastmsgid int64) {
 // GetUserName - get username
 func (bu *BasicUser) GetUserName() string {
 	return bu.User.UserName
+}
+
+// StorePluginData -
+func (bu *BasicUser) StorePluginData(pluginName string, data proto.Message) {
+	bu.mapPluginData.Store(pluginName, data)
+}
+
+// GetPluginData -
+func (bu *BasicUser) GetPluginData(pluginName string) (proto.Message, bool) {
+	v, ok := bu.mapPluginData.Load(pluginName)
+	if ok {
+		return v.(proto.Message), true
+	}
+
+	return nil, false
 }

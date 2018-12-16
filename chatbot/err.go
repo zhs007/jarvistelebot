@@ -65,4 +65,6 @@ var (
 	ErrInvalidParamsInvalidCurPlugin = errors.New("Invalid params: invalid current plugin")
 	// ErrEmptyArray - Empty array
 	ErrEmptyArray = errors.New("Empty array")
+	// ErrOnlyScriptFile - Only script file
+	ErrOnlyScriptFile = errors.New("Only script file")
 )

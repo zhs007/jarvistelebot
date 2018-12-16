@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"strings"
 	"time"
 
@@ -148,4 +149,18 @@ func NewEmptyCommandLine(cmd string) proto.Message {
 	return &chatbotpb.EmptyCommand{
 		Cmd: cmd,
 	}
+}
+
+// LoadScriptFile - load script file
+func LoadScriptFile(filename string) (*chatbotdbpb.File, error) {
+	dat, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	return &chatbotdbpb.File{
+		Filename: filename,
+		Data:     dat,
+		FileType: FileTypeShellScript,
+	}, nil
 }

@@ -27,13 +27,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 	cmd := chatbot.NewCommandMap()
 
-	// cmd.RegFunc("help", cmdHelp)
-	// cmd.RegFunc("mystate", cmdMyState)
-	// cmd.RegFunc("run", cmdRun)
-	// cmd.RegFunc("nodes", cmdNodes)
-	// cmd.RegFunc("scripts", cmdScripts)
-	// // cmd.RegFunc("version", cmdVersion)
-	// cmd.RegFunc("requestfile", cmdRequestFile)
+	cmd.AddCommand("runscript", &cmdRunScript{})
 
 	p := &jarvisnodeexPlugin{
 		cmd: cmd,
@@ -117,6 +111,12 @@ func (p *jarvisnodeexPlugin) GetPluginType() int {
 // ParseMessage - If this message is what I can process,
 //	it will return to the command line, otherwise it will return an error.
 func (p *jarvisnodeexPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
+	if len(params.LstStr) >= 1 {
+		if p.cmd.HasCommand(params.LstStr[0]) {
+			return p.cmd.ParseCommandLine(params.LstStr[0], params)
+		}
+	}
+
 	file := params.Msg.GetFile()
 	if file != nil {
 		if file.FileType == chatbot.FileTypeShellScript {
@@ -129,12 +129,6 @@ func (p *jarvisnodeexPlugin) ParseMessage(params *chatbot.MessageParams) (proto.
 		}
 
 		return nil, chatbot.ErrMsgNotMine
-	}
-
-	if len(params.LstStr) >= 1 {
-		if p.cmd.HasCommand(params.LstStr[0]) {
-			return p.cmd.ParseCommandLine(params.LstStr[0], params)
-		}
 	}
 
 	return nil, chatbot.ErrMsgNotMine

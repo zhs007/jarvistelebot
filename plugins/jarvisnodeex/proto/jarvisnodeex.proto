@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package pluginjarvisnodeexpb;
+
+message FileData {
+    // filename - filename
+    string filename = 1;
+    // data - file data with bytes
+    bytes data = 2;
+    // fileType - file type
+    string fileType = 3;
+    // fullPath - full path
+    string fullPath = 4;
+}
+
+// RunScriptCommand - run script command
+message RunScriptCommand {
+    // jarvisNodeName - jarvisnode name
+    string jarvisNodeName = 1;
+    // destGlobPatterns - when finished script, will get these files.
+    repeated string destGlobPatterns = 2;
+    // scriptFile - script file
+    FileData scriptFile = 3;
+    // files - files
+    repeated FileData files = 4;
+}
+
+// PluginData - plugin data
+message PluginData {
+    RunScriptCommand runScript = 1;
+}

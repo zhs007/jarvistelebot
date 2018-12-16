@@ -21,12 +21,8 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 	cmd := chatbot.NewCommandMap()
 
-	// cmd.RegFunc("help", cmdHelp)
 	cmd.AddCommand("mystate", &cmdMyState{})
-	// cmd.RegFunc("run", cmdRun)
 	cmd.AddCommand("nodes", &cmdNodes{})
-	// cmd.RegFunc("scripts", cmdScripts)
-	// cmd.RegFunc("version", cmdVersion)
 	cmd.AddCommand("requestfile", &cmdRequestFile{})
 
 	p := &jarvisnodePlugin{
@@ -35,15 +31,6 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 	return p, nil
 }
-
-// // RegPlugin - reg timestamp plugin
-// func RegPlugin(cfgPath string, mgr chatbot.PluginsMgr) error {
-// 	chatbot.Info("RegPlugin - jarvisnodePlugin")
-
-// 	mgr.RegPlugin(newPlugin())
-
-// 	return nil
-// }
 
 // OnMessage - get message
 func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.MessageParams) (bool, error) {
@@ -57,37 +44,6 @@ func (p *jarvisnodePlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 	if !params.ChatBot.IsMaster(from) {
 		return false, nil
 	}
-
-	// file := params.Msg.GetFile()
-	// if file != nil {
-	// 	if file.FileType == chatbot.FileTypeShellScript {
-	// 		ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, file.Filename, file.Data, "")
-	// 		if err != nil {
-	// 			jarvisbase.Warn("jarvisnodePlugin.OnMessage", zap.Error(err))
-
-	// 			return false, err
-	// 		}
-
-	// 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(params.Msg.GetText())
-	// 		if curnode == nil {
-	// 			return false, nil
-	// 		}
-
-	// 		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
-
-	// 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-	// 			cr := msg.GetCtrlResult()
-
-	// 			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)
-
-	// 			return nil
-	// 		})
-
-	// 		return true, nil
-	// 	}
-
-	// 	return false, nil
-	// }
 
 	if len(params.LstStr) >= 1 {
 		p.cmd.Run(ctx, params.LstStr[0], params)
