@@ -67,4 +67,10 @@ var (
 	ErrEmptyArray = errors.New("Empty array")
 	// ErrOnlyScriptFile - Only script file
 	ErrOnlyScriptFile = errors.New("Only script file")
+	// ErrNoUserPluginData - Can't find user's plugin data
+	ErrNoUserPluginData = errors.New("Can't find user's plugin data")
+	// ErrInvalidUserPluginData - Invalid user's plugin data
+	ErrInvalidUserPluginData = errors.New("Invalid user's plugin data")
+	// ErrInvalidUserPluginDataType - Invalid user's plugin data type
+	ErrInvalidUserPluginDataType = errors.New("Invalid user's plugin data type")
 )

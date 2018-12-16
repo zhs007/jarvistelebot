@@ -5,8 +5,6 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
-	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnodeex/proto"
 )
@@ -17,6 +15,11 @@ type cmdRunScript struct {
 
 // RunCommand - run command
 func (cmd *cmdRunScript) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
+	from := params.Msg.GetFrom()
+	if from == nil {
+		return false
+	}
+
 	if params.CommandLine != nil {
 		rscmd, ok := params.CommandLine.(*pluginjarvisnodeexpb.RunScriptCommand)
 		if !ok {
@@ -30,26 +33,64 @@ func (cmd *cmdRunScript) RunCommand(ctx context.Context, params *chatbot.Message
 			return true
 		}
 
-		sf := &jarviscorepb.FileData{
-			Filename: rscmd.ScriptFile.Filename,
-			File:     rscmd.ScriptFile.Data,
-		}
-		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(1, sf, nil)
-		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+		if params.CurPlugin == nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrInvalidParamsNoCurPlugin.Error(), params.Msg)
 
 			return false
 		}
 
-		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
+		pluginJarvisnodeex, ok := params.CurPlugin.(*jarvisnodeexPlugin)
+		if !ok {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrInvalidParamsInvalidCurPlugin.Error(), params.Msg)
 
-		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-			cr := msg.GetCtrlResult()
+			return false
+		}
 
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), cr.CtrlResult, params.Msg)
+		pd, ok := from.GetPluginData(PluginName)
+		if !ok {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrNoUserPluginData.Error(), params.Msg)
 
-			return nil
-		})
+			return false
+		}
+
+		jnpd, ok := pd.(*pluginjarvisnodeexpb.PluginData)
+		if !ok {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrInvalidUserPluginDataType.Error(), params.Msg)
+
+			jnpd = &pluginjarvisnodeexpb.PluginData{}
+			from.StorePluginData(PluginName, jnpd)
+
+			return false
+		}
+
+		jnpd.RunScript = rscmd
+		from.StorePluginData(PluginName, jnpd)
+
+		params.MgrPlugins.SetCurPlugin(pluginJarvisnodeex)
+
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "I get it, please send me some files to run script.", params.Msg)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "If you want to start run script, you can send ``start``.", params.Msg)
+
+		// sf := &jarviscorepb.FileData{
+		// 	Filename: rscmd.ScriptFile.Filename,
+		// 	File:     rscmd.ScriptFile.Data,
+		// }
+		// ci, err := jarviscore.BuildCtrlInfoForScriptFile2(1, sf, nil)
+		// if err != nil {
+		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+
+		// 	return false
+		// }
+
+		// params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
+
+		// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+		// 	cr := msg.GetCtrlResult()
+
+		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), cr.CtrlResult, params.Msg)
+
+		// 	return nil
+		// })
 
 		return true
 
