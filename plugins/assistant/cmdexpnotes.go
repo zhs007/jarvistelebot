@@ -97,7 +97,7 @@ func (cmd *cmdExpNotes) ParseCommandLine(params *chatbot.MessageParams) (proto.M
 
 		flagset := pflag.NewFlagSet("expnotes", pflag.ContinueOnError)
 
-		var graph = flagset.BoolP("nums", "n", false, "use graph mode")
+		var graph = flagset.BoolP("graph", "g", false, "use graph mode")
 
 		err := flagset.Parse(params.LstStr[1:])
 		if err != nil {
