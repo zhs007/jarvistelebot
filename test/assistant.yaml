@@ -1,0 +1,10 @@
+# jarvis telegram bot plugin assistant config file
+
+# ankadb config
+ankadb:
+  # dbpath
+  dbpath: './dat'
+  # engine
+  engine: 'leveldb'
+  # httpaddr
+  httpaddr: ':8882'
