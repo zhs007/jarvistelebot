@@ -21,6 +21,140 @@ const (
 	ModeInputKey = 2
 )
 
+// NoteKeyGraphKeyInfo - key info
+type NoteKeyGraphKeyInfo struct {
+	ID    int    `json:"id"`
+	Key   string `json:"key"`
+	Times int    `json:"times"`
+}
+
+// NoteKeyGraphLinks - links
+type NoteKeyGraphLinks struct {
+	Src   int `json:"src"`
+	Dest  int `json:"dest"`
+	Times int `json:"times"`
+}
+
+// NoteKeyGraph - note key graph
+type NoteKeyGraph struct {
+	Keys  []*NoteKeyGraphKeyInfo `json:"keys"`
+	Links []*NoteKeyGraphLinks   `json:"links"`
+}
+
+func inLinks(links []*NoteKeyGraphLinks, id0 int, id1 int) bool {
+	for _, v := range links {
+		if (v.Src == id0 && v.Dest == id1) || (v.Src == id1 && v.Dest == id0) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (nkg *NoteKeyGraph) getKey(key string) int {
+	for _, v := range nkg.Keys {
+		if v.Key == key {
+			return v.ID
+		}
+	}
+
+	return -1
+}
+
+func (nkg *NoteKeyGraph) addKey(key string) {
+	maxid := 0
+
+	for _, v := range nkg.Keys {
+		maxid = v.ID
+
+		if v.Key == key {
+			v.Times++
+
+			return
+		}
+	}
+
+	nkg.Keys = append(nkg.Keys, &NoteKeyGraphKeyInfo{
+		ID:    maxid + 1,
+		Key:   key,
+		Times: 1,
+	})
+}
+
+func (nkg *NoteKeyGraph) linkKeys(id0 int, id1 int) {
+	// maxid := 0
+
+	// id0 := nkg.getKey(key0)
+	// if id0 < 0 {
+	// 	return
+	// }
+
+	// id1 := nkg.getKey(key1)
+	// if id1 < 0 {
+	// 	return
+	// }
+
+	for _, v := range nkg.Links {
+		if (v.Src == id0 && v.Dest == id1) || (v.Src == id1 && v.Dest == id0) {
+
+			v.Times++
+
+			return
+		}
+	}
+
+	nkg.Links = append(nkg.Links, &NoteKeyGraphLinks{
+		Src:   id0,
+		Dest:  id1,
+		Times: 1,
+	})
+}
+
+// AddNote - add note
+func (nkg *NoteKeyGraph) AddNote(keys []string) {
+	for _, v := range keys {
+		nkg.addKey(v)
+	}
+
+	if len(keys) == 1 {
+		return
+	}
+
+	if len(keys) == 2 {
+		id0 := nkg.getKey(keys[0])
+		id1 := nkg.getKey(keys[1])
+		nkg.linkKeys(id0, id1)
+
+		return
+	}
+
+	var lst []*NoteKeyGraphLinks
+
+	for i0 := 0; i0 < len(keys)-1; i0++ {
+		id0 := nkg.getKey(keys[i0])
+		if id0 < 0 {
+			continue
+		}
+
+		for i1 := i0 + 1; i1 < len(keys); i1++ {
+			id1 := nkg.getKey(keys[i1])
+			if id1 < 0 {
+				continue
+			}
+
+			if !inLinks(lst, id0, id1) {
+				lst = append(lst, &NoteKeyGraphLinks{
+					Src:   id0,
+					Dest:  id1,
+					Times: 1,
+				})
+
+				nkg.linkKeys(id0, id1)
+			}
+		}
+	}
+}
+
 // keyInfoMap - keyinfo map
 type keyInfoMap struct {
 	mapKeyInfo map[string]*assistantdbpb.KeyInfo
@@ -90,6 +224,9 @@ type Mgr interface {
 	Export(userID string) ([](map[string]interface{}), error)
 	// Import - import all data
 	Import(userID string, arr [](map[string]interface{})) error
+
+	// ExportGraph - export graph data
+	ExportGraph(userID string) (*NoteKeyGraph, error)
 }
 
 // assistantMgr - assistant manager
@@ -555,4 +692,30 @@ func (mgr *assistantMgr) UpdNote(userID string, note *assistantdbpb.Note) (*assi
 	}
 
 	return note, nil
+}
+
+// ExportGraph - export graph data
+func (mgr *assistantMgr) ExportGraph(userID string) (*NoteKeyGraph, error) {
+	nkg := &NoteKeyGraph{}
+	// var arr [](map[string]interface{})
+	uai, err := mgr.GetUserAssistantInfo(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var i int64
+	for i = 1; i <= uai.MaxNoteID; i++ {
+		note, e := mgr.GetNote(userID, i)
+		if e != nil {
+			err = e
+
+			continue
+		}
+
+		if len(note.Data) > 0 && len(note.Keys) > 0 {
+			nkg.AddNote(note.Keys)
+		}
+	}
+
+	return nkg, nil
 }

@@ -2,10 +2,13 @@ package pluginassistant
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/spf13/pflag"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
+	"github.com/zhs007/jarvistelebot/plugins/assistant/proto"
 )
 
 // cmdExpNotes - expnotes
@@ -16,6 +19,19 @@ type cmdExpNotes struct {
 func (cmd *cmdExpNotes) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
 	from := params.Msg.GetFrom()
 	if from == nil {
+		return false
+	}
+
+	if params.CommandLine == nil {
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidCommandLine.Error(), params.Msg)
+
+		return false
+	}
+
+	encmd, ok := params.CommandLine.(*pluginassistanepb.ExpNotesCommand)
+	if !ok {
+		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidCommandLine.Error(), params.Msg)
+
 		return false
 	}
 
@@ -30,6 +46,29 @@ func (cmd *cmdExpNotes) RunCommand(ctx context.Context, params *chatbot.MessageP
 		chatbot.SendTextMsg(params.ChatBot, from, chatbot.ErrInvalidParamsInvalidCurPlugin.Error(), params.Msg)
 
 		return false
+	}
+
+	if encmd.Graph {
+		nkg, err := pluginAssistant.Mgr.ExportGraph(from.GetUserID())
+		if err != nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+
+			return false
+		}
+
+		jsonstr, err := json.Marshal(nkg)
+		if err != nil {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+
+			return false
+		}
+
+		chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+			Filename: "notes.json",
+			Data:     jsonstr,
+		})
+
+		return true
 	}
 
 	arr, err := pluginAssistant.Mgr.Export(from.GetUserID())
@@ -49,32 +88,25 @@ func (cmd *cmdExpNotes) RunCommand(ctx context.Context, params *chatbot.MessageP
 		})
 	}
 
-	// uai, err := pluginAssistant.Mgr.GetUserAssistantInfo(from.GetUserID())
-	// if err != nil {
-	// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
-
-	// 	return false
-	// }
-
-	// strret, err := chatbot.FormatJSONObj(uai)
-	// if err != nil {
-	// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
-	// } else {
-	// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
-	// }
-
-	// chatbot.SendTextMsg(params.ChatBot, from, "I get it, please tell me the keywords of this note, one at a time.")
-	// chatbot.SendTextMsg(params.ChatBot, from, "If you want to stop inputing keywords, you can send ``endkey``.")
-
 	return true
 }
 
 // Parse - parse command line
 func (cmd *cmdExpNotes) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) >= 1 {
-		if params.LstStr[0] == "expnotes" {
-			return chatbot.NewEmptyCommandLine("expnotes"), nil
+
+		flagset := pflag.NewFlagSet("expnotes", pflag.ContinueOnError)
+
+		var graph = flagset.BoolP("nums", "n", false, "use graph mode")
+
+		err := flagset.Parse(params.LstStr[1:])
+		if err != nil {
+			return nil, err
 		}
+
+		return &pluginassistanepb.ExpNotesCommand{
+			Graph: *graph,
+		}, nil
 	}
 
 	return nil, chatbot.ErrMsgNotMine

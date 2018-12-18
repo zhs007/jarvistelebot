@@ -173,3 +173,44 @@ func ArrayMap2xlsx(arr [](map[string]interface{})) ([]byte, error) {
 
 	return buf.Bytes(), nil
 }
+
+// SheetData - multiple sheet
+type SheetData struct {
+	Sheet string
+	Data  [](map[string]interface{})
+}
+
+// SheetData2xlsx - SheetData to xlsx
+func SheetData2xlsx(lst []*SheetData) ([]byte, error) {
+	if len(lst) <= 0 {
+		return nil, ErrEmptyArray
+	}
+
+	xlsx := excelize.NewFile()
+
+	for _, sd := range lst {
+		lsthead := getMapObjName(sd.Data)
+
+		for x, v := range lsthead {
+			xlsx.SetCellValue(sd.Sheet, getCellName(x, 0), v)
+		}
+
+		for y, v := range sd.Data {
+			for x, hv := range lsthead {
+				cv, ok := v[hv]
+				if ok {
+					xlsx.SetCellValue(sd.Sheet, getCellName(x, y+1), cv)
+				}
+			}
+		}
+	}
+
+	buf := new(bytes.Buffer)
+	w := bufio.NewWriter(buf)
+	err := xlsx.Write(w)
+	if err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
+}

@@ -7,3 +7,9 @@ message NoteCommand {
     // keys
     repeated string keys = 1;
 }
+
+// ExpNotesCommand - expnotes command
+message ExpNotesCommand {
+    // graph mode
+    bool graph = 1;
+}

@@ -31,7 +31,7 @@ func (m *NoteCommand) Reset()         { *m = NoteCommand{} }
 func (m *NoteCommand) String() string { return proto.CompactTextString(m) }
 func (*NoteCommand) ProtoMessage()    {}
 func (*NoteCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_assistant_005708bff527aa91, []int{0}
+	return fileDescriptor_assistant_a4369b017667559d, []int{0}
 }
 func (m *NoteCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_NoteCommand.Unmarshal(m, b)
@@ -58,18 +58,61 @@ func (m *NoteCommand) GetKeys() []string {
 	return nil
 }
 
-func init() {
-	proto.RegisterType((*NoteCommand)(nil), "pluginassistanepb.NoteCommand")
+// ExpNotesCommand - expnotes command
+type ExpNotesCommand struct {
+	// graph mode
+	Graph                bool     `protobuf:"varint,1,opt,name=graph,proto3" json:"graph,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func init() { proto.RegisterFile("assistant.proto", fileDescriptor_assistant_005708bff527aa91) }
+func (m *ExpNotesCommand) Reset()         { *m = ExpNotesCommand{} }
+func (m *ExpNotesCommand) String() string { return proto.CompactTextString(m) }
+func (*ExpNotesCommand) ProtoMessage()    {}
+func (*ExpNotesCommand) Descriptor() ([]byte, []int) {
+	return fileDescriptor_assistant_a4369b017667559d, []int{1}
+}
+func (m *ExpNotesCommand) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ExpNotesCommand.Unmarshal(m, b)
+}
+func (m *ExpNotesCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ExpNotesCommand.Marshal(b, m, deterministic)
+}
+func (dst *ExpNotesCommand) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ExpNotesCommand.Merge(dst, src)
+}
+func (m *ExpNotesCommand) XXX_Size() int {
+	return xxx_messageInfo_ExpNotesCommand.Size(m)
+}
+func (m *ExpNotesCommand) XXX_DiscardUnknown() {
+	xxx_messageInfo_ExpNotesCommand.DiscardUnknown(m)
+}
 
-var fileDescriptor_assistant_005708bff527aa91 = []byte{
-	// 91 bytes of a gzipped FileDescriptorProto
+var xxx_messageInfo_ExpNotesCommand proto.InternalMessageInfo
+
+func (m *ExpNotesCommand) GetGraph() bool {
+	if m != nil {
+		return m.Graph
+	}
+	return false
+}
+
+func init() {
+	proto.RegisterType((*NoteCommand)(nil), "pluginassistanepb.NoteCommand")
+	proto.RegisterType((*ExpNotesCommand)(nil), "pluginassistanepb.ExpNotesCommand")
+}
+
+func init() { proto.RegisterFile("assistant.proto", fileDescriptor_assistant_a4369b017667559d) }
+
+var fileDescriptor_assistant_a4369b017667559d = []byte{
+	// 120 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4f, 0x2c, 0x2e, 0xce,
 	0x2c, 0x2e, 0x49, 0xcc, 0x2b, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x2c, 0xc8, 0x29,
 	0x4d, 0xcf, 0xcc, 0x83, 0x09, 0xa7, 0x16, 0x24, 0x29, 0x29, 0x72, 0x71, 0xfb, 0xe5, 0x97, 0xa4,
 	0x3a, 0xe7, 0xe7, 0xe6, 0x26, 0xe6, 0xa5, 0x08, 0x09, 0x71, 0xb1, 0x64, 0xa7, 0x56, 0x16, 0x4b,
-	0x30, 0x2a, 0x30, 0x6b, 0x70, 0x06, 0x81, 0xd9, 0x49, 0x6c, 0x60, 0xcd, 0xc6, 0x80, 0x00, 0x00,
-	0x00, 0xff, 0xff, 0x82, 0x89, 0xe5, 0x82, 0x4f, 0x00, 0x00, 0x00,
+	0x30, 0x2a, 0x30, 0x6b, 0x70, 0x06, 0x81, 0xd9, 0x4a, 0xea, 0x5c, 0xfc, 0xae, 0x15, 0x05, 0x20,
+	0x55, 0xc5, 0x30, 0x65, 0x22, 0x5c, 0xac, 0xe9, 0x45, 0x89, 0x05, 0x19, 0x12, 0x8c, 0x0a, 0x8c,
+	0x1a, 0x1c, 0x41, 0x10, 0x4e, 0x12, 0x1b, 0xd8, 0x16, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff,
+	0xb8, 0x99, 0x62, 0x30, 0x78, 0x00, 0x00, 0x00,
 }
