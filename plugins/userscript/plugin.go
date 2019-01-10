@@ -2,6 +2,7 @@ package pluginuserscript
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/base"
@@ -74,6 +75,14 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 
 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 			cr := msg.GetCtrlResult()
+			if cr == nil {
+				msgstr := fmt.Sprintf("%v", msg)
+				jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
+
+				chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
+
+				return nil
+			}
 
 			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
 
