@@ -55,7 +55,9 @@ message UpdFileTemplateCommand {
     // jarvisNodeName - jarvis node name
     string jarvisNodeName = 4;
     // fullPath - full path
-    string fullPath = 5;    
+    string fullPath = 5;
+    // subfilesPath - subfiles path
+    string subfilesPath = 6;
 }
 
 // FileTemplatesCommand - filetemplates command

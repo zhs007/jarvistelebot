@@ -220,6 +220,9 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				"fullPath": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(graphql.String),
 				},
+				"subfilesPath": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.String),
+				},
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 				anka := ankadb.GetContextValueAnkaDB(params.Context, interface{}("ankadb"))
@@ -236,11 +239,13 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 				fileTemplateName := params.Args["fileTemplateName"].(string)
 				jarvisNodeName := params.Args["jarvisNodeName"].(string)
 				fullPath := params.Args["fullPath"].(string)
+				subfilesPath := params.Args["subfilesPath"].(string)
 
 				fileTemplate := &pb.UserFileTemplate{
 					FileTemplateName: fileTemplateName,
 					FullPath:         fullPath,
 					JarvisNodeName:   jarvisNodeName,
+					SubfilesPath:     subfilesPath,
 				}
 
 				err := ankadb.PutMsg2DB(curdb,

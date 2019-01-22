@@ -62,6 +62,7 @@ func (cmd *cmdUpdFileTemplate) RunCommand(ctx context.Context, params *chatbot.M
 				FileTemplateName: uftcmd.FileTemplateName,
 				JarvisNodeName:   uftcmd.JarvisNodeName,
 				FullPath:         uftcmd.FullPath,
+				SubfilesPath:     uftcmd.SubfilesPath,
 			}
 
 			err := params.ChatBot.GetChatBotDB().SaveFileTemplate(user.UserID, uft)
@@ -99,6 +100,7 @@ func (cmd *cmdUpdFileTemplate) ParseCommandLine(params *chatbot.MessageParams) (
 	var filetemplatename = flagset.StringP("filetemplatename", "f", "", "you can use file template name")
 	var nodename = flagset.StringP("nodename", "n", "", "you can use jarvis node name")
 	var fullpath = flagset.StringP("path", "p", "", "you can use full path")
+	var subfilespath = flagset.StringP("subfilespath", "s", "", "you can send subfiles to this path")
 
 	err := flagset.Parse(params.LstStr[1:])
 	if err != nil {
@@ -106,13 +108,24 @@ func (cmd *cmdUpdFileTemplate) ParseCommandLine(params *chatbot.MessageParams) (
 	}
 
 	if (*uid != "" || *uname != "") && *filetemplatename != "" && *nodename != "" && *fullpath != "" {
-		return &pluginusermgrpb.UpdFileTemplateCommand{
-			UserID:           *uid,
-			UserName:         *uname,
-			FileTemplateName: *filetemplatename,
-			JarvisNodeName:   *nodename,
-			FullPath:         *fullpath,
-		}, nil
+		if *subfilespath != "" {
+			return &pluginusermgrpb.UpdFileTemplateCommand{
+				UserID:           *uid,
+				UserName:         *uname,
+				FileTemplateName: *filetemplatename,
+				JarvisNodeName:   *nodename,
+				FullPath:         *fullpath,
+				SubfilesPath:     *subfilespath,
+			}, nil
+		} else {
+			return &pluginusermgrpb.UpdFileTemplateCommand{
+				UserID:           *uid,
+				UserName:         *uname,
+				FileTemplateName: *filetemplatename,
+				JarvisNodeName:   *nodename,
+				FullPath:         *fullpath,
+			}, nil
+		}
 	}
 
 	return nil, chatbot.ErrInvalidCommandLine

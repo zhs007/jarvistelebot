@@ -79,6 +79,7 @@ type ResultUserFileTemplate struct {
 		FileTemplateName string `json:"fileTemplateName"`
 		JarvisNodeName   string `json:"jarvisNodeName"`
 		FullPath         string `json:"fullPath"`
+		SubfilesPath     string `json:"subfilesPath"`
 	} `json:"fileTemplate"`
 }
 
@@ -260,6 +261,7 @@ func ResultUserFileTemplate2UserFileTemplate(result *ResultUserFileTemplate) (*p
 		FileTemplateName: result.FileTemplate.FileTemplateName,
 		JarvisNodeName:   result.FileTemplate.JarvisNodeName,
 		FullPath:         result.FileTemplate.FullPath,
+		SubfilesPath:     result.FileTemplate.SubfilesPath,
 	}, nil
 }
 

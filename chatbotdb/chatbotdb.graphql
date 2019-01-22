@@ -47,6 +47,7 @@ type UserFileTemplate {
     fileTemplateName: ID!
     jarvisNodeName: String!
     fullPath: String!
+    subfilesPath: String!
 }
 
 type UserFileTemplateList {
@@ -86,6 +87,6 @@ type Mutation {
     updUserScript(userID: ID!, jarvisNodeName: String!, scriptName: ID!, file: File!): UserScript!
     removeUserScript(userID: ID!, scriptName: ID!) : String!
 
-    updFileTemplate(userID: ID!, fileTemplateName: ID!, jarvisNodeName: String!, fullPath: String!): UserFileTemplate!
+    updFileTemplate(userID: ID!, fileTemplateName: ID!, jarvisNodeName: String!, fullPath: String!, subfilesPath: String!): UserFileTemplate!
     removeFileTemplate(userID: ID!, fileTemplateName: ID!) : String!
 }

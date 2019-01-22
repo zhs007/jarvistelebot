@@ -37,7 +37,7 @@ func (m *UpdScriptCommand) Reset()         { *m = UpdScriptCommand{} }
 func (m *UpdScriptCommand) String() string { return proto.CompactTextString(m) }
 func (*UpdScriptCommand) ProtoMessage()    {}
 func (*UpdScriptCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{0}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{0}
 }
 func (m *UpdScriptCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UpdScriptCommand.Unmarshal(m, b)
@@ -102,7 +102,7 @@ func (m *UserScriptsCommand) Reset()         { *m = UserScriptsCommand{} }
 func (m *UserScriptsCommand) String() string { return proto.CompactTextString(m) }
 func (*UserScriptsCommand) ProtoMessage()    {}
 func (*UserScriptsCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{1}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{1}
 }
 func (m *UserScriptsCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UserScriptsCommand.Unmarshal(m, b)
@@ -160,7 +160,7 @@ func (m *RemoveScriptCommand) Reset()         { *m = RemoveScriptCommand{} }
 func (m *RemoveScriptCommand) String() string { return proto.CompactTextString(m) }
 func (*RemoveScriptCommand) ProtoMessage()    {}
 func (*RemoveScriptCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{2}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{2}
 }
 func (m *RemoveScriptCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_RemoveScriptCommand.Unmarshal(m, b)
@@ -218,7 +218,7 @@ func (m *ShowScriptCommand) Reset()         { *m = ShowScriptCommand{} }
 func (m *ShowScriptCommand) String() string { return proto.CompactTextString(m) }
 func (*ShowScriptCommand) ProtoMessage()    {}
 func (*ShowScriptCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{3}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{3}
 }
 func (m *ShowScriptCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ShowScriptCommand.Unmarshal(m, b)
@@ -270,7 +270,9 @@ type UpdFileTemplateCommand struct {
 	// jarvisNodeName - jarvis node name
 	JarvisNodeName string `protobuf:"bytes,4,opt,name=jarvisNodeName,proto3" json:"jarvisNodeName,omitempty"`
 	// fullPath - full path
-	FullPath             string   `protobuf:"bytes,5,opt,name=fullPath,proto3" json:"fullPath,omitempty"`
+	FullPath string `protobuf:"bytes,5,opt,name=fullPath,proto3" json:"fullPath,omitempty"`
+	// subfilesPath - subfiles path
+	SubfilesPath         string   `protobuf:"bytes,6,opt,name=subfilesPath,proto3" json:"subfilesPath,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -280,7 +282,7 @@ func (m *UpdFileTemplateCommand) Reset()         { *m = UpdFileTemplateCommand{}
 func (m *UpdFileTemplateCommand) String() string { return proto.CompactTextString(m) }
 func (*UpdFileTemplateCommand) ProtoMessage()    {}
 func (*UpdFileTemplateCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{4}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{4}
 }
 func (m *UpdFileTemplateCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UpdFileTemplateCommand.Unmarshal(m, b)
@@ -335,6 +337,13 @@ func (m *UpdFileTemplateCommand) GetFullPath() string {
 	return ""
 }
 
+func (m *UpdFileTemplateCommand) GetSubfilesPath() string {
+	if m != nil {
+		return m.SubfilesPath
+	}
+	return ""
+}
+
 // FileTemplatesCommand - filetemplates command
 type FileTemplatesCommand struct {
 	// userID - userID
@@ -352,7 +361,7 @@ func (m *FileTemplatesCommand) Reset()         { *m = FileTemplatesCommand{} }
 func (m *FileTemplatesCommand) String() string { return proto.CompactTextString(m) }
 func (*FileTemplatesCommand) ProtoMessage()    {}
 func (*FileTemplatesCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{5}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{5}
 }
 func (m *FileTemplatesCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_FileTemplatesCommand.Unmarshal(m, b)
@@ -410,7 +419,7 @@ func (m *RemoveFileTemplateCommand) Reset()         { *m = RemoveFileTemplateCom
 func (m *RemoveFileTemplateCommand) String() string { return proto.CompactTextString(m) }
 func (*RemoveFileTemplateCommand) ProtoMessage()    {}
 func (*RemoveFileTemplateCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{6}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{6}
 }
 func (m *RemoveFileTemplateCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_RemoveFileTemplateCommand.Unmarshal(m, b)
@@ -468,7 +477,7 @@ func (m *ShowFileTemplateCommand) Reset()         { *m = ShowFileTemplateCommand
 func (m *ShowFileTemplateCommand) String() string { return proto.CompactTextString(m) }
 func (*ShowFileTemplateCommand) ProtoMessage()    {}
 func (*ShowFileTemplateCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{7}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{7}
 }
 func (m *ShowFileTemplateCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ShowFileTemplateCommand.Unmarshal(m, b)
@@ -522,7 +531,7 @@ func (m *MyScriptsCommand) Reset()         { *m = MyScriptsCommand{} }
 func (m *MyScriptsCommand) String() string { return proto.CompactTextString(m) }
 func (*MyScriptsCommand) ProtoMessage()    {}
 func (*MyScriptsCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{8}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{8}
 }
 func (m *MyScriptsCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_MyScriptsCommand.Unmarshal(m, b)
@@ -562,7 +571,7 @@ func (m *MyFileTemplatesCommand) Reset()         { *m = MyFileTemplatesCommand{}
 func (m *MyFileTemplatesCommand) String() string { return proto.CompactTextString(m) }
 func (*MyFileTemplatesCommand) ProtoMessage()    {}
 func (*MyFileTemplatesCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{9}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{9}
 }
 func (m *MyFileTemplatesCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_MyFileTemplatesCommand.Unmarshal(m, b)
@@ -604,7 +613,7 @@ func (m *ExpScriptsCommand) Reset()         { *m = ExpScriptsCommand{} }
 func (m *ExpScriptsCommand) String() string { return proto.CompactTextString(m) }
 func (*ExpScriptsCommand) ProtoMessage()    {}
 func (*ExpScriptsCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{10}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{10}
 }
 func (m *ExpScriptsCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ExpScriptsCommand.Unmarshal(m, b)
@@ -653,7 +662,7 @@ func (m *ExpFileTemplatesCommand) Reset()         { *m = ExpFileTemplatesCommand
 func (m *ExpFileTemplatesCommand) String() string { return proto.CompactTextString(m) }
 func (*ExpFileTemplatesCommand) ProtoMessage()    {}
 func (*ExpFileTemplatesCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{11}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{11}
 }
 func (m *ExpFileTemplatesCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ExpFileTemplatesCommand.Unmarshal(m, b)
@@ -702,7 +711,7 @@ func (m *ImpScriptsCommand) Reset()         { *m = ImpScriptsCommand{} }
 func (m *ImpScriptsCommand) String() string { return proto.CompactTextString(m) }
 func (*ImpScriptsCommand) ProtoMessage()    {}
 func (*ImpScriptsCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{12}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{12}
 }
 func (m *ImpScriptsCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ImpScriptsCommand.Unmarshal(m, b)
@@ -751,7 +760,7 @@ func (m *ImpFileTemplatesCommand) Reset()         { *m = ImpFileTemplatesCommand
 func (m *ImpFileTemplatesCommand) String() string { return proto.CompactTextString(m) }
 func (*ImpFileTemplatesCommand) ProtoMessage()    {}
 func (*ImpFileTemplatesCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_usermgr_e0c384c0cfe6c537, []int{13}
+	return fileDescriptor_usermgr_6dfcc81643e16c43, []int{13}
 }
 func (m *ImpFileTemplatesCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ImpFileTemplatesCommand.Unmarshal(m, b)
@@ -802,10 +811,10 @@ func init() {
 	proto.RegisterType((*ImpFileTemplatesCommand)(nil), "pluginusermgrpb.ImpFileTemplatesCommand")
 }
 
-func init() { proto.RegisterFile("usermgr.proto", fileDescriptor_usermgr_e0c384c0cfe6c537) }
+func init() { proto.RegisterFile("usermgr.proto", fileDescriptor_usermgr_6dfcc81643e16c43) }
 
-var fileDescriptor_usermgr_e0c384c0cfe6c537 = []byte{
-	// 319 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_usermgr_6dfcc81643e16c43 = []byte{
+	// 336 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2d, 0x2d, 0x4e, 0x2d,
 	0xca, 0x4d, 0x2f, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x2f, 0xc8, 0x29, 0x4d, 0xcf,
 	0xcc, 0x83, 0x0a, 0x16, 0x24, 0x29, 0xf5, 0x31, 0x72, 0x09, 0x84, 0x16, 0xa4, 0x04, 0x27, 0x17,
@@ -816,14 +825,15 @@ var fileDescriptor_usermgr_e0c384c0cfe6c537 = []byte{
 	0x65, 0x16, 0xfb, 0xe5, 0xa7, 0xa4, 0x82, 0xd5, 0xb0, 0x80, 0xd5, 0xa0, 0x89, 0x2a, 0x15, 0x70,
 	0x09, 0x85, 0x16, 0xa7, 0x16, 0x41, 0x1c, 0x54, 0x4c, 0x89, 0x8b, 0x30, 0x6d, 0x64, 0xc6, 0x6a,
 	0x63, 0x26, 0x97, 0x70, 0x50, 0x6a, 0x6e, 0x7e, 0x59, 0x2a, 0xcd, 0x03, 0x41, 0x29, 0x9d, 0x4b,
-	0x30, 0x38, 0x23, 0xbf, 0x9c, 0xf6, 0x16, 0xed, 0x61, 0xe4, 0x12, 0x0b, 0x2d, 0x48, 0x71, 0xcb,
+	0x30, 0x38, 0x23, 0xbf, 0x9c, 0xf6, 0x16, 0x3d, 0x60, 0xe4, 0x12, 0x0b, 0x2d, 0x48, 0x71, 0xcb,
 	0xcc, 0x49, 0x0d, 0x49, 0xcd, 0x2d, 0xc8, 0x49, 0x2c, 0x49, 0xa5, 0xc4, 0x3a, 0x2d, 0x2e, 0x81,
 	0x34, 0x24, 0xa3, 0x90, 0x2c, 0xc5, 0x10, 0x27, 0x36, 0xa2, 0x41, 0xf6, 0xa5, 0x95, 0xe6, 0xe4,
-	0x04, 0x24, 0x96, 0x64, 0x48, 0xb0, 0x42, 0xec, 0x83, 0xf1, 0x95, 0x8a, 0xb8, 0x44, 0x90, 0x9d,
-	0x4e, 0x97, 0x64, 0x50, 0xcd, 0x25, 0x09, 0x49, 0x06, 0x03, 0x10, 0x68, 0x4a, 0x95, 0x5c, 0xe2,
-	0xa0, 0x84, 0x31, 0x10, 0x56, 0x5b, 0x71, 0x09, 0xf8, 0x56, 0xa2, 0x65, 0x37, 0xcc, 0x30, 0x63,
-	0xc4, 0x1a, 0x66, 0x0e, 0x5c, 0x62, 0xbe, 0x95, 0x58, 0x63, 0x8a, 0x58, 0x13, 0xdc, 0xb9, 0x04,
-	0x5d, 0x2b, 0x0a, 0x28, 0xcf, 0xed, 0x4a, 0xbe, 0x5c, 0xe2, 0xae, 0x15, 0x05, 0xd4, 0x4a, 0x35,
-	0x20, 0x77, 0x79, 0xe6, 0x52, 0xc9, 0x5d, 0x9e, 0xb9, 0x54, 0x73, 0x57, 0x12, 0x1b, 0xb8, 0x1c,
-	0x37, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x9c, 0x8a, 0x97, 0x79, 0xd8, 0x05, 0x00, 0x00,
+	0x04, 0x24, 0x96, 0x64, 0x48, 0xb0, 0x42, 0xec, 0x83, 0xf1, 0x85, 0x94, 0xb8, 0x78, 0x8a, 0x4b,
+	0x93, 0x40, 0x46, 0x17, 0x83, 0xe5, 0xd9, 0xc0, 0xf2, 0x28, 0x62, 0x4a, 0x45, 0x5c, 0x22, 0xc8,
+	0xde, 0xa3, 0x4b, 0x52, 0xa9, 0xe6, 0x92, 0x84, 0x24, 0x95, 0x01, 0x08, 0x58, 0xa5, 0x4a, 0x2e,
+	0x71, 0x50, 0xe2, 0x19, 0x08, 0xab, 0xad, 0xb8, 0x04, 0x7c, 0x2b, 0xd1, 0xb2, 0x24, 0x66, 0x98,
+	0x31, 0x62, 0x0d, 0x33, 0x07, 0x2e, 0x31, 0xdf, 0x4a, 0xac, 0x31, 0x45, 0xac, 0x09, 0xee, 0x5c,
+	0x82, 0xae, 0x15, 0x05, 0x94, 0x97, 0x08, 0x4a, 0xbe, 0x5c, 0xe2, 0xae, 0x15, 0x05, 0xd4, 0x4a,
+	0x35, 0x20, 0x77, 0x79, 0xe6, 0x52, 0xc9, 0x5d, 0x9e, 0xb9, 0x54, 0x73, 0x57, 0x12, 0x1b, 0xb8,
+	0xac, 0x37, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xb9, 0x75, 0x0d, 0xb6, 0xfc, 0x05, 0x00, 0x00,
 }

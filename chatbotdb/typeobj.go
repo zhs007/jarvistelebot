@@ -167,6 +167,9 @@ var typeUserFileTemplate = graphql.NewObject(
 			"fullPath": &graphql.Field{
 				Type: graphql.NewNonNull(graphql.String),
 			},
+			"subfilesPath": &graphql.Field{
+				Type: graphql.NewNonNull(graphql.String),
+			},
 		},
 	},
 )

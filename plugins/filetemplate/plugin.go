@@ -67,6 +67,18 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 
 			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd)
 
+			if ft.SubfilesPath != "" {
+				chatbot.SendTextMsg(params.ChatBot, from,
+					fmt.Sprintf("I processing subfiles."), params.Msg)
+
+				err = procSubfiles(params.ChatBot.GetChatBotDB(), from.GetUserID(), ft.JarvisNodeName, file.Data, ft.SubfilesPath)
+				if err != nil {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+
+					return false, err
+				}
+			}
+
 			return true, nil
 		}
 
@@ -98,44 +110,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 
 			return nil
 		})
-
-		// ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, us.File.Filename, us.File.Data, "")
-		// if err != nil {
-		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error())
-		// 	// jarvisbase.Warn("userscriptPlugin.OnMessage", zap.Error(err))
-
-		// 	return false, err
-		// }
-
-		// curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(us.JarvisNodeName)
-		// if curnode == nil {
-		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), chatbot.ErrNoJarvisNode.Error())
-
-		// 	return false, chatbot.ErrNoJarvisNode
-		// }
-
-		// params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
-
-		// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-		// 	cr := msg.GetCtrlResult()
-
-		// 	chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)
-
-		// 	return nil
-		// })
-
-		// chatbot.SendTextMsg(params.ChatBot, from, rscmd.ScriptName)
 	}
-
-	// if params.Msg.GetText() == "" {
-	// 	return false, chatbot.ErrEmptyMsgText
-	// }
-
-	// if params.ChatBot.IsMaster(from) {
-	// 	chatbot.SendTextMsg(params.ChatBot, from, "Sorry, I can't understand.")
-	// } else {
-	// 	chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.")
-	// }
 
 	return true, nil
 }
