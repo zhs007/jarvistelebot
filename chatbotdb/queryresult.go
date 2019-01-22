@@ -118,6 +118,9 @@ type ResultFileTemplates struct {
 		MaxIndex   int32 `json:"maxIndex"`
 		Templates  []struct {
 			FileTemplateName string `json:"fileTemplateName"`
+			JarvisNodeName   string `json:"jarvisNodeName"`
+			FullPath         string `json:"fullPath"`
+			SubfilesPath     string `json:"subfilesPath"`
 		} `json:"templates"`
 	} `json:"fileTemplates"`
 }
@@ -272,6 +275,9 @@ func ResultFileTemplates2UserFileTemplateList(result *ResultFileTemplates) (*pb.
 	for _, v := range result.FileTemplates.Templates {
 		ft := &pb.UserFileTemplate{
 			FileTemplateName: v.FileTemplateName,
+			JarvisNodeName:   v.JarvisNodeName,
+			FullPath:         v.FullPath,
+			SubfilesPath:     v.SubfilesPath,
 		}
 
 		lst.Templates = append(lst.Templates, ft)

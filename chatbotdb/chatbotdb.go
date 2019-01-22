@@ -129,6 +129,7 @@ const queryGetFileTemplate = `query FileTemplate($userID: ID!, $fileTemplateName
 		fileTemplateName
 		jarvisNodeName
 		fullPath
+		subfilesPath
 	}
 }`
 
