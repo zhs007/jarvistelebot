@@ -94,6 +94,10 @@ message UserFileTemplate {
     string jarvisNodeName = 2;
     // fullPath - full path
     string fullPath = 3;
+    // hasSubfiles - Do you need to process subfiles?
+    bool hasSubfiles = 4;
+    // subfilesPath - Subfiles should be placed in this folder.
+    string subfilesPath = 5;
 }
 
 // UserFileTemplateList - user file template list
