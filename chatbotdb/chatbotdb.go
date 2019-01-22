@@ -23,8 +23,8 @@ const querySaveUserScript = `mutation UpdUserScript($userID: ID!, $jarvisNodeNam
 	}
 }`
 
-const querySaveFileTemplate = `mutation UpdFileTemplate($userID: ID!, $fileTemplateName: ID!, $jarvisNodeName: String!, $fullPath: String!) {
-	updFileTemplate(userID: $userID, fileTemplateName: $fileTemplateName, jarvisNodeName: $jarvisNodeName, fullPath: $fullPath) {
+const querySaveFileTemplate = `mutation UpdFileTemplate($userID: ID!, $fileTemplateName: ID!, $jarvisNodeName: String!, $fullPath: String!, $subfilesPath: String!) {
+	updFileTemplate(userID: $userID, fileTemplateName: $fileTemplateName, jarvisNodeName: $jarvisNodeName, fullPath: $fullPath, subfilesPath: $subfilesPath) {
 		fileTemplateName
 	}
 }`
