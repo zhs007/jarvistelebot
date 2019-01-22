@@ -582,6 +582,7 @@ func (db *ChatBotDB) SaveFileTemplate(userID string, fileTemplate *pb.UserFileTe
 	params["fileTemplateName"] = fileTemplate.FileTemplateName
 	params["jarvisNodeName"] = fileTemplate.JarvisNodeName
 	params["fullPath"] = fileTemplate.FullPath
+	params["subfilesPath"] = fileTemplate.SubfilesPath
 
 	result, err := db.db.LocalQuery(context.Background(), querySaveFileTemplate, params)
 	if err != nil {
