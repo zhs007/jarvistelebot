@@ -32,7 +32,7 @@ func (mgr *FileTemplatesMgr) init(chatbot ChatBot) {
 		})
 }
 
-// Load - load user's scripts
+// Load - load user's filetemplate
 func (mgr *FileTemplatesMgr) Load(db *chatbotdb.ChatBotDB, userID string) (*FileTemplates, error) {
 	lst, err := db.GetFileTemplates(userID, "")
 	if err != nil {

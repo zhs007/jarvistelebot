@@ -77,6 +77,17 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 
 					return false, err
 				}
+
+				chatbot.SendTextMsg(params.ChatBot, from,
+					fmt.Sprintf("I reload your filetemplates."), params.Msg)
+
+				mgrFileTemplates := params.ChatBot.GetFileTemplatesMgr()
+				_, err := mgrFileTemplates.Load(params.ChatBot.GetChatBotDB(), from.GetUserID())
+				if err != nil {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+
+					return false, err
+				}
 			}
 
 			return true, nil
