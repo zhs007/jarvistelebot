@@ -232,6 +232,17 @@ func (cb *teleChatBot) procMessageUser(user *tgbotapi.User) (chatbot.User, error
 
 		cb.MgrUser.AddUser(curuser)
 		cb.GetChatBotDB().UpdUser(curuser.ToProto())
+
+		return curuser, nil
+	}
+
+	if curuser.GetUserName() != user.UserName {
+		olduname := curuser.GetUserName()
+		curuser.SetUserName(user.UserName)
+
+		cb.GetChatBotDB().UpdUserName(curuser.ToProto(), olduname)
+
+		return curuser, nil
 	}
 
 	return curuser, nil
