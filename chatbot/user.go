@@ -25,6 +25,9 @@ type User interface {
 	// UpdLastMsgID - update lastMsgID
 	UpdLastMsgID(lastmsgid int64)
 
+	// SetUserName - set username
+	SetUserName(uname string)
+
 	// StorePluginData -
 	StorePluginData(pluginName string, data proto.Message)
 	// GetPluginData -
@@ -92,4 +95,9 @@ func (bu *BasicUser) GetPluginData(pluginName string) (proto.Message, bool) {
 	}
 
 	return nil, false
+}
+
+// SetUserName - set username
+func (bu *BasicUser) SetUserName(uname string) {
+	bu.User.UserName = uname
 }

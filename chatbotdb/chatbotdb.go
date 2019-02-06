@@ -38,6 +38,15 @@ const queryUpdUser = `mutation UpdUser($user: UserInput!) {
 	}
 }`
 
+const queryUpdUserName = `mutation UpdUserName($user: UserInput!, $userName: String!) {
+	updUserName(user: $user, userName: $userName) {
+		nickName
+		userID
+		userName
+		lastMsgID
+	}
+}`
+
 const queryRmScript = `mutation RemoveUserScript($userID: ID!, $scriptName: ID!) {
 	removeUserScript(userID: $userID, scriptName: $scriptName)
 }`
@@ -282,12 +291,6 @@ func (db *ChatBotDB) UpdUser(user *pb.User) error {
 		return err
 	}
 
-	// params := make(map[string]interface{})
-	// params["nickName"] = user.GetNickName()
-	// params["userID"] = user.GetUserID()
-	// params["userName"] = user.GetUserName()
-	// params["lastMsgID"] = user.GetLastMsgID()
-
 	result, err := db.db.LocalQuery(context.Background(), queryUpdUser, params)
 	if err != nil {
 		jarvisbase.Warn("ChatBotDB.UpdUser:LocalQuery", zap.Error(err))
@@ -302,8 +305,35 @@ func (db *ChatBotDB) UpdUser(user *pb.User) error {
 		return err
 	}
 
-	// jarvisbase.Debug("ChatBotDB.updUser",
-	// 	jarvisbase.JSON("result", result))
+	return nil
+}
+
+// UpdUserName - update username
+func (db *ChatBotDB) UpdUserName(user *pb.User, uname string) error {
+	if db.db == nil {
+		return ErrChatBotDBNil
+	}
+
+	params := make(map[string]interface{})
+	err := ankadb.MakeParamsFromMsg(params, "user", user)
+	if err != nil {
+		return err
+	}
+	params["userName"] = uname
+
+	result, err := db.db.LocalQuery(context.Background(), queryUpdUserName, params)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.UpdUserName:LocalQuery", zap.Error(err))
+
+		return err
+	}
+
+	err = ankadb.GetResultError(result)
+	if err != nil {
+		jarvisbase.Warn("ChatBotDB.UpdUserName:GetResultError", zap.Error(err))
+
+		return err
+	}
 
 	return nil
 }

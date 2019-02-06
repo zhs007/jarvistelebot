@@ -83,6 +83,7 @@ type Mutation {
     newMsg(msg: Message!): Message!
 
     updUser(user: User!): User!
+    updUserName(user: User!, userName: String!): User!
 
     updUserScript(userID: ID!, jarvisNodeName: String!, scriptName: ID!, file: File!): UserScript!
     removeUserScript(userID: ID!, scriptName: ID!) : String!
