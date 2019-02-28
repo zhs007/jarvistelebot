@@ -27,7 +27,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("assistantdb")
+					curdb := anka.GetDBMgr().GetDB("assistantdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}
@@ -67,7 +67,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("assistantdb")
+					curdb := anka.GetDBMgr().GetDB("assistantdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}
@@ -112,7 +112,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("assistantdb")
+					curdb := anka.GetDBMgr().GetDB("assistantdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}

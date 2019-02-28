@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"path"
 
+	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
 	"github.com/zhs007/jarviscore/base"
 	pb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
@@ -161,7 +162,7 @@ const queryGetFileTemplates = `query FileTemplates($userID: String!, $jarvisNode
 
 // ChatBotDB - chatbotdb
 type ChatBotDB struct {
-	db *ankadb.AnkaDB
+	db ankadb.AnkaDB
 }
 
 // NewChatBotDB - new ChatBotDB
@@ -176,7 +177,17 @@ func NewChatBotDB(dbpath string, httpAddr string, engine string) (*ChatBotDB, er
 		PathDB: path.Join(dbpath, "chatbotdb"),
 	})
 
-	ankaDB, err := ankadb.NewAnkaDB(cfg, newDBLogic())
+	dblogic, err := ankadb.NewBaseDBLogic(graphql.SchemaConfig{
+		Query:    typeQuery,
+		Mutation: typeMutation,
+	})
+	if err != nil {
+		jarvisbase.Error("newdb", zap.Error(err))
+
+		return nil, err
+	}
+
+	ankaDB, err := ankadb.NewAnkaDB(cfg, dblogic)
 	if ankaDB == nil {
 		jarvisbase.Error("NewChatBotDB", zap.Error(err))
 
@@ -220,9 +231,9 @@ func (db *ChatBotDB) SaveMsg(msg *pb.Message) error {
 	// params["text"] = msg.GetText()
 	// params["timeStamp"] = msg.GetTimeStamp()
 
-	result, err := db.db.LocalQuery(context.Background(), querySaveMsg, params)
+	result, err := db.db.Query(context.Background(), querySaveMsg, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.SaveMsg:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.SaveMsg:Query", zap.Error(err))
 
 		return err
 	}
@@ -249,9 +260,9 @@ func (db *ChatBotDB) GetMsg(chatid string) (*pb.Message, error) {
 	params := make(map[string]interface{})
 	params["chatID"] = chatid
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetMsg, params)
+	result, err := db.db.Query(context.Background(), queryGetMsg, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetMsg:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.GetMsg:Query", zap.Error(err))
 
 		return nil, err
 	}
@@ -291,9 +302,9 @@ func (db *ChatBotDB) UpdUser(user *pb.User) error {
 		return err
 	}
 
-	result, err := db.db.LocalQuery(context.Background(), queryUpdUser, params)
+	result, err := db.db.Query(context.Background(), queryUpdUser, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.UpdUser:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.UpdUser:Query", zap.Error(err))
 
 		return err
 	}
@@ -321,9 +332,9 @@ func (db *ChatBotDB) UpdUserName(user *pb.User, uname string) error {
 	}
 	params["userName"] = uname
 
-	result, err := db.db.LocalQuery(context.Background(), queryUpdUserName, params)
+	result, err := db.db.Query(context.Background(), queryUpdUserName, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.UpdUserName:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.UpdUserName:Query", zap.Error(err))
 
 		return err
 	}
@@ -347,9 +358,9 @@ func (db *ChatBotDB) GetUser(userid string) (*pb.User, error) {
 	params := make(map[string]interface{})
 	params["userID"] = userid
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetUser, params)
+	result, err := db.db.Query(context.Background(), queryGetUser, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetUser:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.GetUser:Query", zap.Error(err))
 
 		return nil, err
 	}
@@ -381,9 +392,9 @@ func (db *ChatBotDB) GetUserWithUserName(username string) (*pb.User, error) {
 	params := make(map[string]interface{})
 	params["userName"] = username
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetUserWithUserName, params)
+	result, err := db.db.Query(context.Background(), queryGetUserWithUserName, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetUserWithUserName:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.GetUserWithUserName:Query", zap.Error(err))
 
 		return nil, err
 	}
@@ -429,9 +440,9 @@ func (db *ChatBotDB) SaveUserScript(userID string, userScript *pb.UserScript) er
 	params["scriptName"] = userScript.ScriptName
 	params["jarvisNodeName"] = userScript.JarvisNodeName
 
-	result, err := db.db.LocalQuery(context.Background(), querySaveUserScript, params)
+	result, err := db.db.Query(context.Background(), querySaveUserScript, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.SaveUserScript:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.SaveUserScript:Query", zap.Error(err))
 
 		return err
 	}
@@ -459,9 +470,9 @@ func (db *ChatBotDB) GetUserScript(userID string, scriptName string) (*pb.UserSc
 	params["userID"] = userID
 	params["scriptName"] = scriptName
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetUserScript, params)
+	result, err := db.db.Query(context.Background(), queryGetUserScript, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetUserScript:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.GetUserScript:Query", zap.Error(err))
 
 		return nil, err
 	}
@@ -500,9 +511,9 @@ func (db *ChatBotDB) GetUsers(nums int) (*pb.UserList, error) {
 	params["beginIndex"] = 0
 	params["nums"] = nums
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetUsers, params)
+	result, err := db.db.Query(context.Background(), queryGetUsers, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetUsers:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.GetUsers:Query", zap.Error(err))
 
 		return nil, err
 	}
@@ -542,9 +553,9 @@ func (db *ChatBotDB) GetUserScripts(userID string, jarvisNodeName string) (*pb.U
 	params["userID"] = userID
 	params["jarvisNodeName"] = jarvisNodeName
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetUserScripts, params)
+	result, err := db.db.Query(context.Background(), queryGetUserScripts, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetUserScripts:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.GetUserScripts:Query", zap.Error(err))
 
 		return nil, err
 	}
@@ -584,9 +595,9 @@ func (db *ChatBotDB) RemoveUserScripts(userID string, scriptName string) error {
 	params["userID"] = userID
 	params["scriptName"] = scriptName
 
-	result, err := db.db.LocalQuery(context.Background(), queryRmScript, params)
+	result, err := db.db.Query(context.Background(), queryRmScript, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.RemoveUserScripts:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.RemoveUserScripts:Query", zap.Error(err))
 
 		return err
 	}
@@ -615,9 +626,9 @@ func (db *ChatBotDB) SaveFileTemplate(userID string, fileTemplate *pb.UserFileTe
 	params["fullPath"] = fileTemplate.FullPath
 	params["subfilesPath"] = fileTemplate.SubfilesPath
 
-	result, err := db.db.LocalQuery(context.Background(), querySaveFileTemplate, params)
+	result, err := db.db.Query(context.Background(), querySaveFileTemplate, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.SaveFileTemplate:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.SaveFileTemplate:Query", zap.Error(err))
 
 		return err
 	}
@@ -645,9 +656,9 @@ func (db *ChatBotDB) GetFileTemplate(userID string, fileTemplateName string) (*p
 	params["userID"] = userID
 	params["fileTemplateName"] = fileTemplateName
 
-	result, err := db.db.LocalQuery(context.Background(), queryGetFileTemplate, params)
+	result, err := db.db.Query(context.Background(), queryGetFileTemplate, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetFileTemplate:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.GetFileTemplate:Query", zap.Error(err))
 
 		return nil, err
 	}
@@ -690,9 +701,9 @@ func (db *ChatBotDB) GetFileTemplates(userID string, jarvisNodeName string) (*pb
 	// 	querystr = queryGetFileTemplatesFull
 	// }
 
-	result, err := db.db.LocalQuery(context.Background(), querystr, params)
+	result, err := db.db.Query(context.Background(), querystr, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.GetFileTemplates:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.GetFileTemplates:Query", zap.Error(err))
 
 		return nil, err
 	}
@@ -732,9 +743,9 @@ func (db *ChatBotDB) RemoveFileTemplate(userID string, fileTemplateName string) 
 	params["userID"] = userID
 	params["fileTemplateName"] = fileTemplateName
 
-	result, err := db.db.LocalQuery(context.Background(), queryRmFileTemplate, params)
+	result, err := db.db.Query(context.Background(), queryRmFileTemplate, params)
 	if err != nil {
-		jarvisbase.Warn("ChatBotDB.RemoveFileTemplate:LocalQuery", zap.Error(err))
+		jarvisbase.Warn("ChatBotDB.RemoveFileTemplate:Query", zap.Error(err))
 
 		return err
 	}

@@ -29,7 +29,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("chatbotdb")
+					curdb := anka.GetDBMgr().GetDB("chatbotdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}
@@ -65,7 +65,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("chatbotdb")
+					curdb := anka.GetDBMgr().GetDB("chatbotdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}
@@ -102,12 +102,12 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("chatbotdb")
+					curdb := anka.GetDBMgr().GetDB("chatbotdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}
 
-					mgrSnapshot := anka.MgrDB.GetMgrSnapshot("chatbotdb")
+					mgrSnapshot := anka.GetDBMgr().GetMgrSnapshot("chatbotdb")
 					if mgrSnapshot == nil {
 						return nil, ankadb.ErrCtxSnapshotMgr
 					}
@@ -185,7 +185,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("chatbotdb")
+					curdb := anka.GetDBMgr().GetDB("chatbotdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}
@@ -221,7 +221,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("chatbotdb")
+					curdb := anka.GetDBMgr().GetDB("chatbotdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}
@@ -264,7 +264,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("chatbotdb")
+					curdb := anka.GetDBMgr().GetDB("chatbotdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}
@@ -325,7 +325,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("chatbotdb")
+					curdb := anka.GetDBMgr().GetDB("chatbotdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}
@@ -370,7 +370,7 @@ var typeQuery = graphql.NewObject(
 						return nil, ankadb.ErrCtxAnkaDB
 					}
 
-					curdb := anka.MgrDB.GetDB("chatbotdb")
+					curdb := anka.GetDBMgr().GetDB("chatbotdb")
 					if curdb == nil {
 						return nil, ankadb.ErrCtxCurDB
 					}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
 
@@ -65,7 +66,12 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 				Filename: ft.FullPath,
 			}
 
-			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd)
+			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd,
+				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, request *jarviscorepb.JarvisMsg,
+					reply *jarviscorepb.JarvisMsg) (bool, error) {
+
+					return true, nil
+				})
 
 			if ft.SubfilesPath != "" {
 				chatbot.SendTextMsg(params.ChatBot, from,
@@ -107,7 +113,12 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 			Filename: ft.FullPath,
 		}
 
-		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf)
+		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf,
+			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, request *jarviscorepb.JarvisMsg,
+				reply *jarviscorepb.JarvisMsg) (bool, error) {
+
+				return true, nil
+			})
 
 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 			if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {

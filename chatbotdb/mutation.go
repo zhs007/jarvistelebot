@@ -25,7 +25,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxAnkaDB
 				}
 
-				curdb := anka.MgrDB.GetDB("chatbotdb")
+				curdb := anka.GetDBMgr().GetDB("chatbotdb")
 				if curdb == nil {
 					return nil, ankadb.ErrCtxCurDB
 				}
@@ -68,7 +68,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxAnkaDB
 				}
 
-				curdb := anka.MgrDB.GetDB("chatbotdb")
+				curdb := anka.GetDBMgr().GetDB("chatbotdb")
 				if curdb == nil {
 					return nil, ankadb.ErrCtxCurDB
 				}
@@ -111,7 +111,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxAnkaDB
 				}
 
-				curdb := anka.MgrDB.GetDB("chatbotdb")
+				curdb := anka.GetDBMgr().GetDB("chatbotdb")
 				if curdb == nil {
 					return nil, ankadb.ErrCtxCurDB
 				}
@@ -169,7 +169,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxAnkaDB
 				}
 
-				curdb := anka.MgrDB.GetDB("chatbotdb")
+				curdb := anka.GetDBMgr().GetDB("chatbotdb")
 				if curdb == nil {
 					return nil, ankadb.ErrCtxCurDB
 				}
@@ -224,7 +224,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxAnkaDB
 				}
 
-				curdb := anka.MgrDB.GetDB("chatbotdb")
+				curdb := anka.GetDBMgr().GetDB("chatbotdb")
 				if curdb == nil {
 					return nil, ankadb.ErrCtxCurDB
 				}
@@ -272,7 +272,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxAnkaDB
 				}
 
-				curdb := anka.MgrDB.GetDB("chatbotdb")
+				curdb := anka.GetDBMgr().GetDB("chatbotdb")
 				if curdb == nil {
 					return nil, ankadb.ErrCtxCurDB
 				}
@@ -321,7 +321,7 @@ var typeMutation = graphql.NewObject(graphql.ObjectConfig{
 					return nil, ankadb.ErrCtxAnkaDB
 				}
 
-				curdb := anka.MgrDB.GetDB("chatbotdb")
+				curdb := anka.GetDBMgr().GetDB("chatbotdb")
 				if curdb == nil {
 					return nil, ankadb.ErrCtxCurDB
 				}

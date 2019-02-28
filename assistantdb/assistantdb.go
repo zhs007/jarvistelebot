@@ -4,6 +4,7 @@ import (
 	"context"
 	"path"
 
+	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
 	"github.com/zhs007/jarviscore/base"
 	pb "github.com/zhs007/jarvistelebot/assistantdb/proto"
@@ -62,7 +63,7 @@ const queryUpdAssistantData = `mutation UpdUserAssistantInfo($userID: ID!, $uai:
 
 // AssistantDB -
 type AssistantDB struct {
-	ankaDB *ankadb.AnkaDB
+	ankaDB ankadb.AnkaDB
 	// dat    *pb.UserAssistantInfo
 }
 
@@ -78,7 +79,17 @@ func NewAssistantDB(dbpath string, httpAddr string, engine string) (*AssistantDB
 		PathDB: path.Join(dbpath, "assistantdb"),
 	})
 
-	ankaDB, err := ankadb.NewAnkaDB(cfg, newDBLogic())
+	dblogic, err := ankadb.NewBaseDBLogic(graphql.SchemaConfig{
+		Query:    typeQuery,
+		Mutation: typeMutation,
+	})
+	if err != nil {
+		jarvisbase.Error("newdb", zap.Error(err))
+
+		return nil, err
+	}
+
+	ankaDB, err := ankadb.NewAnkaDB(cfg, dblogic)
 	if ankaDB == nil {
 		jarvisbase.Error("NewAssistantDB", zap.Error(err))
 
@@ -107,7 +118,7 @@ func (db *AssistantDB) LoadUserAssistantInfo(userID string) (*pb.UserAssistantIn
 	params := make(map[string]interface{})
 	params["userID"] = userID
 
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryUserAssistantInfo, params)
+	result, err := db.ankaDB.Query(context.Background(), queryUserAssistantInfo, params)
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +164,7 @@ func (db *AssistantDB) UpdNote(userID string, note *pb.Note) (*pb.Note, error) {
 		return nil, err
 	}
 
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryUpdNote, params)
+	result, err := db.ankaDB.Query(context.Background(), queryUpdNote, params)
 	if err != nil {
 		return nil, err
 	}
@@ -182,7 +193,7 @@ func (db *AssistantDB) RmNote(userID string, noteID int64) (string, error) {
 	params["userID"] = userID
 	params["noteID"] = noteID
 
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryRmNote, params)
+	result, err := db.ankaDB.Query(context.Background(), queryRmNote, params)
 	if err != nil {
 		return "", err
 	}
@@ -215,7 +226,7 @@ func (db *AssistantDB) UpdUserAssistantInfo(userID string, uai *pb.UserAssistant
 		return nil, err
 	}
 
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryUpdAssistantData, params)
+	result, err := db.ankaDB.Query(context.Background(), queryUpdAssistantData, params)
 	if err != nil {
 		return nil, err
 	}
@@ -244,7 +255,7 @@ func (db *AssistantDB) GetNote(userID string, noteID int64) (*pb.Note, error) {
 	params["userID"] = userID
 	params["noteID"] = noteID
 
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryGetNote, params)
+	result, err := db.ankaDB.Query(context.Background(), queryGetNote, params)
 	if err != nil {
 		jarvisbase.Warn("AssistantDB.GetNote", zap.Error(err), jarvisbase.JSON("params", params))
 
@@ -318,7 +329,7 @@ func (db *AssistantDB) UpdKeyInfo(userID string, key string, keyinfo *pb.KeyInfo
 		return nil, err
 	}
 
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryUpdKeyInfo, params)
+	result, err := db.ankaDB.Query(context.Background(), queryUpdKeyInfo, params)
 	if err != nil {
 		jarvisbase.Warn("AssistantDB.UpdKeyInfo", zap.Error(err), jarvisbase.JSON("params", params))
 
@@ -353,7 +364,7 @@ func (db *AssistantDB) GetKeyInfo(userID string, key string) (*pb.KeyInfo, error
 	params["userID"] = userID
 	params["key"] = key
 
-	result, err := db.ankaDB.LocalQuery(context.Background(), queryGetKeyInfo, params)
+	result, err := db.ankaDB.Query(context.Background(), queryGetKeyInfo, params)
 	if err != nil {
 		return nil, err
 	}
