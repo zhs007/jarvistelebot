@@ -2,7 +2,6 @@ package assistantdb
 
 import (
 	"context"
-	"path"
 
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
@@ -76,7 +75,7 @@ func NewAssistantDB(dbpath string, httpAddr string, engine string) (*AssistantDB
 	cfg.ListDB = append(cfg.ListDB, ankadb.DBConfig{
 		Name:   "assistantdb",
 		Engine: engine,
-		PathDB: path.Join(dbpath, "assistantdb"),
+		PathDB: "assistantdb",
 	})
 
 	dblogic, err := ankadb.NewBaseDBLogic(graphql.SchemaConfig{

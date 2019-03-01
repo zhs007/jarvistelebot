@@ -3,7 +3,6 @@ package chatbotdb
 import (
 	"context"
 	"encoding/base64"
-	"path"
 
 	"github.com/graphql-go/graphql"
 	"github.com/zhs007/ankadb"
@@ -174,7 +173,7 @@ func NewChatBotDB(dbpath string, httpAddr string, engine string) (*ChatBotDB, er
 	cfg.ListDB = append(cfg.ListDB, ankadb.DBConfig{
 		Name:   "chatbotdb",
 		Engine: engine,
-		PathDB: path.Join(dbpath, "chatbotdb"),
+		PathDB: "chatbotdb",
 	})
 
 	dblogic, err := ankadb.NewBaseDBLogic(graphql.SchemaConfig{
