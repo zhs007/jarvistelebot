@@ -89,7 +89,12 @@ func (cmd *cmdStart) RunCommand(ctx context.Context, params *chatbot.MessagePara
 			return false
 		}
 
-		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
+		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci,
+			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, request *jarviscorepb.JarvisMsg,
+				reply *jarviscorepb.JarvisMsg) (bool, error) {
+
+				return true, nil
+			})
 
 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 			cr := msg.GetCtrlResult()

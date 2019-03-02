@@ -2,6 +2,7 @@ package pluginjarvisnode
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
@@ -15,14 +16,25 @@ type cmdMyState struct {
 func (cmd *cmdMyState) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
 	coredb := params.ChatBot.GetJarvisNodeCoreDB()
 
-	str, _ := coredb.GetMyState()
-	strret, err := chatbot.FormatJSON(str)
+	pd, err := coredb.GetMyData()
 	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str, params.Msg)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), str)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+
+		return false
+	}
+
+	jret, err := json.Marshal(pd)
+	if err != nil {
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+
+		return false
+	}
+
+	strret, err := chatbot.FormatJSON(string(jret))
+	if err != nil {
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(jret), params.Msg)
 	} else {
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
-		// params.ChatBot.SendMsg(params.Msg.GetFrom(), strret)
 	}
 
 	return true

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/zhs007/jarviscore/base"
+	"github.com/zhs007/jarviscore/coredb"
 	"go.uber.org/zap"
 
 	"github.com/zhs007/jarviscore"
@@ -37,7 +38,7 @@ type ChatBot interface {
 	GetFileTemplatesMgr() *FileTemplatesMgr
 
 	// GetJarvisNodeCoreDB - get jarvis node coredb
-	GetJarvisNodeCoreDB() *jarviscore.CoreDB
+	GetJarvisNodeCoreDB() *coredb.CoreDB
 	// GetJarvisNode - get jarvis node
 	GetJarvisNode() jarviscore.JarvisNode
 
@@ -157,7 +158,7 @@ func (base *BasicChatBot) Start(ctx context.Context, node jarviscore.JarvisNode)
 }
 
 // GetJarvisNodeCoreDB - get jarvis node coredb
-func (base *BasicChatBot) GetJarvisNodeCoreDB() *jarviscore.CoreDB {
+func (base *BasicChatBot) GetJarvisNodeCoreDB() *coredb.CoreDB {
 	return base.Node.GetCoreDB()
 }
 
