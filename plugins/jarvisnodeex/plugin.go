@@ -28,6 +28,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd := chatbot.NewCommandMap()
 
 	cmd.AddCommand("runscript", &cmdRunScript{})
+	cmd.AddCommand("updnodes", &cmdUpdNodes{})
 
 	p := &jarvisnodeexPlugin{
 		cmd: cmd,
