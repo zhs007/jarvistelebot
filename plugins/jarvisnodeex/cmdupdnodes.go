@@ -36,7 +36,7 @@ func (cmd *cmdUpdNodes) RunCommand(ctx context.Context, params *chatbot.MessageP
 				return true, nil
 			}, func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.ResultSendMsg) error {
 
-				str, err := json.Marshal(lstResult)
+				str, err := json.MarshalIndent(lstResult, "", "\t")
 				if err != nil {
 					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 				} else {
