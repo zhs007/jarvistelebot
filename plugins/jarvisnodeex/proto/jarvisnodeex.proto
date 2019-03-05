@@ -29,3 +29,11 @@ message RunScriptCommand {
 message PluginData {
     RunScriptCommand runScript = 1;
 }
+
+// UpdNodesCommand - updnodes command
+message UpdNodesCommand {
+    // nodeType - jarvisnode type name
+    string nodeType = 1;
+    // nodeTypeVer - new version
+    string nodeTypeVer = 2;
+}

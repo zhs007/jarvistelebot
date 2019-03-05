@@ -29,10 +29,13 @@ func Release() {
 }
 
 // NewNode - new node
-func NewNode(cfg *jarviscore.Config) jarviscore.JarvisNode {
-	node := jarviscore.NewNode(cfg)
+func NewNode(cfg *jarviscore.Config) (jarviscore.JarvisNode, error) {
+	node, err := jarviscore.NewNode(cfg)
+	if err != nil {
+		return nil, err
+	}
 
 	node.SetNodeTypeInfo(basedef.JARVISNODETYPE, basedef.VERSION)
 
-	return node
+	return node, nil
 }

@@ -67,7 +67,7 @@ func (p *filetransferPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 					reply *jarviscorepb.JarvisMsg) (bool, error) {
 
 					return true, nil
-				})
+				}, nil)
 
 			// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 			// 	cr := msg.GetCtrlResult()

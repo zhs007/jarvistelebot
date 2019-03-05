@@ -90,7 +90,7 @@
     "leveldb/table",
     "leveldb/util"
   ]
-  revision = "4217c9f31f5816db02addc94e56061da77f288d8"
+  revision = "3a907f965fc16db5f7787e18d4434bbe46d47f6e"
 
 [[projects]]
   name = "github.com/technoweenie/multipartstreamer"
@@ -115,12 +115,13 @@
   packages = [
     ".",
     "base",
+    "basedef",
     "coredb",
     "coredb/proto",
     "crypto",
     "proto"
   ]
-  revision = "0ea2321c03cb621f14f29c876b76d8885462217d"
+  revision = "e1aa402fececb4786f25dc12238527cfca9e18bf"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -171,7 +172,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "b6889370fb1098ed892bd3400d189bb6a3355813"
+  revision = "30e92a19ae4a77dde818b8c3d41d51e4850cba12"
 
 [[projects]]
   name = "golang.org/x/text"

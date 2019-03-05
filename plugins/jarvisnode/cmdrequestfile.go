@@ -41,7 +41,7 @@ func (cmd *cmdRequestFile) RunCommand(ctx context.Context, params *chatbot.Messa
 				reply *jarviscorepb.JarvisMsg) (bool, error) {
 
 				return true, nil
-			})
+			}, nil)
 
 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 			if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {

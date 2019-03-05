@@ -28,6 +28,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd := chatbot.NewCommandMap()
 
 	cmd.AddCommand("runscript", &cmdRunScript{})
+	cmd.AddCommand("updnodes", &cmdUpdNodes{})
 
 	p := &jarvisnodeexPlugin{
 		cmd: cmd,
@@ -73,7 +74,7 @@ func (p *jarvisnodeexPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 					reply *jarviscorepb.JarvisMsg) (bool, error) {
 
 					return true, nil
-				})
+				}, nil)
 
 			params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 				cr := msg.GetCtrlResult()
