@@ -2,6 +2,7 @@ package pluginjarvisnodeex
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
@@ -33,6 +34,18 @@ func (cmd *cmdUpdNodes) RunCommand(ctx context.Context, params *chatbot.MessageP
 				reply *jarviscorepb.JarvisMsg) (bool, error) {
 
 				return true, nil
+			}, func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.ResultSendMsg) error {
+
+				str, err := json.Marshal(lstResult)
+				if err != nil {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+				} else {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(str), params.Msg)
+				}
+
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
+
+				return nil
 			})
 
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "I get it.", params.Msg)

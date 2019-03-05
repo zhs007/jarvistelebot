@@ -13,6 +13,8 @@ func main() {
 	cfg, err := telebot.InitTeleBot("./cfg/config.yaml")
 	if err != nil {
 		chatbot.Error("InitTeleBot err.", zap.Error(err))
+
+		return
 	}
 
 	defer telebot.ReleaseTeleBot()
@@ -20,9 +22,17 @@ func main() {
 	myni, err := jarvisnode.Init("./cfg/jarvisnode.yaml")
 	if err != nil {
 		chatbot.Error("jarvisnode.Init err.", zap.Error(err))
+
+		return
 	}
 
-	node := jarvisnode.NewNode(myni)
+	node, err := jarvisnode.NewNode(myni)
+	if err != nil {
+		chatbot.Error("jarvisnode.NewNode err.", zap.Error(err))
+
+		return
+	}
+
 	go node.Start(context.Background())
 
 	telebot.StartTeleBot(context.Background(), cfg, node)
