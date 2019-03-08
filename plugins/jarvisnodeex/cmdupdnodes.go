@@ -3,6 +3,7 @@ package pluginjarvisnodeex
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
@@ -29,21 +30,39 @@ func (cmd *cmdUpdNodes) RunCommand(ctx context.Context, params *chatbot.MessageP
 			return false
 		}
 
+		lastend := 0
+		firstlog := false
 		params.ChatBot.GetJarvisNode().UpdateAllNodes(ctx, updnodes.NodeType, updnodes.NodeTypeVer,
 			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, request *jarviscorepb.JarvisMsg,
 				reply *jarviscorepb.JarvisMsg) (bool, error) {
 
 				return true, nil
 			}, func(ctx context.Context, jarvisnode jarviscore.JarvisNode, numsNode int, lstResult []*jarviscore.ClientGroupProcMsgResults) error {
+				if !firstlog {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						fmt.Sprintf("The total number of nodes is %v.", numsNode), params.Msg)
 
-				str, err := json.MarshalIndent(lstResult, "", "\t")
-				if err != nil {
-					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
-				} else {
-					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(str), params.Msg)
+					firstlog = true
 				}
 
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
+				curend := jarviscore.CountClientGroupProcMsgResultsEnd(lstResult)
+				if curend == numsNode {
+					str, err := json.MarshalIndent(lstResult, "", "\t")
+					if err != nil {
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+					} else {
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(str), params.Msg)
+					}
+
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
+				} else {
+					if curend > lastend {
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							fmt.Sprintf("The %vth node has been completed.", curend), params.Msg)
+
+						lastend = curend
+					}
+				}
 
 				return nil
 			})
