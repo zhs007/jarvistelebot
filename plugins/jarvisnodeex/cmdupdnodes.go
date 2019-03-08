@@ -34,7 +34,7 @@ func (cmd *cmdUpdNodes) RunCommand(ctx context.Context, params *chatbot.MessageP
 				reply *jarviscorepb.JarvisMsg) (bool, error) {
 
 				return true, nil
-			}, func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.ResultSendMsg) error {
+			}, func(ctx context.Context, jarvisnode jarviscore.JarvisNode, numsNode int, lstResult []*jarviscore.ClientGroupProcMsgResults) error {
 
 				str, err := json.MarshalIndent(lstResult, "", "\t")
 				if err != nil {
