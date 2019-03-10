@@ -8,7 +8,6 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
 	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnodeex/proto"
 )
@@ -33,11 +32,7 @@ func (cmd *cmdUpdNodes) RunCommand(ctx context.Context, params *chatbot.MessageP
 		lastend := 0
 		firstlog := false
 		params.ChatBot.GetJarvisNode().UpdateAllNodes(ctx, updnodes.NodeType, updnodes.NodeTypeVer,
-			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, request *jarviscorepb.JarvisMsg,
-				reply *jarviscorepb.JarvisMsg) (bool, error) {
-
-				return true, nil
-			}, func(ctx context.Context, jarvisnode jarviscore.JarvisNode, numsNode int, lstResult []*jarviscore.ClientGroupProcMsgResults) error {
+			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, numsNode int, lstResult []*jarviscore.ClientGroupProcMsgResults) error {
 				if !firstlog {
 					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 						fmt.Sprintf("The total number of nodes is %v.", numsNode), params.Msg)
