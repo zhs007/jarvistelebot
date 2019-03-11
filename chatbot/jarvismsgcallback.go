@@ -53,7 +53,7 @@ func (mgr *jarvisMsgCallbackMgr) addCallback(destAddr string, ctrlid int64, call
 
 // procCallback - proc msgCallback
 func (mgr *jarvisMsgCallbackMgr) procCallback(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-	callbackid := MakeJarvisMsgCallbackID(msg.SrcAddr, 0)
+	callbackid := MakeJarvisMsgCallbackID(msg.SrcAddr, msg.ReplyMsgID)
 
 	cb, ok := mgr.mapJarvisMsgCallback[callbackid]
 	if !ok {
