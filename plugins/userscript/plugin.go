@@ -2,7 +2,7 @@ package pluginuserscript
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
 
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/base"
@@ -71,23 +71,36 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 			return false, chatbot.ErrNoJarvisNode
 		}
 
-		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci, nil)
+		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci,
+			func(ctx context.Context, jarvisnode jarviscore.JarvisNode,
+				lstResult []*jarviscore.ClientProcMsgResult) error {
+				str, err := json.MarshalIndent(lstResult, "", "\t")
+				if err != nil {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+				} else {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(str), params.Msg)
+				}
 
-		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-			cr := msg.GetCtrlResult()
-			if cr == nil {
-				msgstr := fmt.Sprintf("%v", msg)
-				jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
-
-				chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
 
 				return nil
-			}
+			})
 
-			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+		// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+		// 	cr := msg.GetCtrlResult()
+		// 	if cr == nil {
+		// 		msgstr := fmt.Sprintf("%v", msg)
+		// 		jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
 
-			return nil
-		})
+		// 		chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
+
+		// 		return nil
+		// 	}
+
+		// 	chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+
+		// 	return nil
+		// })
 
 		// chatbot.SendTextMsg(params.ChatBot, from, rscmd.ScriptName)
 	}
