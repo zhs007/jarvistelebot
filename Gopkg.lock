@@ -121,7 +121,7 @@
     "crypto",
     "proto"
   ]
-  revision = "b6a1fb07314695a4ee271b0211e09747434425e3"
+  revision = "acdfe0401b7b29ebd6ddfd2598a53cd058a9d8f8"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -166,7 +166,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "c10a0554eabf8a6a7a6cc3097c9d9f43dcee0a43"
+  revision = "56fb01167e7d1e1d17dd87993d34c963f4356e87"
 
 [[projects]]
   branch = "master"
