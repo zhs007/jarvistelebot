@@ -2,7 +2,7 @@ package pluginuserscript
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/base"
@@ -71,17 +71,35 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 			return false, chatbot.ErrNoJarvisNode
 		}
 
+		isrecv := false
 		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci,
 			func(ctx context.Context, jarvisnode jarviscore.JarvisNode,
 				lstResult []*jarviscore.ClientProcMsgResult) error {
-				str, err := json.MarshalIndent(lstResult, "", "\t")
-				if err != nil {
-					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
-				} else {
-					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(str), params.Msg)
+
+				if !isrecv && len(lstResult) > 0 {
+					if lstResult[len(lstResult)-1].Err != nil {
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							lstResult[len(lstResult)-1].Err.Error(), params.Msg)
+					} else if lstResult[len(lstResult)-1].Msg != nil {
+						cm := lstResult[len(lstResult)-1].Msg
+						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 && cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
+							chatbot.SendTextMsg(params.ChatBot,
+								params.Msg.GetFrom(),
+								fmt.Sprintf("%v has received the request (%v).",
+									us.JarvisNodeName, rscmd.ScriptName),
+								params.Msg)
+						}
+					}
 				}
 
-				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
+				// str, err := json.MarshalIndent(lstResult, "", "\t")
+				// if err != nil {
+				// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+				// } else {
+				// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(str), params.Msg)
+				// }
+
+				// chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
 
 				return nil
 			})
