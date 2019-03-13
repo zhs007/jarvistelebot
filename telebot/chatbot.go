@@ -446,7 +446,7 @@ func (cb *teleChatBot) OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb
 		return err
 	}
 
-	err = cb.DelJarvisMsgCallback(msg.SrcAddr, 0)
+	err = cb.DelJarvisMsgCallback(msg.SrcAddr, msg.ReplyMsgID)
 	if err != nil {
 		jarvisbase.Warn("teleChatBot.OnJarvisCtrlResult:DelJarvisMsgCallback", zap.Error(err))
 

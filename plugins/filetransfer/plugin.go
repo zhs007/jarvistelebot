@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
@@ -62,12 +61,7 @@ func (p *filetransferPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 				Filename: strings.Join(arr[1:], ":"),
 			}
 
-			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd,
-				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, request *jarviscorepb.JarvisMsg,
-					reply *jarviscorepb.JarvisMsg) (bool, error) {
-
-					return true, nil
-				}, nil)
+			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd, nil)
 
 			// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 			// 	cr := msg.GetCtrlResult()

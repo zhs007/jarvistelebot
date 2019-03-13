@@ -6,7 +6,6 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
-	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
@@ -36,12 +35,7 @@ func (cmd *cmdRequestFile) RunCommand(ctx context.Context, params *chatbot.Messa
 			Filename: rfcmd.FileFullPath,
 		}
 
-		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf,
-			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, request *jarviscorepb.JarvisMsg,
-				reply *jarviscorepb.JarvisMsg) (bool, error) {
-
-				return true, nil
-			}, nil)
+		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf, nil)
 
 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 			if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {

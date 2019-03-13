@@ -71,28 +71,71 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 			return false, chatbot.ErrNoJarvisNode
 		}
 
+		isrecv := false
 		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci,
-			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, request *jarviscorepb.JarvisMsg,
-				reply *jarviscorepb.JarvisMsg) (bool, error) {
+			func(ctx context.Context, jarvisnode jarviscore.JarvisNode,
+				lstResult []*jarviscore.ClientProcMsgResult) error {
 
-				return true, nil
-			}, nil)
+				if !isrecv && len(lstResult) > 0 {
+					if lstResult[len(lstResult)-1].Err != nil {
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							lstResult[len(lstResult)-1].Err.Error(), params.Msg)
+					} else if lstResult[len(lstResult)-1].Msg != nil {
+						cm := lstResult[len(lstResult)-1].Msg
+						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 && cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
+							chatbot.SendTextMsg(params.ChatBot,
+								params.Msg.GetFrom(),
+								fmt.Sprintf("%v has received the request (%v).",
+									us.JarvisNodeName, rscmd.ScriptName),
+								params.Msg)
 
-		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-			cr := msg.GetCtrlResult()
-			if cr == nil {
-				msgstr := fmt.Sprintf("%v", msg)
-				jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
+							params.ChatBot.AddJarvisMsgCallback(curnode.Addr, cm.ReplyMsgID,
+								func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+									cr := msg.GetCtrlResult()
+									if cr == nil {
+										msgstr := fmt.Sprintf("%v", msg)
+										jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
 
-				chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
+										chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
+
+										return nil
+									}
+
+									chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+
+									return nil
+								})
+						}
+					}
+				}
+
+				// str, err := json.MarshalIndent(lstResult, "", "\t")
+				// if err != nil {
+				// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+				// } else {
+				// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(str), params.Msg)
+				// }
+
+				// chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
 
 				return nil
-			}
+			})
 
-			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+		// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+		// 	cr := msg.GetCtrlResult()
+		// 	if cr == nil {
+		// 		msgstr := fmt.Sprintf("%v", msg)
+		// 		jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
 
-			return nil
-		})
+		// 		chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
+
+		// 		return nil
+		// 	}
+
+		// 	chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+
+		// 	return nil
+		// })
 
 		// chatbot.SendTextMsg(params.ChatBot, from, rscmd.ScriptName)
 	}
