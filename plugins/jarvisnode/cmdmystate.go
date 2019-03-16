@@ -43,7 +43,7 @@ func (cmd *cmdMyState) RunCommand(ctx context.Context, params *chatbot.MessagePa
 	if err != nil {
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(jret), params.Msg)
 	} else {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 	}
 
 	return true
