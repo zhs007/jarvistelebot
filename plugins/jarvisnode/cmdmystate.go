@@ -41,9 +41,9 @@ func (cmd *cmdMyState) RunCommand(ctx context.Context, params *chatbot.MessagePa
 
 	jret, err = json.MarshalIndent(nodestatus, "", "  ")
 	if err != nil {
-		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(jret), params.Msg)
-	} else {
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+	} else {
+		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(jret), params.Msg)
 	}
 
 	return true
