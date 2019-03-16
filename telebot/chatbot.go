@@ -97,34 +97,6 @@ func NewTeleChatBot(cfg *Config) (chatbot.ChatBot, error) {
 	return tcb, nil
 }
 
-// SendMsg -
-// func (cb *teleChatBot) SendMsg(user chatbot.User, text string) error {
-// 	// u, ok := (user).(*teleUser)
-// 	// if !ok {
-// 	// 	return ErrInvalidUser
-// 	// }
-
-// 	// chatid, err := strconv.ParseInt(user.GetUserID(), 10, 64)
-// 	// if err != nil {
-// 	// 	return err
-// 	// }
-
-// 	// telemsg := tgbotapi.NewMessage(chatid, text)
-
-// 	// var arr []tgbotapi.InlineKeyboardButton
-
-// 	// arr = append(arr, tgbotapi.NewInlineKeyboardButtonData("yes", "yes, i am."))
-// 	// arr = append(arr, tgbotapi.NewInlineKeyboardButtonData("no", "no, i am not"))
-
-// 	// var numericKeyboard = tgbotapi.NewInlineKeyboardMarkup(arr)
-
-// 	// telemsg.ReplyMarkup = numericKeyboard
-
-// 	// cb.teleBotAPI.Send(telemsg)
-
-// 	return nil
-// }
-
 func (cb *teleChatBot) procDocumentWithMsg(msg chatbot.Message, doc *tgbotapi.Document) error {
 	// jarvisbase.Debug("teleChatBot.procDocument")
 
@@ -135,26 +107,12 @@ func (cb *teleChatBot) procDocumentWithMsg(msg chatbot.Message, doc *tgbotapi.Do
 		return err
 	}
 
-	// localfn := path.Join(cb.GetConfig().DownloadPath, doc.FileName)
-	// if doc.MimeType == "text/x-script.sh" {
-	// 	localfn = path.Join(cb.GetConfig().DownloadPath, "scripts", doc.FileName)
-	// }
-
-	// jarvisbase.Info("teleChatBot.procDocument",
-	// 	jarvisbase.JSON("file", file))
-
 	url := file.Link(cb.teleBotAPI.Token)
 
 	res, err := http.Get(url)
 	if err != nil {
 		return err
 	}
-
-	// f, err := os.Create(localfn)
-	// if err != nil {
-	// 	return err
-	// }
-	// io.Copy(f, res.Body)
 
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(res.Body)
@@ -166,17 +124,6 @@ func (cb *teleChatBot) procDocumentWithMsg(msg chatbot.Message, doc *tgbotapi.Do
 	}
 
 	msg.SetFile(fileobj)
-
-	// dat, err := ioutil.ReadFile(localfn)
-	// if err != nil {
-	// 	jarvisbase.Warn("load script file", zap.Error(err))
-
-	// 	return err
-	// }
-
-	// ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, doc.FileName, dat, "")
-
-	// cb.Node.RequestCtrl(ctx, "1NutSP6ypvLtHpqHaxtjJMmEUbMfLUdp9a", ci)
 
 	return nil
 }
@@ -410,31 +357,10 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 		if err != nil {
 			chatbot.Error("mgrPlugins.OnMessage", zap.Error(err))
 		}
-
-		// if IsMaster(update.Message.From.UserName) {
-		// 	chatbot.Info("got master msg",
-		// 		zap.String("username", update.Message.From.UserName),
-		// 		zap.String("text", update.Message.Text))
-		// } else {
-		// 	chatbot.Info("got msg",
-		// 		zap.String("username", update.Message.From.UserName),
-		// 		zap.String("text", update.Message.Text))
-		// }
-
-		// msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-		// msg.ReplyToMessageID = update.Message.MessageID
-
-		// cb.SendMsg()
-		// bot.Send(msg)
 	}
 
 	return nil
 }
-
-// // GetPluginsMgr - get PluginsMgr
-// func (cb *teleChatBot) GetPluginsMgr() chatbot.PluginsMgr {
-// 	return cb.mgrPlugins
-// }
 
 // OnJarvisCtrlResult - event handle
 func (cb *teleChatBot) OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
@@ -452,11 +378,6 @@ func (cb *teleChatBot) OnJarvisCtrlResult(ctx context.Context, msg *jarviscorepb
 
 		return err
 	}
-
-	// cr := msg.GetCtrlResult()
-
-	// chatbot.SendTextMsg(cb, cb.scriptUser, cr.CtrlResult)
-	// cb.SendMsg(cb.scriptUser, cr.CtrlResult)
 
 	return nil
 }
