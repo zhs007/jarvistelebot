@@ -28,8 +28,8 @@
     "ptypes/duration",
     "ptypes/timestamp"
   ]
-  revision = "c823c79ea1570fb5ff454033735a8e68575d1d0f"
-  version = "v1.3.0"
+  revision = "b5d812f8a3706043e23a9cd5babf2e5423744d30"
+  version = "v1.3.1"
 
 [[projects]]
   name = "github.com/golang/snappy"
@@ -90,7 +90,7 @@
     "leveldb/table",
     "leveldb/util"
   ]
-  revision = "3a907f965fc16db5f7787e18d4434bbe46d47f6e"
+  revision = "7bd84fdc8ccda40c12af62ed4f0a94a0dd04a362"
 
 [[projects]]
   name = "github.com/technoweenie/multipartstreamer"
@@ -121,7 +121,7 @@
     "crypto",
     "proto"
   ]
-  revision = "2086d13fea073614aadd633f66eb45fda2f0452c"
+  revision = "454ea2559f6f5fdf19312dc26dbb2c5d8b1d51a7"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -152,7 +152,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ripemd160"]
-  revision = "c2843e01d9a2bc60bb26ad24e09734fdc2d9ec58"
+  revision = "a1f597ede03a7bef967a422b5b3a5bd08805a01e"
 
 [[projects]]
   branch = "master"
@@ -166,13 +166,13 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "d8887717615a059821345a5c23649351b52a1c0b"
+  revision = "9f648a60d9775ef5c977e7669d1673a7a67bef33"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "c8c8c57fd1e1a977c10821a559dda983a9a9a3b5"
+  revision = "a2f829d7f35f2ed1c3520c553a6226495455cae0"
 
 [[projects]]
   name = "golang.org/x/text"
