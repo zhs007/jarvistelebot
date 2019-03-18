@@ -149,10 +149,25 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 
 								for j := 0; j < len(lstResult); j++ {
 									if lstResult[j].Msg != nil &&
-										curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE &&
-										curmsg.GetFile() != nil {
+										lstResult[j].Msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE &&
+										lstResult[j].Msg.GetFile() != nil {
 
-										b.Write(curmsg.GetFile().File)
+										n, err := b.Write(lstResult[j].Msg.GetFile().File)
+										if err != nil {
+											chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+												fmt.Sprintf("WriteError: %v", err.Error()),
+												params.Msg)
+
+											continue
+										}
+
+										if n != len(lstResult[j].Msg.GetFile().File) {
+											chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+												fmt.Sprintf("WriteError: invalid length"),
+												params.Msg)
+
+											continue
+										}
 									}
 								}
 
@@ -163,7 +178,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 											curfi.TotalLength, b.Len(), curfi.FileMD5String, strmd5),
 										params.Msg)
 
-									return jarviscore.ErrInvalidFileDataMD5String
+									continue
 								}
 
 								// jarviscore.CountMD5String(lstfile)
