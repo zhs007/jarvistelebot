@@ -1,9 +1,11 @@
 package pluginfiletemplate
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 
+	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
 
@@ -107,20 +109,55 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 			Filename: ft.FullPath,
 		}
 
-		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf, nil)
+		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf,
+			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.ClientProcMsgResult) error {
+				for i := 0; i < len(lstResult); i++ {
+					curmsg := lstResult[i].Msg
+					if curmsg != nil && curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
+						curfi := curmsg.GetFile()
+						if curfi == nil {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), jarviscore.ErrNoFileData.Error(), params.Msg)
 
-		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-			if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
-				fd := msg.GetFile()
+							return jarviscore.ErrNoFileData
+						}
 
-				chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-					Filename: ft.FileTemplateName,
-					Data:     fd.File,
-				})
-			}
+						if curfi.TotalLength == curfi.Length {
+							chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+								Filename: ft.FileTemplateName,
+								Data:     curfi.File,
+							})
+						} else if curfi.FileMD5String != "" {
+							var b bytes.Buffer
 
-			return nil
-		})
+							for j := 0; j < len(lstResult); j++ {
+								if lstResult[j].Msg != nil && curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE && curmsg.GetFile() != nil {
+									b.Write(curmsg.GetFile().File)
+								}
+							}
+
+							chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+								Filename: ft.FileTemplateName,
+								Data:     b.Bytes(),
+							})
+						}
+					}
+				}
+
+				return nil
+			})
+
+		// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+		// 	if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
+		// 		fd := msg.GetFile()
+
+		// 		chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+		// 			Filename: ft.FileTemplateName,
+		// 			Data:     fd.File,
+		// 		})
+		// 	}
+
+		// 	return nil
+		// })
 	}
 
 	return true, nil
