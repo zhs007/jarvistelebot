@@ -137,7 +137,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 							})
 
 						} else {
-							currecvlen = currecvlen + curfi.Length
+							currecvlen = currecvlen + int64(len(curmsg.GetFile().File))
 
 							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 								fmt.Sprintf("The %v:%v length is %v, I received %v bytes.",
