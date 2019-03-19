@@ -67,7 +67,46 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 				Filename: ft.FullPath,
 			}
 
-			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd, nil)
+			sendfilelastresultindex := 0
+
+			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd,
+				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.ClientProcMsgResult) error {
+
+					for ; sendfilelastresultindex < len(lstResult); sendfilelastresultindex++ {
+						curmsg := lstResult[sendfilelastresultindex].Msg
+						if curmsg != nil {
+							if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
+								if curmsg.ReplyType == jarviscorepb.REPLYTYPE_IGOTIT {
+									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+										fmt.Sprintf("%v has received the file (%v).",
+											ft.JarvisNodeName, ft.FullPath),
+										params.Msg)
+								} else if curmsg.ReplyType == jarviscorepb.REPLYTYPE_ERROR {
+									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+										curmsg.Err,
+										params.Msg)
+								}
+							} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY_TRANSFER_FILE {
+								rtf := curmsg.GetReplyTransferFile()
+								if rtf != nil {
+									if rtf.Md5String == fd.Md5String {
+										chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("%v:%v is sent and the verification is successful.",
+												ft.JarvisNodeName, ft.FullPath),
+											params.Msg)
+									} else {
+										chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("%v:%v verification failed. %v (%v)",
+												ft.JarvisNodeName, ft.FullPath, fd.Md5String, rtf.Md5String),
+											params.Msg)
+									}
+								}
+							}
+						}
+					}
+
+					return nil
+				})
 
 			if ft.SubfilesPath != "" {
 				chatbot.SendTextMsg(params.ChatBot, from,
