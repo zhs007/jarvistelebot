@@ -43,6 +43,7 @@ plugins:
   - 'usermgr'
   - 'userscript'
   - 'filetemplate'
+  - 'crawler'
 
 # defaultplugin - default plugin
 defaultplugin: 'normal'
