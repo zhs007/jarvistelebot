@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package plugincrawlerpb;
+
+// UpdCrawlerCommand - updcrawler
+message UpdCrawlerCommand {
+}
+
+// ExpArticleCommand - exparticle
+message ExpArticleCommand {
+    // URL - url
+    string URL = 1;
+    // PDF - pdf filename
+    string PDF = 2;
+}

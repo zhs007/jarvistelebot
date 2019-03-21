@@ -14,12 +14,6 @@ func Init(filename string) (*jarviscore.Config, error) {
 
 	jarviscore.InitJarvisCore(cfg)
 
-	// bi := &jarviscore.BaseInfo{
-	// 	Name:     cfg.BaseNodeInfo.NodeName,
-	// 	BindAddr: cfg.BaseNodeInfo.BindAddr,
-	// 	ServAddr: cfg.BaseNodeInfo.ServAddr,
-	// }
-
 	return cfg, nil
 }
 

@@ -74,7 +74,7 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 		isrecv := false
 		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci,
 			func(ctx context.Context, jarvisnode jarviscore.JarvisNode,
-				lstResult []*jarviscore.ClientProcMsgResult) error {
+				lstResult []*jarviscore.JarvisMsgInfo) error {
 
 				if !isrecv && len(lstResult) > 0 {
 					if lstResult[len(lstResult)-1].Err != nil {
@@ -109,46 +109,9 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 					}
 				}
 
-				// str, err := json.MarshalIndent(lstResult, "", "\t")
-				// if err != nil {
-				// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
-				// } else {
-				// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(str), params.Msg)
-				// }
-
-				// chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
-
 				return nil
 			})
-
-		// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-		// 	cr := msg.GetCtrlResult()
-		// 	if cr == nil {
-		// 		msgstr := fmt.Sprintf("%v", msg)
-		// 		jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
-
-		// 		chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
-
-		// 		return nil
-		// 	}
-
-		// 	chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
-
-		// 	return nil
-		// })
-
-		// chatbot.SendTextMsg(params.ChatBot, from, rscmd.ScriptName)
 	}
-
-	// if params.Msg.GetText() == "" {
-	// 	return false, chatbot.ErrEmptyMsgText
-	// }
-
-	// if params.ChatBot.IsMaster(from) {
-	// 	chatbot.SendTextMsg(params.ChatBot, from, "Sorry, I can't understand.")
-	// } else {
-	// 	chatbot.SendTextMsg(params.ChatBot, from, "Sorry, you are not my master.")
-	// }
 
 	return true, nil
 }

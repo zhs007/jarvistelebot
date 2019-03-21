@@ -69,8 +69,8 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 
 			sendfilelastresultindex := 0
 
-			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd,
-				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.ClientProcMsgResult) error {
+			params.ChatBot.GetJarvisNode().SendFile2(ctx, curnode.Addr, fd,
+				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
 					for ; sendfilelastresultindex < len(lstResult); sendfilelastresultindex++ {
 						curmsg := lstResult[sendfilelastresultindex].Msg
@@ -86,20 +86,12 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 										curmsg.Err,
 										params.Msg)
 								}
-							} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY_TRANSFER_FILE {
-								rtf := curmsg.GetReplyTransferFile()
-								if rtf != nil {
-									if rtf.Md5String == fd.Md5String {
-										chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-											fmt.Sprintf("%v:%v is sent and the verification is successful.",
-												ft.JarvisNodeName, ft.FullPath),
-											params.Msg)
-									} else {
-										chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-											fmt.Sprintf("%v:%v verification failed. %v (%v)",
-												ft.JarvisNodeName, ft.FullPath, fd.Md5String, rtf.Md5String),
-											params.Msg)
-									}
+							} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
+								if curmsg.ReplyType == jarviscorepb.REPLYTYPE_END {
+									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+										fmt.Sprintf("%v:%v is sent and the verification is successful.",
+											ft.JarvisNodeName, ft.FullPath),
+										params.Msg)
 								}
 							}
 						}
@@ -152,7 +144,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 		currecvlen := int64(0)
 
 		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf,
-			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.ClientProcMsgResult) error {
+			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
 				for ; lastresultindex < len(lstResult); lastresultindex++ {
 

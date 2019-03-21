@@ -1,0 +1,23 @@
+# jarvis telegram bot plugin crawler config file
+
+# crawler node addr
+crawlernodeaddr: 12LyThj17Dj88EsHgVonn1eJffMSwjsXf4
+# crawler path
+crawlerpath: /mnt/jarviscrawlercore
+
+# updatescript - the script will run when the update crawler was starting.  
+#     There are some variables that can be used in this script.
+#       - CrawlerPath: crawler path
+updatescript: |
+  cd {{.CrawlerPath}}
+  git pull
+  sh builddocker.sh
+
+# exparticlescript - the script will run when the export article was starting.  
+#     There are some variables that can be used in this script.
+#       - CrawlerPath: crawler path
+#       - URL: article url
+#       - PDF: pdf filename
+exparticlescript: |
+  cd {{.CrawlerPath}}
+  docker run --rm -v $PWD/output:/usr/src/app/output jarviscrawlercore node ./bin/jarviscrawler.js exparticle {{.URL}} -p ./output/{{.PDF}} -f A4

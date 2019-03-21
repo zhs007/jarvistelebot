@@ -121,7 +121,7 @@
     "crypto",
     "proto"
   ]
-  revision = "3db11c038fc1c767fc6f684e91ff28aaadbcb6da"
+  revision = "dfdeef9520abc8549168f53d9d3945b92d4f56ce"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -152,7 +152,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ripemd160"]
-  revision = "a1f597ede03a7bef967a422b5b3a5bd08805a01e"
+  revision = "b7391e95e576cacdcdd422573063bc057239113d"
 
 [[projects]]
   branch = "master"
@@ -166,13 +166,13 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "d196dffd7c2beec1957382065df08bcc353b9706"
+  revision = "1272bf9dcd53ea65c09668fb4c76e65deb740072"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "6c81ef8f67ca3f42fc9cd71dfbd5f35b0c4b5771"
+  revision = "f7bb7a8bee54210937e93ec56d007d892c1f0580"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -236,8 +236,8 @@
     "status",
     "tap"
   ]
-  revision = "2fdaae294f38ed9a121193c51ec99fecd3b13eb7"
-  version = "v1.19.0"
+  revision = "3507fb8e1a5ad030303c106fef3a47c9fdad16ad"
+  version = "v1.19.1"
 
 [[projects]]
   name = "gopkg.in/yaml.v2"
