@@ -54,22 +54,6 @@ func (p *xlsx2jsonPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 
 				chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), fd)
 			}
-			// arr := strings.Split(params.Msg.GetText(), ":")
-			// if len(arr) < 2 {
-			// 	return false, nil
-			// }
-
-			// curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
-			// if curnode == nil {
-			// 	return false, nil
-			// }
-
-			// fd := &jarviscorepb.FileData{
-			// 	File:     file.Data,
-			// 	Filename: strings.Join(arr[1:], ":"),
-			// }
-
-			// params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd)
 
 			return true, nil
 		}

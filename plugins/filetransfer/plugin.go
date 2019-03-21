@@ -2,9 +2,11 @@ package pluginfiletransfer
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
@@ -61,15 +63,38 @@ func (p *filetransferPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 				Filename: strings.Join(arr[1:], ":"),
 			}
 
-			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd, nil)
+			sendfilelastresultindex := 0
+			// params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd, nil)
+			params.ChatBot.GetJarvisNode().SendFile2(ctx, curnode.Addr, fd,
+				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
-			// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-			// 	cr := msg.GetCtrlResult()
+					for ; sendfilelastresultindex < len(lstResult); sendfilelastresultindex++ {
+						curmsg := lstResult[sendfilelastresultindex].Msg
+						if curmsg != nil {
+							if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
+								if curmsg.ReplyType == jarviscorepb.REPLYTYPE_IGOTIT {
+									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+										fmt.Sprintf("%v has received the file (%v).",
+											curnode.Name, fd.Filename),
+										params.Msg)
+								} else if curmsg.ReplyType == jarviscorepb.REPLYTYPE_ERROR {
+									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+										curmsg.Err,
+										params.Msg)
+								}
+							} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
+								if curmsg.ReplyType == jarviscorepb.REPLYTYPE_END {
+									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+										fmt.Sprintf("%v:%v is sent and the verification is successful.",
+											curnode.Name, fd.Filename),
+										params.Msg)
+								}
+							}
+						}
+					}
 
-			// 	chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult)
-
-			// 	return nil
-			// })
+					return nil
+				})
 
 			return true, nil
 		}
