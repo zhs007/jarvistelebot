@@ -79,7 +79,7 @@ func (cmd *cmdUpdCrawler) RunCommand(ctx context.Context, params *chatbot.Messag
 		isrecv := false
 		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci,
 			func(ctx context.Context, jarvisnode jarviscore.JarvisNode,
-				lstResult []*jarviscore.ClientProcMsgResult) error {
+				lstResult []*jarviscore.JarvisMsgInfo) error {
 
 				if !isrecv && len(lstResult) > 0 {
 					if lstResult[len(lstResult)-1].Err != nil {

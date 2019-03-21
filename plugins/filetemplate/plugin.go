@@ -70,7 +70,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 			sendfilelastresultindex := 0
 
 			params.ChatBot.GetJarvisNode().SendFile(ctx, curnode.Addr, fd,
-				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.ClientProcMsgResult) error {
+				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
 					for ; sendfilelastresultindex < len(lstResult); sendfilelastresultindex++ {
 						curmsg := lstResult[sendfilelastresultindex].Msg
@@ -152,7 +152,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 		currecvlen := int64(0)
 
 		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf,
-			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.ClientProcMsgResult) error {
+			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
 				for ; lastresultindex < len(lstResult); lastresultindex++ {
 

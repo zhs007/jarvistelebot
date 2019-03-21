@@ -51,39 +51,6 @@ func (cmd *cmdRequestFile) RunCommand(ctx context.Context, params *chatbot.Messa
 		})
 	}
 
-	// fn := strings.Join(params.LstStr[2:], " ")
-
-	// arr := strings.Split(fn, ":")
-	// if len(arr) < 2 {
-	// 	return false
-	// }
-
-	// curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
-	// if curnode == nil {
-	// 	return false
-	// }
-
-	// rf := &jarviscorepb.RequestFile{
-	// 	Filename: strings.Join(arr[1:], ":"),
-	// }
-
-	// params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf)
-
-	// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-	// 	if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
-	// 		fd := msg.GetFile()
-
-	// 		chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-	// 			Filename: chatbot.GetFileNameFromFullPath(fd.Filename),
-	// 			Data:     fd.File,
-	// 		})
-	// 	}
-
-	// 	return nil
-	// })
-
-	// // chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), params.ChatBot.GetVersion())
-
 	return true
 }
 
