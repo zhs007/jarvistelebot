@@ -82,7 +82,9 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 							lstResult[len(lstResult)-1].Err.Error(), params.Msg)
 					} else if lstResult[len(lstResult)-1].Msg != nil {
 						cm := lstResult[len(lstResult)-1].Msg
-						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 && cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
+						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 &&
+							cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
+
 							chatbot.SendTextMsg(params.ChatBot,
 								params.Msg.GetFrom(),
 								fmt.Sprintf("%v has received the request (%v).",

@@ -93,7 +93,8 @@ func (cmd *cmdExpArticle) RunCommand(ctx context.Context, params *chatbot.Messag
 					} else if lstResult[len(lstResult)-1].Msg != nil {
 
 						cm := lstResult[len(lstResult)-1].Msg
-						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 && cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
+						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 &&
+							cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
 
 							chatbot.SendTextMsg(params.ChatBot,
 								params.Msg.GetFrom(),
@@ -113,7 +114,11 @@ func (cmd *cmdExpArticle) RunCommand(ctx context.Context, params *chatbot.Messag
 										return nil
 									}
 
-									chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+									if cr.CtrlResult != "" {
+										chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+									}
+
+									chatbot.SendTextMsg(params.ChatBot, from, "It's done.", params.Msg)
 
 									return nil
 								})

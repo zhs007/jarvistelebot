@@ -46,6 +46,12 @@ func FormatJSONObj(obj interface{}) (string, error) {
 func SendTextMsg(bot ChatBot, user User, text string, srcmsg Message) error {
 	// jarvisbase.Debug("SendTextMsg", zap.String("text", text))
 
+	if text == "" {
+		jarvisbase.Warn("SendTextMsg:checkText", zap.Error(ErrEmptyMsg))
+
+		return ErrEmptyMsg
+	}
+
 	if len(text) >= basedef.MaxTextMessageSize {
 		return SendFileMsg(bot, user, &chatbotdbpb.File{
 			Filename: GetMD5String([]byte(text)) + ".txt",
