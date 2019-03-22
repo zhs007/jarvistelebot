@@ -101,7 +101,11 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 										return nil
 									}
 
-									chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+									if cr.CtrlResult != "" {
+										chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+									}
+
+									chatbot.SendTextMsg(params.ChatBot, from, "It's done.", params.Msg)
 
 									return nil
 								})
