@@ -10,6 +10,7 @@ import (
 	"github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
 	"github.com/zhs007/jarvistelebot/plugins/crawler/proto"
 	"go.uber.org/zap"
 )
@@ -72,7 +73,9 @@ func (cmd *cmdExpArticle) RunCommand(ctx context.Context, params *chatbot.Messag
 			File:     buf,
 		}
 
-		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
+		ci, err := jarviscore.BuildCtrlInfoForScriptFile3(sf, []string{
+			eacmd.PDF,
+		})
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
@@ -122,6 +125,23 @@ func (cmd *cmdExpArticle) RunCommand(ctx context.Context, params *chatbot.Messag
 
 									return nil
 								})
+						} else if cm.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
+							curfi := cm.GetFile()
+							if curfi == nil {
+								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+									jarviscore.ErrNoFileData.Error(), params.Msg)
+
+								return jarviscore.ErrNoFileData
+							}
+
+							if curfi.TotalLength == curfi.Length {
+
+								chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+									Filename: eacmd.PDF,
+									Data:     curfi.File,
+								})
+
+							}
 						}
 					}
 				}
