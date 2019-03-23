@@ -3,6 +3,7 @@ package plugincrawler
 import (
 	"context"
 	"fmt"
+	"path"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
@@ -74,7 +75,7 @@ func (cmd *cmdExpArticle) RunCommand(ctx context.Context, params *chatbot.Messag
 		}
 
 		ci, err := jarviscore.BuildCtrlInfoForScriptFile3(sf, []string{
-			eacmd.PDF,
+			path.Join(pluginCrawler.cfg.CrawlerPath, "./output/", eacmd.PDF),
 		})
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
