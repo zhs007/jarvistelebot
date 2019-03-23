@@ -71,81 +71,8 @@ func (cmd *cmdRunScript) RunCommand(ctx context.Context, params *chatbot.Message
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "I get it, please send me some files to run script.", params.Msg)
 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "If you want to start run script, you can send ``start``.", params.Msg)
 
-		// sf := &jarviscorepb.FileData{
-		// 	Filename: rscmd.ScriptFile.Filename,
-		// 	File:     rscmd.ScriptFile.Data,
-		// }
-		// ci, err := jarviscore.BuildCtrlInfoForScriptFile2(1, sf, nil)
-		// if err != nil {
-		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
-
-		// 	return false
-		// }
-
-		// params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci)
-
-		// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-		// 	cr := msg.GetCtrlResult()
-
-		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), cr.CtrlResult, params.Msg)
-
-		// 	return nil
-		// })
-
 		return true
-
-		// rf := &jarviscorepb.RequestFile{
-		// 	Filename: rfcmd.FileFullPath,
-		// }
-
-		// params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf)
-
-		// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-		// 	if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
-		// 		fd := msg.GetFile()
-
-		// 		chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-		// 			Filename: chatbot.GetFileNameFromFullPath(fd.Filename),
-		// 			Data:     fd.File,
-		// 		})
-		// 	}
-
-		// 	return nil
-		// })
 	}
-
-	// fn := strings.Join(params.LstStr[2:], " ")
-
-	// arr := strings.Split(fn, ":")
-	// if len(arr) < 2 {
-	// 	return false
-	// }
-
-	// curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(arr[0])
-	// if curnode == nil {
-	// 	return false
-	// }
-
-	// rf := &jarviscorepb.RequestFile{
-	// 	Filename: strings.Join(arr[1:], ":"),
-	// }
-
-	// params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf)
-
-	// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-	// 	if msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
-	// 		fd := msg.GetFile()
-
-	// 		chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-	// 			Filename: chatbot.GetFileNameFromFullPath(fd.Filename),
-	// 			Data:     fd.File,
-	// 		})
-	// 	}
-
-	// 	return nil
-	// })
-
-	// // chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), params.ChatBot.GetVersion())
 
 	return false
 }

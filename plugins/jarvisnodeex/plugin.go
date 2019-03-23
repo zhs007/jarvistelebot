@@ -57,7 +57,7 @@ func (p *jarvisnodeexPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 				Filename: file.Filename,
 				File:     file.Data,
 			}
-			ci, err := jarviscore.BuildCtrlInfoForScriptFile2(1, sf, nil)
+			ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
 			if err != nil {
 				jarvisbase.Warn("jarvisnodeexPlugin.OnMessage", zap.Error(err))
 

@@ -55,7 +55,7 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 			Filename: us.File.Filename,
 			File:     us.File.Data,
 		}
-		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(1, sf, nil)
+		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
 		// ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, us.File.Filename, us.File.Data, "")
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
@@ -82,7 +82,9 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 							lstResult[len(lstResult)-1].Err.Error(), params.Msg)
 					} else if lstResult[len(lstResult)-1].Msg != nil {
 						cm := lstResult[len(lstResult)-1].Msg
-						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 && cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
+						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 &&
+							cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
+
 							chatbot.SendTextMsg(params.ChatBot,
 								params.Msg.GetFrom(),
 								fmt.Sprintf("%v has received the request (%v).",
@@ -101,7 +103,11 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 										return nil
 									}
 
-									chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+									if cr.CtrlResult != "" {
+										chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+									}
+
+									chatbot.SendTextMsg(params.ChatBot, from, "It's done.", params.Msg)
 
 									return nil
 								})

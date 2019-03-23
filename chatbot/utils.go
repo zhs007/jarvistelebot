@@ -1,6 +1,7 @@
 package chatbot
 
 import (
+	"bytes"
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
@@ -8,7 +9,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/zhs007/jarviscore/proto"
+
 	"github.com/golang/protobuf/proto"
+	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarvistelebot/basedef"
 	"github.com/zhs007/jarvistelebot/chatbot/proto"
@@ -45,6 +49,12 @@ func FormatJSONObj(obj interface{}) (string, error) {
 // SendTextMsg - sendmsg
 func SendTextMsg(bot ChatBot, user User, text string, srcmsg Message) error {
 	// jarvisbase.Debug("SendTextMsg", zap.String("text", text))
+
+	if text == "" {
+		jarvisbase.Warn("SendTextMsg:checkText", zap.Error(ErrEmptyMsg))
+
+		return ErrEmptyMsg
+	}
 
 	if len(text) >= basedef.MaxTextMessageSize {
 		return SendFileMsg(bot, user, &chatbotdbpb.File{
@@ -163,4 +173,52 @@ func LoadScriptFile(filename string) (*chatbotdbpb.File, error) {
 		Data:     dat,
 		FileType: FileTypeShellScript,
 	}, nil
+}
+
+// ProcReplyRequestFile - proc ReplyRequestFile
+func ProcReplyRequestFile(msg *jarviscorepb.JarvisMsg, buf *bytes.Buffer) (bool, error) {
+
+	curfi := msg.GetFile()
+	if curfi == nil {
+		return false, jarviscore.ErrNoFileData
+	}
+
+	if curfi.TotalLength == curfi.Length {
+		curmd5 := jarviscore.GetMD5String(curfi.File)
+		if curmd5 != curfi.Md5String {
+			return false, ErrInvalidMD5Hash
+		}
+
+		_, err := buf.Write(curfi.File)
+
+		return true, err
+	}
+
+	if curfi.FileMD5String == "" {
+		curmd5 := jarviscore.GetMD5String(curfi.File)
+		if curmd5 != curfi.Md5String {
+			return false, ErrInvalidMD5Hash
+		}
+
+		_, err := buf.Write(curfi.File)
+
+		return false, err
+	}
+
+	curmd5 := jarviscore.GetMD5String(curfi.File)
+	if curmd5 != curfi.Md5String {
+		return false, ErrInvalidMD5Hash
+	}
+
+	_, err := buf.Write(curfi.File)
+	if err != nil {
+		return false, err
+	}
+
+	totalmd5 := jarviscore.GetMD5String(buf.Bytes())
+	if totalmd5 != curfi.FileMD5String {
+		return false, ErrInvalidMD5Hash
+	}
+
+	return true, nil
 }

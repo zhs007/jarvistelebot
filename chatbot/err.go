@@ -73,4 +73,8 @@ var (
 	ErrInvalidUserPluginData = errors.New("Invalid user's plugin data")
 	// ErrInvalidUserPluginDataType - Invalid user's plugin data type
 	ErrInvalidUserPluginDataType = errors.New("Invalid user's plugin data type")
+	// ErrEmptyMsg - Empty text message
+	ErrEmptyMsg = errors.New("Empty text message")
+	// ErrInvalidMD5Hash - Invliad MD5 hash
+	ErrInvalidMD5Hash = errors.New("Invliad MD5 hash")
 )

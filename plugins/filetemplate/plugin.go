@@ -140,103 +140,129 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 			Filename: ft.FullPath,
 		}
 
-		lastresultindex := 0
-		currecvlen := int64(0)
+		// lastresultindex := 0
+		// currecvlen := int64(0)
+		var buf bytes.Buffer
 
 		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf,
 			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
-				for ; lastresultindex < len(lstResult); lastresultindex++ {
+				// for ; lastresultindex < len(lstResult); lastresultindex++ {
 
-					curmsg := lstResult[lastresultindex].Msg
-					if curmsg != nil {
-						if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
-							if curmsg.ReplyType == jarviscorepb.REPLYTYPE_IGOTIT {
-								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-									fmt.Sprintf("%v has received the file request(%v).",
-										ft.JarvisNodeName, ft.FullPath),
-									params.Msg)
-							} else if curmsg.ReplyType == jarviscorepb.REPLYTYPE_ERROR {
-								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-									curmsg.Err,
-									params.Msg)
-							}
-
-						} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
-							curfi := curmsg.GetFile()
-							if curfi == nil {
-								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-									jarviscore.ErrNoFileData.Error(), params.Msg)
-
-								return jarviscore.ErrNoFileData
-							}
-
-							if curfi.TotalLength == curfi.Length {
-
-								chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-									Filename: ft.FileTemplateName,
-									Data:     curfi.File,
-								})
-
-							} else {
-								currecvlen = currecvlen + int64(len(curmsg.GetFile().File))
-
-								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-									fmt.Sprintf("The %v:%v length is %v, I received %v bytes.",
-										ft.JarvisNodeName, ft.FullPath, curfi.TotalLength, currecvlen),
-									params.Msg)
-
-								if curfi.FileMD5String != "" {
-									var b bytes.Buffer
-
-									for j := 0; j < len(lstResult); j++ {
-										if lstResult[j].Msg != nil &&
-											lstResult[j].Msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE &&
-											lstResult[j].Msg.GetFile() != nil {
-
-											n, err := b.Write(lstResult[j].Msg.GetFile().File)
-											if err != nil {
-												chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-													fmt.Sprintf("WriteError: %v", err.Error()),
-													params.Msg)
-
-												continue
-											}
-
-											if n != len(lstResult[j].Msg.GetFile().File) {
-												chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-													fmt.Sprintf("WriteError: invalid length"),
-													params.Msg)
-
-												continue
-											}
-										}
-									}
-
-									strmd5 := jarviscore.GetMD5String(b.Bytes())
-									if strmd5 != curfi.FileMD5String {
-										chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-											fmt.Sprintf("The file length is %v(%v), the MD5 is %v(%v).",
-												curfi.TotalLength, b.Len(), curfi.FileMD5String, strmd5),
-											params.Msg)
-
-										continue
-									}
-
-									chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
-										Filename: ft.FileTemplateName,
-										Data:     b.Bytes(),
-									})
-								}
-							}
+				curmsg := lstResult[len(lstResult)-1].Msg
+				if curmsg != nil {
+					if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
+						if curmsg.ReplyType == jarviscorepb.REPLYTYPE_IGOTIT {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								fmt.Sprintf("%v has received the file request(%v).",
+									ft.JarvisNodeName, ft.FullPath),
+								params.Msg)
+						} else if curmsg.ReplyType == jarviscorepb.REPLYTYPE_ERROR {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								curmsg.Err,
+								params.Msg)
 						}
-					}
 
-					if lstResult[lastresultindex].Err != nil {
-						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-							jarviscore.ErrNoFileData.Error(), params.Msg)
+					} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
+						isend, err := chatbot.ProcReplyRequestFile(curmsg, &buf)
+						if err != nil {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								err.Error(), params.Msg)
+
+							return err
+						}
+
+						if isend {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								fmt.Sprintf("The %v:%v received %v bytes, the file is received, I will send it to you.",
+									ft.JarvisNodeName, ft.FullPath, buf.Len()),
+								params.Msg)
+
+							chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+								Filename: ft.FileTemplateName,
+								Data:     buf.Bytes(),
+							})
+						} else {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								fmt.Sprintf("The %v:%v received %v bytes.",
+									ft.JarvisNodeName, ft.FullPath, buf.Len()),
+								params.Msg)
+						}
+
+						// curfi := curmsg.GetFile()
+						// if curfi == nil {
+						// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						// 		jarviscore.ErrNoFileData.Error(), params.Msg)
+
+						// 	return jarviscore.ErrNoFileData
+						// }
+
+						// if curfi.TotalLength == curfi.Length {
+
+						// 	chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+						// 		Filename: ft.FileTemplateName,
+						// 		Data:     curfi.File,
+						// 	})
+
+						// } else {
+						// 	currecvlen = currecvlen + int64(len(curmsg.GetFile().File))
+
+						// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						// 		fmt.Sprintf("The %v:%v length is %v, I received %v bytes.",
+						// 			ft.JarvisNodeName, ft.FullPath, curfi.TotalLength, currecvlen),
+						// 		params.Msg)
+
+						// 	if curfi.FileMD5String != "" {
+						// 		var b bytes.Buffer
+
+						// 		for j := 0; j < len(lstResult); j++ {
+						// 			if lstResult[j].Msg != nil &&
+						// 				lstResult[j].Msg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE &&
+						// 				lstResult[j].Msg.GetFile() != nil {
+
+						// 				n, err := b.Write(lstResult[j].Msg.GetFile().File)
+						// 				if err != nil {
+						// 					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						// 						fmt.Sprintf("WriteError: %v", err.Error()),
+						// 						params.Msg)
+
+						// 					continue
+						// 				}
+
+						// 				if n != len(lstResult[j].Msg.GetFile().File) {
+						// 					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						// 						fmt.Sprintf("WriteError: invalid length"),
+						// 						params.Msg)
+
+						// 					continue
+						// 				}
+						// 			}
+						// 		}
+
+						// 		strmd5 := jarviscore.GetMD5String(b.Bytes())
+						// 		if strmd5 != curfi.FileMD5String {
+						// 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						// 				fmt.Sprintf("The file length is %v(%v), the MD5 is %v(%v).",
+						// 					curfi.TotalLength, b.Len(), curfi.FileMD5String, strmd5),
+						// 				params.Msg)
+
+						// 			continue
+						// 		}
+
+						// 		chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+						// 			Filename: ft.FileTemplateName,
+						// 			Data:     b.Bytes(),
+						// 		})
+						// 	}
+						// }
 					}
 				}
+
+				if lstResult[len(lstResult)-1].Err != nil {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						lstResult[len(lstResult)-1].Err.Error(), params.Msg)
+				}
+				// }
 
 				return nil
 			})
