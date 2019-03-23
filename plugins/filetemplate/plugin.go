@@ -173,6 +173,11 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 						}
 
 						if isend {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								fmt.Sprintf("The %v:%v received %v bytes, the file is received, I will send it to you.",
+									ft.JarvisNodeName, ft.FullPath, buf.Len()),
+								params.Msg)
+
 							chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
 								Filename: ft.FileTemplateName,
 								Data:     buf.Bytes(),
