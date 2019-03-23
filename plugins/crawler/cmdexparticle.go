@@ -72,7 +72,7 @@ func (cmd *cmdExpArticle) RunCommand(ctx context.Context, params *chatbot.Messag
 			File:     buf,
 		}
 
-		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(1, sf, nil)
+		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 

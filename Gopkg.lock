@@ -121,7 +121,7 @@
     "crypto",
     "proto"
   ]
-  revision = "dfdeef9520abc8549168f53d9d3945b92d4f56ce"
+  revision = "54990415a93bb4a400d1dd5dead8fd59586878c2"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -166,13 +166,13 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "1272bf9dcd53ea65c09668fb4c76e65deb740072"
+  revision = "addf6b3196f61cd44ce5a76657913698c73479d0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "f7bb7a8bee54210937e93ec56d007d892c1f0580"
+  revision = "f49334f85ddcf0f08d7fb6dd7363e9e6d6b777eb"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -199,7 +199,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "5fe7a883aa19554f42890211544aa549836af7b7"
+  revision = "e79c0c59cdb5e117ef82a6f885294df3d74065d5"
 
 [[projects]]
   name = "google.golang.org/grpc"

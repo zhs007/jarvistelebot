@@ -82,7 +82,7 @@ func (cmd *cmdStart) RunCommand(ctx context.Context, params *chatbot.MessagePara
 			Filename: rscmd.ScriptFile.Filename,
 			File:     rscmd.ScriptFile.Data,
 		}
-		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(1, sf, arr)
+		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, arr)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
