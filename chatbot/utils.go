@@ -176,7 +176,7 @@ func LoadScriptFile(filename string) (*chatbotdbpb.File, error) {
 }
 
 // ProcReplyRequestFile - proc ReplyRequestFile
-func ProcReplyRequestFile(msg *jarviscorepb.JarvisMsg, buf bytes.Buffer) (bool, error) {
+func ProcReplyRequestFile(msg *jarviscorepb.JarvisMsg, buf *bytes.Buffer) (bool, error) {
 
 	curfi := msg.GetFile()
 	if curfi == nil {

@@ -164,7 +164,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 						}
 
 					} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
-						isend, err := chatbot.ProcReplyRequestFile(curmsg, buf)
+						isend, err := chatbot.ProcReplyRequestFile(curmsg, &buf)
 						if err != nil {
 							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 								err.Error(), params.Msg)
