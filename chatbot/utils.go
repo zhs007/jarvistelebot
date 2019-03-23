@@ -191,7 +191,7 @@ func ProcReplyRequestFile(msg *jarviscorepb.JarvisMsg, buf *bytes.Buffer) (bool,
 
 		_, err := buf.Write(curfi.File)
 
-		return false, err
+		return true, err
 	}
 
 	if curfi.FileMD5String == "" {
