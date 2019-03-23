@@ -1,6 +1,7 @@
 package plugincrawler
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"path"
@@ -83,6 +84,8 @@ func (cmd *cmdExpArticle) RunCommand(ctx context.Context, params *chatbot.Messag
 			return false
 		}
 
+		var filebuf bytes.Buffer
+
 		isrecv := false
 		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci,
 			func(ctx context.Context, jarvisnode jarviscore.JarvisNode,
@@ -127,22 +130,49 @@ func (cmd *cmdExpArticle) RunCommand(ctx context.Context, params *chatbot.Messag
 									return nil
 								})
 						} else if cm.MsgType == jarviscorepb.MSGTYPE_REPLY_REQUEST_FILE {
-							curfi := cm.GetFile()
-							if curfi == nil {
+							isend, err := chatbot.ProcReplyRequestFile(cm, &filebuf)
+							if err != nil {
 								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-									jarviscore.ErrNoFileData.Error(), params.Msg)
+									err.Error(), params.Msg)
 
-								return jarviscore.ErrNoFileData
+								return err
 							}
 
-							if curfi.TotalLength == curfi.Length {
+							if isend {
+								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+									fmt.Sprintf("The %v received %v bytes, the file is received, I will send it to you.",
+										eacmd.PDF, filebuf.Len()),
+									params.Msg)
 
 								chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
 									Filename: eacmd.PDF,
-									Data:     curfi.File,
+									Data:     filebuf.Bytes(),
 								})
 
+								filebuf.Reset()
+							} else {
+								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+									fmt.Sprintf("The %v received %v bytes.",
+										eacmd.PDF, filebuf.Len()),
+									params.Msg)
 							}
+
+							// curfi := cm.GetFile()
+							// if curfi == nil {
+							// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							// 		jarviscore.ErrNoFileData.Error(), params.Msg)
+
+							// 	return jarviscore.ErrNoFileData
+							// }
+
+							// if curfi.TotalLength == curfi.Length {
+
+							// 	chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
+							// 		Filename: eacmd.PDF,
+							// 		Data:     curfi.File,
+							// 	})
+
+							// }
 						}
 					}
 				}
