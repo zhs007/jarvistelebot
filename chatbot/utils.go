@@ -117,6 +117,7 @@ func MakeChatID(userid string, msgid string) string {
 // SendFileMsg - sendmsg
 func SendFileMsg(bot ChatBot, user User, fd *chatbotdbpb.File, srcmsg Message) error {
 	msg := bot.NewMsg("", "", nil, user, "", time.Now().Unix())
+	msg.SetFile(fd)
 
 	if srcmsg != nil && srcmsg.InGroup() {
 		// jarvisbase.Debug("SendTextMsg", zap.String("groupid", srcmsg.GetGroupID()))
