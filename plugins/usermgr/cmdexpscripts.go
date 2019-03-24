@@ -95,7 +95,7 @@ func (cmd *cmdExpScripts) RunCommand(ctx context.Context, params *chatbot.Messag
 			chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
 				Filename: "scripts.xlsx",
 				Data:     buf,
-			})
+			}, params.Msg)
 		}
 
 		// strret, err := chatbot.FormatJSONObj(lst)

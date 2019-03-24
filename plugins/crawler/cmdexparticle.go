@@ -147,7 +147,7 @@ func (cmd *cmdExpArticle) RunCommand(ctx context.Context, params *chatbot.Messag
 								chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
 									Filename: eacmd.PDF,
 									Data:     filebuf.Bytes(),
-								})
+								}, params.Msg)
 
 								filebuf.Reset()
 							} else {

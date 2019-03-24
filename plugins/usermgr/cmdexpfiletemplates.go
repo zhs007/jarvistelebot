@@ -91,7 +91,7 @@ func (cmd *cmdExpFileTemplates) RunCommand(ctx context.Context, params *chatbot.
 			chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
 				Filename: "filetemplates.xlsx",
 				Data:     buf,
-			})
+			}, params.Msg)
 		}
 
 		return true

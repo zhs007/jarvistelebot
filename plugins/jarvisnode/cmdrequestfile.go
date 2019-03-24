@@ -44,7 +44,7 @@ func (cmd *cmdRequestFile) RunCommand(ctx context.Context, params *chatbot.Messa
 				chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
 					Filename: chatbot.GetFileNameFromFullPath(fd.Filename),
 					Data:     fd.File,
-				})
+				}, params.Msg)
 			}
 
 			return nil

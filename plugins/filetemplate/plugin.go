@@ -181,7 +181,7 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 							chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
 								Filename: ft.FileTemplateName,
 								Data:     buf.Bytes(),
-							})
+							}, params.Msg)
 						} else {
 							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 								fmt.Sprintf("The %v:%v received %v bytes.",

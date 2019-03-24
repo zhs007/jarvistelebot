@@ -52,7 +52,7 @@ func (p *xlsx2jsonPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 					Data:     []byte(str),
 				}
 
-				chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), fd)
+				chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), fd, params.Msg)
 			}
 
 			return true, nil
