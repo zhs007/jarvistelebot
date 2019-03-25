@@ -96,6 +96,11 @@ func (p *crawlerPlugin) GetPluginType() int {
 //	it will return to the command line, otherwise it will return an error.
 func (p *crawlerPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) >= 1 {
+		ret := p.urlParser.ParseURL(params.LstStr[0])
+		if ret != nil {
+			return &plugincrawlerpb.URLCommand{}, nil
+		}
+
 		if p.cmd.HasCommand(params.LstStr[0]) {
 			return p.cmd.ParseCommandLine(params.LstStr[0], params)
 		}
