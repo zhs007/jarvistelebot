@@ -60,7 +60,7 @@ func SendTextMsg(bot ChatBot, user User, text string, srcmsg Message) error {
 		return SendFileMsg(bot, user, &chatbotdbpb.File{
 			Filename: GetMD5String([]byte(text)) + ".txt",
 			Data:     []byte(text),
-		})
+		}, srcmsg)
 	}
 
 	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
@@ -115,9 +115,15 @@ func MakeChatID(userid string, msgid string) string {
 }
 
 // SendFileMsg - sendmsg
-func SendFileMsg(bot ChatBot, user User, fd *chatbotdbpb.File) error {
+func SendFileMsg(bot ChatBot, user User, fd *chatbotdbpb.File, srcmsg Message) error {
 	msg := bot.NewMsg("", "", nil, user, "", time.Now().Unix())
 	msg.SetFile(fd)
+
+	if srcmsg != nil && srcmsg.InGroup() {
+		// jarvisbase.Debug("SendTextMsg", zap.String("groupid", srcmsg.GetGroupID()))
+
+		msg.SetGroupID(srcmsg.GetGroupID())
+	}
 
 	_, err := bot.SendMsg(msg)
 	if err != nil {

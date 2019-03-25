@@ -6,11 +6,9 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarviscore/base"
-	"github.com/zhs007/jarviscore/proto"
-	"go.uber.org/zap"
 
-	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/plugins/crawler/proto"
 )
 
 // PluginName - plugin name
@@ -18,8 +16,9 @@ const PluginName = "crawler"
 
 // crawlerPlugin - crawler plugin
 type crawlerPlugin struct {
-	cmd *chatbot.CommandMap
-	cfg *config
+	cmd       *chatbot.CommandMap
+	cfg       *config
+	urlParser *URLParser
 }
 
 // NewPlugin - new jarvisnode plugin
@@ -40,8 +39,9 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("updcrawler", &cmdUpdCrawler{})
 
 	p := &crawlerPlugin{
-		cmd: cmd,
-		cfg: cfg,
+		cmd:       cmd,
+		cfg:       cfg,
+		urlParser: NewURLParser(),
 	}
 
 	return p, nil
@@ -58,42 +58,17 @@ func (p *crawlerPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePa
 		return false, nil
 	}
 
-	file := params.Msg.GetFile()
-	if file != nil {
-		if file.FileType == chatbot.FileTypeShellScript {
-			sf := &jarviscorepb.FileData{
-				Filename: file.Filename,
-				File:     file.Data,
+	if len(params.LstStr) >= 1 {
+		ret := p.urlParser.ParseURL(params.LstStr[0])
+		if ret != nil {
+			if ret.URLType == "article" {
+				return runExportArticle(ctx, params, &plugincrawlerpb.ExpArticleCommand{
+					URL: ret.URL,
+					PDF: ret.PDF,
+				}), nil
 			}
-			ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
-			if err != nil {
-				jarvisbase.Warn("jarvisnodeexPlugin.OnMessage", zap.Error(err))
-
-				return false, err
-			}
-
-			curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(params.Msg.GetText())
-			if curnode == nil {
-				return false, nil
-			}
-
-			params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci, nil)
-
-			params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-				cr := msg.GetCtrlResult()
-
-				chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
-
-				return nil
-			})
-
-			return true, nil
 		}
 
-		return false, nil
-	}
-
-	if len(params.LstStr) >= 1 {
 		p.cmd.Run(ctx, params.LstStr[0], params)
 
 		return true, nil
@@ -121,6 +96,11 @@ func (p *crawlerPlugin) GetPluginType() int {
 //	it will return to the command line, otherwise it will return an error.
 func (p *crawlerPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) >= 1 {
+		ret := p.urlParser.ParseURL(params.LstStr[0])
+		if ret != nil {
+			return &plugincrawlerpb.URLCommand{}, nil
+		}
+
 		if p.cmd.HasCommand(params.LstStr[0]) {
 			return p.cmd.ParseCommandLine(params.LstStr[0], params)
 		}

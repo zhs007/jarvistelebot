@@ -13,3 +13,7 @@ message ExpArticleCommand {
     // PDF - pdf filename
     string PDF = 2;
 }
+
+// URLCommand - url
+message URLCommand {
+}

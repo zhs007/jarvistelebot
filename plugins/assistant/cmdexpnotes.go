@@ -66,7 +66,7 @@ func (cmd *cmdExpNotes) RunCommand(ctx context.Context, params *chatbot.MessageP
 		chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
 			Filename: "notes.json",
 			Data:     jsonstr,
-		})
+		}, params.Msg)
 
 		return true
 	}
@@ -85,7 +85,7 @@ func (cmd *cmdExpNotes) RunCommand(ctx context.Context, params *chatbot.MessageP
 		chatbot.SendFileMsg(params.ChatBot, params.Msg.GetFrom(), &chatbotdbpb.File{
 			Filename: "notes.xlsx",
 			Data:     buf,
-		})
+		}, params.Msg)
 	}
 
 	return true

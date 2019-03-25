@@ -1,5 +1,9 @@
 # JarvisTeleBot Development Log
 
+### 2019-03-24
+
+``exparticle``已经可以主动发文件给你了。
+
 ### 2019-03-20
 
 今天把crawler控制插件完成了。  
