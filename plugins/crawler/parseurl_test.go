@@ -54,6 +54,22 @@ func TestParseURL(t *testing.T) {
 				PDF:     "geekpark.239623.pdf",
 			},
 		},
+		data{
+			url: "https://www.lieyunwang.com/archives/452856",
+			ret: &URLResult{
+				URLType: "article",
+				URL:     "https://www.lieyunwang.com/archives/452856",
+				PDF:     "lieyunwang.452856.pdf",
+			},
+		},
+		data{
+			url: "https://www.tmtpost.com/3839950.html",
+			ret: &URLResult{
+				URLType: "article",
+				URL:     "https://www.tmtpost.com/3839950.html",
+				PDF:     "tmtpost.3839950.pdf",
+			},
+		},
 	}
 
 	for i := 0; i < len(lst); i++ {
