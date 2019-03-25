@@ -6,10 +6,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarviscore/base"
-	"github.com/zhs007/jarviscore/proto"
-	"go.uber.org/zap"
 
-	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
@@ -58,40 +55,40 @@ func (p *crawlerPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePa
 		return false, nil
 	}
 
-	file := params.Msg.GetFile()
-	if file != nil {
-		if file.FileType == chatbot.FileTypeShellScript {
-			sf := &jarviscorepb.FileData{
-				Filename: file.Filename,
-				File:     file.Data,
-			}
-			ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
-			if err != nil {
-				jarvisbase.Warn("jarvisnodeexPlugin.OnMessage", zap.Error(err))
+	// file := params.Msg.GetFile()
+	// if file != nil {
+	// 	if file.FileType == chatbot.FileTypeShellScript {
+	// 		sf := &jarviscorepb.FileData{
+	// 			Filename: file.Filename,
+	// 			File:     file.Data,
+	// 		}
+	// 		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
+	// 		if err != nil {
+	// 			jarvisbase.Warn("jarvisnodeexPlugin.OnMessage", zap.Error(err))
 
-				return false, err
-			}
+	// 			return false, err
+	// 		}
 
-			curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(params.Msg.GetText())
-			if curnode == nil {
-				return false, nil
-			}
+	// 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(params.Msg.GetText())
+	// 		if curnode == nil {
+	// 			return false, nil
+	// 		}
 
-			params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci, nil)
+	// 		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci, nil)
 
-			params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-				cr := msg.GetCtrlResult()
+	// 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+	// 			cr := msg.GetCtrlResult()
 
-				chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+	// 			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
 
-				return nil
-			})
+	// 			return nil
+	// 		})
 
-			return true, nil
-		}
+	// 		return true, nil
+	// 	}
 
-		return false, nil
-	}
+	// 	return false, nil
+	// }
 
 	if len(params.LstStr) >= 1 {
 		p.cmd.Run(ctx, params.LstStr[0], params)
