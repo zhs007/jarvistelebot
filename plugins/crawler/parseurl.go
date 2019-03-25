@@ -40,6 +40,9 @@ func NewURLParser() *URLParser {
 	p := &URLParser{}
 
 	p.Reg(articleSMZDM, parseArticleSMZDM)
+	p.Reg(article36kr, parseArticle36kr)
+	p.Reg(articlebaijingapp, parseArticlebaijingapp)
+	p.Reg(articlehuxiu, parseArticlehuxiu)
 
 	return p
 }
@@ -79,7 +82,7 @@ func (p *URLParser) get(name string) FuncParseURL {
 func (p *URLParser) ParseURL(url string) *URLResult {
 	var firstret *URLResult
 
-	jarvisbase.Info("URLParser.ParseURL", zap.String("url", url))
+	// jarvisbase.Info("URLParser.ParseURL", zap.String("url", url))
 
 	p.mapFuncParseURL.Range(func(key, val interface{}) bool {
 		f, typeok := val.(FuncParseURL)
@@ -96,9 +99,9 @@ func (p *URLParser) ParseURL(url string) *URLResult {
 		return true
 	})
 
-	if firstret != nil {
-		jarvisbase.Info("URLParser.ParseURL", jarvisbase.JSON("ret", firstret))
-	}
+	// if firstret != nil {
+	// 	jarvisbase.Info("URLParser.ParseURL", jarvisbase.JSON("ret", firstret))
+	// }
 
 	return firstret
 }
