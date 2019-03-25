@@ -41,10 +41,8 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	p := &crawlerPlugin{
 		cmd:       cmd,
 		cfg:       cfg,
-		urlParser: &URLParser{},
+		urlParser: NewURLParser(),
 	}
-
-	p.urlParser.Reg(articleSMZDM, parseArticleSMZDM)
 
 	return p, nil
 }
@@ -60,17 +58,17 @@ func (p *crawlerPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePa
 		return false, nil
 	}
 
-	ret := p.urlParser.ParseURL(params.LstStr[0])
-	if ret != nil {
-		if ret.URLType == "article" {
-			return runExportArticle(ctx, params, &plugincrawlerpb.ExpArticleCommand{
-				URL: ret.URL,
-				PDF: ret.PDF,
-			}), nil
-		}
-	}
-
 	if len(params.LstStr) >= 1 {
+		ret := p.urlParser.ParseURL(params.LstStr[0])
+		if ret != nil {
+			if ret.URLType == "article" {
+				return runExportArticle(ctx, params, &plugincrawlerpb.ExpArticleCommand{
+					URL: ret.URL,
+					PDF: ret.PDF,
+				}), nil
+			}
+		}
+
 		p.cmd.Run(ctx, params.LstStr[0], params)
 
 		return true, nil

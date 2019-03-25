@@ -9,9 +9,9 @@ import (
 
 // URLResult - URL result
 type URLResult struct {
-	URLType string
-	URL     string
-	PDF     string
+	URLType string `json:"URLType"`
+	URL     string `json:"URL"`
+	PDF     string `json:"PDF"`
 }
 
 // isSame - is same
@@ -33,6 +33,15 @@ type FuncParseURL func(url string) *URLResult
 // URLParser - URL parser
 type URLParser struct {
 	mapFuncParseURL sync.Map
+}
+
+// NewURLParser - new NewURLParser
+func NewURLParser() *URLParser {
+	p := &URLParser{}
+
+	p.Reg(articleSMZDM, parseArticleSMZDM)
+
+	return p
 }
 
 // Reg - parse url
@@ -70,6 +79,8 @@ func (p *URLParser) get(name string) FuncParseURL {
 func (p *URLParser) ParseURL(url string) *URLResult {
 	var firstret *URLResult
 
+	jarvisbase.Info("URLParser.ParseURL", zap.String("url", url))
+
 	p.mapFuncParseURL.Range(func(key, val interface{}) bool {
 		f, typeok := val.(FuncParseURL)
 		if typeok {
@@ -84,6 +95,10 @@ func (p *URLParser) ParseURL(url string) *URLResult {
 
 		return true
 	})
+
+	if firstret != nil {
+		jarvisbase.Info("URLParser.ParseURL", jarvisbase.JSON("ret", firstret))
+	}
 
 	return firstret
 }
