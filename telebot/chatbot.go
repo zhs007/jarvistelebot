@@ -278,10 +278,10 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 			return cb.OnJarvisCtrlResult(curctx, msg)
 		})
 
-	node.RegMsgEventFunc(jarviscore.EventOnReplyRequestFile,
-		func(curctx context.Context, jarvisnode jarviscore.JarvisNode, msg *jarviscorepb.JarvisMsg) error {
-			return cb.OnJarvisCtrlResult(curctx, msg)
-		})
+	// node.RegMsgEventFunc(jarviscore.EventOnReplyRequestFile,
+	// 	func(curctx context.Context, jarvisnode jarviscore.JarvisNode, msg *jarviscorepb.JarvisMsg) error {
+	// 		return cb.OnJarvisCtrlResult(curctx, msg)
+	// 	})
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
