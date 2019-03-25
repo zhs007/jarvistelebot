@@ -44,6 +44,8 @@ func NewURLParser() *URLParser {
 	p.Reg(articlebaijingapp, parseArticlebaijingapp)
 	p.Reg(articlehuxiu, parseArticlehuxiu)
 	p.Reg(articlegeekpark, parseArticlegeekpark)
+	p.Reg(articlelieyunwang, parseArticlelieyunwang)
+	p.Reg(articletmtpost, parseArticletmtpost)
 
 	return p
 }
