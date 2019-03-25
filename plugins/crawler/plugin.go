@@ -8,6 +8,7 @@ import (
 	"github.com/zhs007/jarviscore/base"
 
 	"github.com/zhs007/jarvistelebot/chatbot"
+	"github.com/zhs007/jarvistelebot/plugins/crawler/proto"
 )
 
 // PluginName - plugin name
@@ -15,8 +16,9 @@ const PluginName = "crawler"
 
 // crawlerPlugin - crawler plugin
 type crawlerPlugin struct {
-	cmd *chatbot.CommandMap
-	cfg *config
+	cmd       *chatbot.CommandMap
+	cfg       *config
+	urlParser *URLParser
 }
 
 // NewPlugin - new jarvisnode plugin
@@ -37,9 +39,12 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("updcrawler", &cmdUpdCrawler{})
 
 	p := &crawlerPlugin{
-		cmd: cmd,
-		cfg: cfg,
+		cmd:       cmd,
+		cfg:       cfg,
+		urlParser: &URLParser{},
 	}
+
+	p.urlParser.Reg(articleSMZDM, parseArticleSMZDM)
 
 	return p, nil
 }
@@ -55,40 +60,15 @@ func (p *crawlerPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePa
 		return false, nil
 	}
 
-	// file := params.Msg.GetFile()
-	// if file != nil {
-	// 	if file.FileType == chatbot.FileTypeShellScript {
-	// 		sf := &jarviscorepb.FileData{
-	// 			Filename: file.Filename,
-	// 			File:     file.Data,
-	// 		}
-	// 		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
-	// 		if err != nil {
-	// 			jarvisbase.Warn("jarvisnodeexPlugin.OnMessage", zap.Error(err))
-
-	// 			return false, err
-	// 		}
-
-	// 		curnode := params.ChatBot.GetJarvisNode().FindNodeWithName(params.Msg.GetText())
-	// 		if curnode == nil {
-	// 			return false, nil
-	// 		}
-
-	// 		params.ChatBot.GetJarvisNode().RequestCtrl(ctx, curnode.Addr, ci, nil)
-
-	// 		params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-	// 			cr := msg.GetCtrlResult()
-
-	// 			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
-
-	// 			return nil
-	// 		})
-
-	// 		return true, nil
-	// 	}
-
-	// 	return false, nil
-	// }
+	ret := p.urlParser.ParseURL(params.LstStr[0])
+	if ret != nil {
+		if ret.URLType == "article" {
+			return runExportArticle(ctx, params, &plugincrawlerpb.ExpArticleCommand{
+				URL: ret.URL,
+				PDF: ret.PDF,
+			}), nil
+		}
+	}
 
 	if len(params.LstStr) >= 1 {
 		p.cmd.Run(ctx, params.LstStr[0], params)

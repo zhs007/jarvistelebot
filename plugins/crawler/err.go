@@ -15,4 +15,8 @@ var (
 	ErrConfigNoUpdateScript = errors.New("no updatescript in crawler.yaml")
 	// ErrConfigNoExpArticleScript - no exparticlescript in crawler.yaml
 	ErrConfigNoExpArticleScript = errors.New("no exparticlescript in crawler.yaml")
+	// ErrInvalidURLParserType - invalid URLParser type
+	ErrInvalidURLParserType = errors.New("invalid URLParser type")
+	// ErrDuplicateURLParserType - duplicate URLParser type
+	ErrDuplicateURLParserType = errors.New("duplicate URLParser type")
 )
