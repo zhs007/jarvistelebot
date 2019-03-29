@@ -52,8 +52,8 @@
     "language/typeInfo",
     "language/visitor"
   ]
-  revision = "08943645bf265d192b32f2100cdff2428f7ae7c5"
-  version = "v0.7.7"
+  revision = "2b0b7340d2285b861482047fbf5de0488e021bea"
+  version = "v0.7.8"
 
 [[projects]]
   name = "github.com/mitchellh/mapstructure"
@@ -121,7 +121,7 @@
     "crypto",
     "proto"
   ]
-  revision = "22c6496d37219051dfe6d5afb20fa425f84e33d9"
+  revision = "411355b7abc08968011e97de7b326de236fea1fc"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -152,7 +152,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ripemd160"]
-  revision = "b7391e95e576cacdcdd422573063bc057239113d"
+  revision = "a5d413f7728c81fb97d96a2b722368945f651e78"
 
 [[projects]]
   branch = "master"
@@ -166,7 +166,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "e3b2ff56ed879efa686c9d09ed74f9bfe42f1a1d"
+  revision = "74de082e2cca95839e88aa0aeee5aadf6ce7710f"
 
 [[projects]]
   branch = "master"
@@ -199,7 +199,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "e79c0c59cdb5e117ef82a6f885294df3d74065d5"
+  revision = "d831d65fe17df2e52bcc4316d4a9f7a418701f43"
 
 [[projects]]
   name = "google.golang.org/grpc"
