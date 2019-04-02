@@ -82,7 +82,22 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 							lstResult[len(lstResult)-1].Err.Error(), params.Msg)
 					} else if lstResult[len(lstResult)-1].Msg != nil {
 						cm := lstResult[len(lstResult)-1].Msg
+
 						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 &&
+							cm.ReplyType == jarviscorepb.REPLYTYPE_ERROR {
+
+							chatbot.SendTextMsg(params.ChatBot,
+								params.Msg.GetFrom(),
+								fmt.Sprintf("%v reply err %v.",
+									curnode.Name, cm.Err),
+								params.Msg)
+
+						} else if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 &&
+							cm.ReplyType == jarviscorepb.REPLYTYPE_END {
+
+							chatbot.SendTextMsg(params.ChatBot, from, "It's done.", params.Msg)
+
+						} else if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 &&
 							cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
 
 							chatbot.SendTextMsg(params.ChatBot,
@@ -91,26 +106,42 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 									us.JarvisNodeName, rscmd.ScriptName),
 								params.Msg)
 
-							params.ChatBot.AddJarvisMsgCallback(curnode.Addr, cm.ReplyMsgID,
-								func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
-									cr := msg.GetCtrlResult()
-									if cr == nil {
-										msgstr := fmt.Sprintf("%v", msg)
-										jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
+							// params.ChatBot.AddJarvisMsgCallback(curnode.Addr, cm.ReplyMsgID,
+							// 	func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
+							// 		cr := msg.GetCtrlResult()
+							// 		if cr == nil {
+							// 			msgstr := fmt.Sprintf("%v", msg)
+							// 			jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
 
-										chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
+							// 			chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
 
-										return nil
-									}
+							// 			return nil
+							// 		}
 
-									if cr.CtrlResult != "" {
-										chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
-									}
+							// 		if cr.CtrlResult != "" {
+							// 			chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+							// 		}
 
-									chatbot.SendTextMsg(params.ChatBot, from, "It's done.", params.Msg)
+							// 		chatbot.SendTextMsg(params.ChatBot, from, "It's done.", params.Msg)
 
-									return nil
-								})
+							// 		return nil
+							// 	})
+						} else if cm.MsgType == jarviscorepb.MSGTYPE_REPLY_CTRL_RESULT {
+							cr := cm.GetCtrlResult()
+							if cr == nil {
+								msgstr := fmt.Sprintf("%v", cm)
+								jarvisbase.Warn("userscriptPlugin.AddJarvisMsgCallback", zap.String("msg", msgstr))
+
+								chatbot.SendTextMsg(params.ChatBot, from, msgstr, params.Msg)
+
+								return nil
+							}
+
+							if cr.CtrlResult != "" {
+								chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+							}
+
+							// chatbot.SendTextMsg(params.ChatBot, from, "It's done.", params.Msg)
 						}
 					}
 				}

@@ -90,7 +90,17 @@ func (cmd *cmdUpdCrawler) RunCommand(ctx context.Context, params *chatbot.Messag
 					} else if lstResult[len(lstResult)-1].Msg != nil {
 
 						cm := lstResult[len(lstResult)-1].Msg
-						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 && cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
+						if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 &&
+							cm.ReplyType == jarviscorepb.REPLYTYPE_ERROR {
+
+							chatbot.SendTextMsg(params.ChatBot,
+								params.Msg.GetFrom(),
+								fmt.Sprintf("%v reply err %v.",
+									curnode.Name, cm.Err),
+								params.Msg)
+
+						} else if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 &&
+							cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
 
 							chatbot.SendTextMsg(params.ChatBot,
 								params.Msg.GetFrom(),
