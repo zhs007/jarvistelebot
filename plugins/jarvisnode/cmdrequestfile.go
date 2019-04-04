@@ -48,7 +48,12 @@ func (cmd *cmdRequestFile) RunCommand(ctx context.Context, params *chatbot.Messa
 
 				curmsg := lstResult[len(lstResult)-1].Msg
 				if curmsg != nil {
-					if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
+					if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeSend {
+
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							jarviscore.AppendString("I send request ", rfcmd.FileFullPath, " to ", curnode.Name), params.Msg)
+
+					} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
 						if curmsg.ReplyType == jarviscorepb.REPLYTYPE_IGOTIT {
 							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 								fmt.Sprintf("%v has received the file request(%v).",
