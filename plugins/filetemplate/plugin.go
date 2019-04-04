@@ -72,6 +72,11 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 			params.ChatBot.GetJarvisNode().SendFile2(ctx, curnode.Addr, fd,
 				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
+					if len(lstResult) > 0 && lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeSend {
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							jarviscore.AppendString("I send ", ft.FullPath, " to ", ft.JarvisNodeName), params.Msg)
+					}
+
 					for ; sendfilelastresultindex < len(lstResult); sendfilelastresultindex++ {
 						curmsg := lstResult[sendfilelastresultindex].Msg
 						if curmsg != nil {
@@ -147,7 +152,10 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf,
 			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
-				// for ; lastresultindex < len(lstResult); lastresultindex++ {
+				if len(lstResult) > 0 && lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeSend {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						jarviscore.AppendString("I send request ", ft.FullPath, " from ", ft.JarvisNodeName), params.Msg)
+				}
 
 				curmsg := lstResult[len(lstResult)-1].Msg
 				if curmsg != nil {

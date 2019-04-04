@@ -71,7 +71,12 @@ func (p *filetransferPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 					for ; sendfilelastresultindex < len(lstResult); sendfilelastresultindex++ {
 						curmsg := lstResult[sendfilelastresultindex].Msg
 						if curmsg != nil {
-							if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
+							if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeSend {
+
+								chatbot.SendTextMsg(params.ChatBot, from,
+									jarviscore.AppendString("I start sendfile to ", curnode.Name), params.Msg)
+
+							} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
 								if curmsg.ReplyType == jarviscorepb.REPLYTYPE_IGOTIT {
 									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 										fmt.Sprintf("%v has received the file (%v).",

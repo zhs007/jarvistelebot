@@ -75,7 +75,12 @@ func runExportArticle(ctx context.Context, params *chatbot.MessageParams, eacmd 
 				lstResult []*jarviscore.JarvisMsgInfo) error {
 
 				if !isrecv && len(lstResult) > 0 {
-					if lstResult[len(lstResult)-1].Err != nil {
+					if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeSend {
+
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							"I send the script exparticle for "+curnode.Name, params.Msg)
+
+					} else if lstResult[len(lstResult)-1].Err != nil {
 
 						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 							lstResult[len(lstResult)-1].Err.Error(), params.Msg)
