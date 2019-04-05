@@ -62,10 +62,13 @@ func (p *translatePlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		return false, chatbot.ErrMsgNoFrom
 	}
 
-	if p.translateParams != nil && params.CommandLine != nil {
+	if len(params.LstStr) > 0 {
 		if p.cmd.Run(ctx, params.LstStr[0], params) {
 			return true, nil
 		}
+	}
+
+	if p.translateParams != nil && params.CommandLine != nil {
 
 		eacmd, ok := params.CommandLine.(*plugintranslatepb.TextCommand)
 		if !ok {
