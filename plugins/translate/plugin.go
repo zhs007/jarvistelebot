@@ -63,6 +63,10 @@ func (p *translatePlugin) OnMessage(ctx context.Context, params *chatbot.Message
 	}
 
 	if p.translateParams != nil && params.CommandLine != nil {
+		if p.cmd.Run(ctx, params.LstStr[0], params) {
+			return true, nil
+		}
+
 		eacmd, ok := params.CommandLine.(*plugintranslatepb.TextCommand)
 		if !ok {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
@@ -82,7 +86,7 @@ func (p *translatePlugin) OnMessage(ctx context.Context, params *chatbot.Message
 				str, params.Msg)
 		}
 
-		return false, nil
+		return true, nil
 	}
 
 	// if !params.ChatBot.IsMaster(from) {
@@ -146,7 +150,7 @@ func (p *translatePlugin) OnStart(ctx context.Context) error {
 
 // GetPluginType - get pluginType
 func (p *translatePlugin) GetPluginType() int {
-	return chatbot.PluginTypeCommand
+	return chatbot.PluginTypeWritableCommand
 }
 
 // ParseMessage - If this message is what I can process,
