@@ -35,9 +35,9 @@ translateservaddr: 127.0.0.1:7051
 
 ``` sh
 # 进入翻译模式
-translate -s zh-CN -d en -p google -r true
+translate -s zh-CN -d en -p google -r=true
 # 退出翻译模式
-translate -s zh-CN -d en -p google -r false
+translate -s zh-CN -d en -p google -r=false
 ```
 
 ### 2019-03-24

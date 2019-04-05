@@ -73,7 +73,7 @@ func parseTranslateCmd(lststr []string) (*plugintranslatepb.TranslateCommand, er
 	var srclang = flagset.StringP("srclang", "s", "", "source language")
 	var destlang = flagset.StringP("destlang", "d", "", "destination language")
 	var platform = flagset.StringP("platform", "p", "google", "platform")
-	var run = flagset.BoolP("run", "r", true, "run")
+	var run = flagset.BoolP("run", "r", false, "run")
 
 	err := flagset.Parse(lststr)
 	if err != nil {

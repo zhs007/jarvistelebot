@@ -15,12 +15,22 @@ func TestParseTranslateCmd(t *testing.T) {
 
 	lst := []data{
 		data{
-			lststr: []string{"-s", "zh-CN", "-d", "en", "-p", "google", "-r", "true"},
+			lststr: []string{"-s", "zh-CN", "-d", "en", "-p", "google", "-r=true"},
 			cmd: &plugintranslatepb.TranslateCommand{
 				Platform: "google",
 				SrcLang:  "zh-CN",
 				DestLang: "en",
 				Run:      true,
+			},
+			err: nil,
+		},
+		data{
+			lststr: []string{"-s", "zh-CN", "-d", "en", "-p", "google", "-r=false"},
+			cmd: &plugintranslatepb.TranslateCommand{
+				Platform: "google",
+				SrcLang:  "zh-CN",
+				DestLang: "en",
+				Run:      false,
 			},
 			err: nil,
 		},
