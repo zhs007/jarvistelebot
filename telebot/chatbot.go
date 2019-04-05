@@ -26,6 +26,7 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/normal"
 	"github.com/zhs007/jarvistelebot/plugins/notekeyword"
 	"github.com/zhs007/jarvistelebot/plugins/timestamp"
+	"github.com/zhs007/jarvistelebot/plugins/translate"
 	"github.com/zhs007/jarvistelebot/plugins/usermgr"
 	"github.com/zhs007/jarvistelebot/plugins/userscript"
 	"github.com/zhs007/jarvistelebot/plugins/xlsx2json"
@@ -59,6 +60,7 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(pluginfiletemplate.PluginName, pluginfiletemplate.NewPlugin)
 	mgrPlugins.RegPlugin(pluginnotekeyword.PluginName, pluginnotekeyword.NewPlugin)
 	mgrPlugins.RegPlugin(plugincrawler.PluginName, plugincrawler.NewPlugin)
+	mgrPlugins.RegPlugin(plugintranslate.PluginName, plugintranslate.NewPlugin)
 
 	mgrPlugins.SetDefaultPlugin(cfg.DefaultPlugin)
 

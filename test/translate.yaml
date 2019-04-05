@@ -1,0 +1,4 @@
+# jarvis telegram bot plugin translate config file
+
+# translate service addr
+translateservaddr: 192.168.0.1:7051

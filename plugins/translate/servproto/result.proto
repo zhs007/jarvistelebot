@@ -1,0 +1,83 @@
+syntax = "proto3";
+package jarviscrawlercore;
+
+// ParagraphType - paragraph type
+enum ParagraphType {
+    PT_NULL = 0;
+    PT_TEXT = 1;
+    PT_IMAGE = 2;
+    PT_HEADLINE = 3;
+}
+
+// ImageInfo - image info
+message ImageInfo {
+    string hashName = 1;
+    string url = 2;
+    int32 width = 3;
+    int32 height = 4;
+    bytes data = 5;
+}
+
+// Paragraph - paragraph
+message Paragraph {
+    ParagraphType pt = 1;
+    string imgHashName = 2;
+    string text = 3;
+    string imgURL = 4;
+}
+
+// ExportArticleResult - export article result
+message ExportArticleResult {
+    string title = 1;
+    string author = 2;
+    string writeTime = 3;
+    string article = 4;
+    string url = 5;
+    repeated ImageInfo imgs = 6;
+    ImageInfo titleImage = 7;
+    repeated string tags = 8;
+    repeated Paragraph paragraphs = 9;
+    string summary = 10;
+}
+
+// ConfluenceUpdateItem - confluence all updates - item
+message ConfluenceUpdateItem {
+    string title = 1;
+    string url = 2;
+    string summary = 3;
+}
+
+// ConfluenceUpdateGrouping - confluence all updates - grouping
+message ConfluenceUpdateGrouping {
+    string author = 1;
+    repeated ConfluenceUpdateItem items = 2;
+}
+
+// ExportArticleResult - export article result
+message ConfluenceAllUpdates {
+    repeated ConfluenceUpdateGrouping updates = 1;
+}
+
+// RequestTranslate - request translate
+message RequestTranslate {
+    // text - source text
+    string text = 1;
+    // platform - it's like google
+    string platform = 2;
+    // srcLang - source language
+    string srcLang = 3;
+    // destLang - destination language
+    string destLang = 4;
+}
+
+// ReplyTranslate - reply translate
+message ReplyTranslate {
+    // text - destination text
+    string text = 1;
+}
+
+// JarvisCrawlerService - JarvisCrawler service
+service JarvisCrawlerService {
+    // translate - translate text
+    rpc translate(RequestTranslate) returns (ReplyTranslate) {}
+}
