@@ -159,16 +159,19 @@ func (p *translatePlugin) GetPluginType() int {
 // ParseMessage - If this message is what I can process,
 //	it will return to the command line, otherwise it will return an error.
 func (p *translatePlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
+	if len(params.LstStr) >= 1 && p.cmd.HasCommand(params.LstStr[0]) {
+		msg, _ := p.cmd.ParseCommandLine(params.LstStr[0], params)
+		if msg != nil {
+			return msg, nil
+		}
+	}
+
 	if p.translateParams != nil && len(params.LstStr) >= 1 {
 		uac := &plugintranslatepb.TextCommand{
 			Text: params.Msg.GetText(),
 		}
 
 		return uac, nil
-	}
-
-	if len(params.LstStr) >= 1 && p.cmd.HasCommand(params.LstStr[0]) {
-		return p.cmd.ParseCommandLine(params.LstStr[0], params)
 	}
 
 	return nil, chatbot.ErrMsgNotMine
