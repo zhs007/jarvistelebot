@@ -55,14 +55,27 @@ func (cmd *cmdTranslate) ParseCommandLine(params *chatbot.MessageParams) (proto.
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
-	flagset := pflag.NewFlagSet("runscript", pflag.ContinueOnError)
+	uac, err := parseTranslateCmd(params.LstStr[1:])
+	if err != nil {
+		return nil, err
+	}
+
+	if uac != nil {
+		return uac, nil
+	}
+
+	return nil, chatbot.ErrInvalidCommandLine
+}
+
+func parseTranslateCmd(lststr []string) (*plugintranslatepb.TranslateCommand, error) {
+	flagset := pflag.NewFlagSet("translate", pflag.ContinueOnError)
 
 	var srclang = flagset.StringP("srclang", "s", "", "source language")
 	var destlang = flagset.StringP("destlang", "d", "", "destination language")
-	var platform = flagset.StringP("platform", "p", "", "platform")
+	var platform = flagset.StringP("platform", "p", "google", "platform")
 	var run = flagset.BoolP("run", "r", true, "run")
 
-	err := flagset.Parse(params.LstStr[1:])
+	err := flagset.Parse(lststr)
 	if err != nil {
 		return nil, err
 	}
@@ -78,5 +91,5 @@ func (cmd *cmdTranslate) ParseCommandLine(params *chatbot.MessageParams) (proto.
 		return uac, nil
 	}
 
-	return nil, chatbot.ErrInvalidCommandLine
+	return nil, nil
 }

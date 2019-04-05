@@ -160,5 +160,9 @@ func (p *translatePlugin) ParseMessage(params *chatbot.MessageParams) (proto.Mes
 		return uac, nil
 	}
 
+	if len(params.LstStr) >= 1 && p.cmd.HasCommand(params.LstStr[0]) {
+		return p.cmd.ParseCommandLine(params.LstStr[0], params)
+	}
+
 	return nil, chatbot.ErrMsgNotMine
 }
