@@ -2,12 +2,15 @@ syntax = "proto3";
 
 package plugintranslatepb;
 
-// TranslateCommand - translate
-message TranslateCommand {
+// StartTranslateCommand - start translate
+message StartTranslateCommand {
     string platform = 1;
     string srcLang = 2;
     string destLang = 3;
-    bool run = 4;
+}
+
+// StopTranslateCommand - stop translate
+message StopTranslateCommand {
 }
 
 // TextCommand - text

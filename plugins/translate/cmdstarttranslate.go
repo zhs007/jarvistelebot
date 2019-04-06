@@ -9,19 +9,19 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/translate/proto"
 )
 
-// cmdTranslate - translate
-type cmdTranslate struct {
+// cmdStartTranslate - translate
+type cmdStartTranslate struct {
 }
 
 // RunCommand - run command
-func (cmd *cmdTranslate) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
+func (cmd *cmdStartTranslate) RunCommand(ctx context.Context, params *chatbot.MessageParams) bool {
 	from := params.Msg.GetFrom()
 	if from == nil {
 		return false
 	}
 
 	if params.CommandLine != nil {
-		eacmd, ok := params.CommandLine.(*plugintranslatepb.TranslateCommand)
+		eacmd, ok := params.CommandLine.(*plugintranslatepb.StartTranslateCommand)
 		if !ok {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 				chatbot.ErrInvalidCommandLine.Error(), params.Msg)
@@ -37,11 +37,7 @@ func (cmd *cmdTranslate) RunCommand(ctx context.Context, params *chatbot.Message
 			return false
 		}
 
-		if eacmd.Run {
-			pluginTranslate.translateParams = eacmd
-		} else {
-			pluginTranslate.translateParams = nil
-		}
+		pluginTranslate.translateParams = eacmd
 
 		return true
 	}
@@ -50,12 +46,12 @@ func (cmd *cmdTranslate) RunCommand(ctx context.Context, params *chatbot.Message
 }
 
 // Parse - parse command line
-func (cmd *cmdTranslate) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
+func (cmd *cmdStartTranslate) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
 	if len(params.LstStr) < 1 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
-	uac, err := parseTranslateCmd(params.LstStr[1:])
+	uac, err := parseStartTranslateCmd(params.LstStr[1:])
 	if err != nil {
 		return nil, err
 	}
@@ -67,13 +63,12 @@ func (cmd *cmdTranslate) ParseCommandLine(params *chatbot.MessageParams) (proto.
 	return nil, chatbot.ErrInvalidCommandLine
 }
 
-func parseTranslateCmd(lststr []string) (*plugintranslatepb.TranslateCommand, error) {
-	flagset := pflag.NewFlagSet("translate", pflag.ContinueOnError)
+func parseStartTranslateCmd(lststr []string) (*plugintranslatepb.StartTranslateCommand, error) {
+	flagset := pflag.NewFlagSet("starttranslate", pflag.ContinueOnError)
 
 	var srclang = flagset.StringP("srclang", "s", "", "source language")
 	var destlang = flagset.StringP("destlang", "d", "", "destination language")
 	var platform = flagset.StringP("platform", "p", "google", "platform")
-	var run = flagset.BoolP("run", "r", false, "run")
 
 	err := flagset.Parse(lststr)
 	if err != nil {
@@ -81,11 +76,10 @@ func parseTranslateCmd(lststr []string) (*plugintranslatepb.TranslateCommand, er
 	}
 
 	if *srclang != "" && *destlang != "" {
-		uac := &plugintranslatepb.TranslateCommand{
+		uac := &plugintranslatepb.StartTranslateCommand{
 			Platform: *platform,
 			SrcLang:  *srclang,
 			DestLang: *destlang,
-			Run:      *run,
 		}
 
 		return uac, nil

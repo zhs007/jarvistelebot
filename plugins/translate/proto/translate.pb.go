@@ -18,68 +18,91 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-// TranslateCommand - translate
-type TranslateCommand struct {
+// StartTranslateCommand - start translate
+type StartTranslateCommand struct {
 	Platform             string   `protobuf:"bytes,1,opt,name=platform,proto3" json:"platform,omitempty"`
 	SrcLang              string   `protobuf:"bytes,2,opt,name=srcLang,proto3" json:"srcLang,omitempty"`
 	DestLang             string   `protobuf:"bytes,3,opt,name=destLang,proto3" json:"destLang,omitempty"`
-	Run                  bool     `protobuf:"varint,4,opt,name=run,proto3" json:"run,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *TranslateCommand) Reset()         { *m = TranslateCommand{} }
-func (m *TranslateCommand) String() string { return proto.CompactTextString(m) }
-func (*TranslateCommand) ProtoMessage()    {}
-func (*TranslateCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_translate_a98b5be351b1679e, []int{0}
+func (m *StartTranslateCommand) Reset()         { *m = StartTranslateCommand{} }
+func (m *StartTranslateCommand) String() string { return proto.CompactTextString(m) }
+func (*StartTranslateCommand) ProtoMessage()    {}
+func (*StartTranslateCommand) Descriptor() ([]byte, []int) {
+	return fileDescriptor_translate_1b0a44f289ff52a4, []int{0}
 }
-func (m *TranslateCommand) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_TranslateCommand.Unmarshal(m, b)
+func (m *StartTranslateCommand) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StartTranslateCommand.Unmarshal(m, b)
 }
-func (m *TranslateCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_TranslateCommand.Marshal(b, m, deterministic)
+func (m *StartTranslateCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StartTranslateCommand.Marshal(b, m, deterministic)
 }
-func (dst *TranslateCommand) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TranslateCommand.Merge(dst, src)
+func (dst *StartTranslateCommand) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StartTranslateCommand.Merge(dst, src)
 }
-func (m *TranslateCommand) XXX_Size() int {
-	return xxx_messageInfo_TranslateCommand.Size(m)
+func (m *StartTranslateCommand) XXX_Size() int {
+	return xxx_messageInfo_StartTranslateCommand.Size(m)
 }
-func (m *TranslateCommand) XXX_DiscardUnknown() {
-	xxx_messageInfo_TranslateCommand.DiscardUnknown(m)
+func (m *StartTranslateCommand) XXX_DiscardUnknown() {
+	xxx_messageInfo_StartTranslateCommand.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_TranslateCommand proto.InternalMessageInfo
+var xxx_messageInfo_StartTranslateCommand proto.InternalMessageInfo
 
-func (m *TranslateCommand) GetPlatform() string {
+func (m *StartTranslateCommand) GetPlatform() string {
 	if m != nil {
 		return m.Platform
 	}
 	return ""
 }
 
-func (m *TranslateCommand) GetSrcLang() string {
+func (m *StartTranslateCommand) GetSrcLang() string {
 	if m != nil {
 		return m.SrcLang
 	}
 	return ""
 }
 
-func (m *TranslateCommand) GetDestLang() string {
+func (m *StartTranslateCommand) GetDestLang() string {
 	if m != nil {
 		return m.DestLang
 	}
 	return ""
 }
 
-func (m *TranslateCommand) GetRun() bool {
-	if m != nil {
-		return m.Run
-	}
-	return false
+// StopTranslateCommand - stop translate
+type StopTranslateCommand struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
+
+func (m *StopTranslateCommand) Reset()         { *m = StopTranslateCommand{} }
+func (m *StopTranslateCommand) String() string { return proto.CompactTextString(m) }
+func (*StopTranslateCommand) ProtoMessage()    {}
+func (*StopTranslateCommand) Descriptor() ([]byte, []int) {
+	return fileDescriptor_translate_1b0a44f289ff52a4, []int{1}
+}
+func (m *StopTranslateCommand) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StopTranslateCommand.Unmarshal(m, b)
+}
+func (m *StopTranslateCommand) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StopTranslateCommand.Marshal(b, m, deterministic)
+}
+func (dst *StopTranslateCommand) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StopTranslateCommand.Merge(dst, src)
+}
+func (m *StopTranslateCommand) XXX_Size() int {
+	return xxx_messageInfo_StopTranslateCommand.Size(m)
+}
+func (m *StopTranslateCommand) XXX_DiscardUnknown() {
+	xxx_messageInfo_StopTranslateCommand.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StopTranslateCommand proto.InternalMessageInfo
 
 // TextCommand - text
 type TextCommand struct {
@@ -93,7 +116,7 @@ func (m *TextCommand) Reset()         { *m = TextCommand{} }
 func (m *TextCommand) String() string { return proto.CompactTextString(m) }
 func (*TextCommand) ProtoMessage()    {}
 func (*TextCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_translate_a98b5be351b1679e, []int{1}
+	return fileDescriptor_translate_1b0a44f289ff52a4, []int{2}
 }
 func (m *TextCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TextCommand.Unmarshal(m, b)
@@ -121,22 +144,23 @@ func (m *TextCommand) GetText() string {
 }
 
 func init() {
-	proto.RegisterType((*TranslateCommand)(nil), "plugintranslatepb.TranslateCommand")
+	proto.RegisterType((*StartTranslateCommand)(nil), "plugintranslatepb.StartTranslateCommand")
+	proto.RegisterType((*StopTranslateCommand)(nil), "plugintranslatepb.StopTranslateCommand")
 	proto.RegisterType((*TextCommand)(nil), "plugintranslatepb.TextCommand")
 }
 
-func init() { proto.RegisterFile("translate.proto", fileDescriptor_translate_a98b5be351b1679e) }
+func init() { proto.RegisterFile("translate.proto", fileDescriptor_translate_1b0a44f289ff52a4) }
 
-var fileDescriptor_translate_a98b5be351b1679e = []byte{
-	// 159 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_translate_1b0a44f289ff52a4 = []byte{
+	// 158 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2f, 0x29, 0x4a, 0xcc,
 	0x2b, 0xce, 0x49, 0x2c, 0x49, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x2c, 0xc8, 0x29,
-	0x4d, 0xcf, 0xcc, 0x83, 0x0b, 0x17, 0x24, 0x29, 0x95, 0x71, 0x09, 0x84, 0xc0, 0xb8, 0xce, 0xf9,
-	0xb9, 0xb9, 0x89, 0x79, 0x29, 0x42, 0x52, 0x5c, 0x1c, 0x05, 0x39, 0x89, 0x25, 0x69, 0xf9, 0x45,
-	0xb9, 0x12, 0x8c, 0x0a, 0x8c, 0x1a, 0x9c, 0x41, 0x70, 0xbe, 0x90, 0x04, 0x17, 0x7b, 0x71, 0x51,
-	0xb2, 0x4f, 0x62, 0x5e, 0xba, 0x04, 0x13, 0x58, 0x0a, 0xc6, 0x05, 0xe9, 0x4a, 0x49, 0x2d, 0x2e,
-	0x01, 0x4b, 0x31, 0x43, 0x74, 0xc1, 0xf8, 0x42, 0x02, 0x5c, 0xcc, 0x45, 0xa5, 0x79, 0x12, 0x2c,
-	0x0a, 0x8c, 0x1a, 0x1c, 0x41, 0x20, 0xa6, 0x92, 0x22, 0x17, 0x77, 0x48, 0x6a, 0x45, 0x09, 0xcc,
-	0x4a, 0x21, 0x2e, 0x96, 0x92, 0xd4, 0x8a, 0x12, 0xa8, 0x75, 0x60, 0x76, 0x12, 0x1b, 0xd8, 0xd1,
-	0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0xc1, 0x7d, 0x16, 0x15, 0xc7, 0x00, 0x00, 0x00,
+	0x4d, 0xcf, 0xcc, 0x83, 0x0b, 0x17, 0x24, 0x29, 0x65, 0x72, 0x89, 0x06, 0x97, 0x24, 0x16, 0x95,
+	0x84, 0xc0, 0xc4, 0x9c, 0xf3, 0x73, 0x73, 0x13, 0xf3, 0x52, 0x84, 0xa4, 0xb8, 0x38, 0x0a, 0x72,
+	0x12, 0x4b, 0xd2, 0xf2, 0x8b, 0x72, 0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x83, 0xe0, 0x7c, 0x21,
+	0x09, 0x2e, 0xf6, 0xe2, 0xa2, 0x64, 0x9f, 0xc4, 0xbc, 0x74, 0x09, 0x26, 0xb0, 0x14, 0x8c, 0x0b,
+	0xd2, 0x95, 0x92, 0x5a, 0x5c, 0x02, 0x96, 0x62, 0x86, 0xe8, 0x82, 0xf1, 0x95, 0xc4, 0xb8, 0x44,
+	0x82, 0x4b, 0xf2, 0x0b, 0xd0, 0x6d, 0x52, 0x52, 0xe4, 0xe2, 0x0e, 0x49, 0xad, 0x28, 0x81, 0x59,
+	0x2c, 0xc4, 0xc5, 0x52, 0x92, 0x5a, 0x51, 0x02, 0xb5, 0x14, 0xcc, 0x4e, 0x62, 0x03, 0xbb, 0xdf,
+	0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x44, 0xb1, 0xf6, 0x38, 0xd2, 0x00, 0x00, 0x00,
 }

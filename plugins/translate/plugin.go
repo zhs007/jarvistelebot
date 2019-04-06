@@ -18,7 +18,7 @@ type translatePlugin struct {
 	cmd             *chatbot.CommandMap
 	cfg             *config
 	client          *translateClient
-	translateParams *plugintranslatepb.TranslateCommand
+	translateParams *plugintranslatepb.StartTranslateCommand
 }
 
 // NewPlugin - new xlsx2json plugin
@@ -35,7 +35,8 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 	cmd := chatbot.NewCommandMap()
 
-	cmd.AddCommand("translate", &cmdTranslate{})
+	cmd.AddCommand("starttranslate", &cmdStartTranslate{})
+	cmd.AddCommand("stoptranslate", &cmdStopTranslate{})
 
 	p := &translatePlugin{
 		cmd:    cmd,

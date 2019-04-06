@@ -6,63 +6,56 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/translate/proto"
 )
 
-func TestParseTranslateCmd(t *testing.T) {
+func TestParseStartTranslateCmd(t *testing.T) {
 	type data struct {
 		lststr []string
-		cmd    *plugintranslatepb.TranslateCommand
+		cmd    *plugintranslatepb.StartTranslateCommand
 		err    error
 	}
 
 	lst := []data{
 		data{
-			lststr: []string{"-s", "zh-CN", "-d", "en", "-p", "google", "-r=true"},
-			cmd: &plugintranslatepb.TranslateCommand{
+			lststr: []string{"-s", "zh-CN", "-d", "en", "-p", "google"},
+			cmd: &plugintranslatepb.StartTranslateCommand{
 				Platform: "google",
 				SrcLang:  "zh-CN",
 				DestLang: "en",
-				Run:      true,
 			},
 			err: nil,
 		},
 		data{
-			lststr: []string{"-s", "zh-CN", "-d", "en", "-p", "google", "-r=false"},
-			cmd: &plugintranslatepb.TranslateCommand{
+			lststr: []string{"-s", "zh-CN", "-d", "en"},
+			cmd: &plugintranslatepb.StartTranslateCommand{
 				Platform: "google",
 				SrcLang:  "zh-CN",
 				DestLang: "en",
-				Run:      false,
 			},
 			err: nil,
 		},
 	}
 
 	for i := 0; i < len(lst); i++ {
-		cmd, err := parseTranslateCmd(lst[i].lststr)
+		cmd, err := parseStartTranslateCmd(lst[i].lststr)
 		if err != lst[i].err {
-			t.Fatalf("TestParseTranslateCmd parseTranslateCmd %v - %v", lst[i], err)
+			t.Fatalf("TestParseStartTranslateCmd parseStartTranslateCmd %v - %v", lst[i], err)
 		}
 
 		if lst[i].cmd != nil && cmd == nil || lst[i].cmd == nil && cmd != nil {
-			t.Fatalf("TestParseTranslateCmd parseTranslateCmd %v - %v", lst[i], cmd)
+			t.Fatalf("TestParseStartTranslateCmd parseTranslateCmd %v - %v", lst[i], cmd)
 		} else if cmd != nil && lst[i].cmd != nil {
 			if cmd.Platform != lst[i].cmd.Platform {
-				t.Fatalf("TestParseTranslateCmd parseTranslateCmd %v %v - %v",
+				t.Fatalf("TestParseStartTranslateCmd parseTranslateCmd %v %v - %v",
 					lst[i].lststr, lst[i].cmd.Platform, cmd.Platform)
 			}
 
 			if cmd.SrcLang != lst[i].cmd.SrcLang {
-				t.Fatalf("TestParseTranslateCmd parseTranslateCmd %v %v - %v",
+				t.Fatalf("TestParseStartTranslateCmd parseTranslateCmd %v %v - %v",
 					lst[i].lststr, lst[i].cmd.SrcLang, cmd.SrcLang)
 			}
 
 			if cmd.DestLang != lst[i].cmd.DestLang {
-				t.Fatalf("TestParseTranslateCmd parseTranslateCmd %v %v - %v",
+				t.Fatalf("TestParseStartTranslateCmd parseTranslateCmd %v %v - %v",
 					lst[i].lststr, lst[i].cmd.DestLang, cmd.DestLang)
-			}
-
-			if cmd.Run != lst[i].cmd.Run {
-				t.Fatalf("TestParseTranslateCmd parseTranslateCmd %v %v - %v",
-					lst[i].lststr, lst[i].cmd.Run, cmd.Run)
 			}
 		}
 
@@ -71,5 +64,5 @@ func TestParseTranslateCmd(t *testing.T) {
 		// }
 	}
 
-	t.Log("TestParseTranslateCmd OK")
+	t.Log("TestParseStartTranslateCmd OK")
 }
