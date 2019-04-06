@@ -55,8 +55,8 @@ func (cmd *cmdStartTranslate) RunCommand(ctx context.Context, params *chatbot.Me
 			)
 
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-				fmt.Sprintf("I got it, I will translate %v to %v for %v.%v(%v)",
-					cmd.SrcLang, cmd.DestLang, params.Msg.GetGroupID(), cmd.Username, user.UserID), params.Msg)
+				fmt.Sprintf("I got it, I will translate %v to %v for %v.%v(%v-%v)",
+					cmd.SrcLang, cmd.DestLang, params.Msg.GetGroupID(), cmd.Username, user.UserID, params.Msg.GetChatID()), params.Msg)
 		} else {
 			pluginTranslate.translateParams = cmd
 
