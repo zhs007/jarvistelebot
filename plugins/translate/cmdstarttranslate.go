@@ -2,6 +2,7 @@ package plugintranslate
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
@@ -52,8 +53,16 @@ func (cmd *cmdStartTranslate) RunCommand(ctx context.Context, params *chatbot.Me
 				cmd.SrcLang,
 				cmd.DestLang,
 			)
+
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+				fmt.Sprintf("I got it, I will translate %v to %v for %v.%v(%v)",
+					cmd.SrcLang, cmd.DestLang, params.Msg.GetGroupID(), cmd.Username, user.UserID), params.Msg)
 		} else {
 			pluginTranslate.translateParams = cmd
+
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+				fmt.Sprintf("I got it, I will translate %v to %v for you",
+					cmd.SrcLang, cmd.DestLang), params.Msg)
 		}
 
 		return true
