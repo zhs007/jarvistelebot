@@ -1,5 +1,45 @@
 # JarvisTeleBot Development Log
 
+### 2019-04-05
+
+今天加了``translate``插件，当然，首先需要在``config.yaml``里配置加载插件。
+
+``` yaml
+# plugins - enable plugins
+plugins:
+  - 'core'
+  - 'assistant'
+  - 'jarvisnode'
+  - 'jarvisnodeex'
+  - 'timestamp'
+  - 'xlsx2json'
+  - 'filetransfer'
+  - 'usermgr'
+  - 'userscript'
+  - 'filetemplate'
+  - 'crawler'
+  - 'translate'
+```
+
+翻译插件直接用``jarviscrawlercore``的服务，也有自己的配置文件``translate.yaml``。
+
+``` yaml
+# jarvis telegram bot plugin translate config file
+
+# translate service addr
+translateservaddr: 127.0.0.1:7051
+```
+
+
+有几个命令
+
+``` sh
+# 进入翻译模式
+translate -s zh-CN -d en -p google -r=true
+# 退出翻译模式
+translate -s zh-CN -d en -p google -r=false
+```
+
 ### 2019-03-24
 
 ``exparticle``已经可以主动发文件给你了。

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package plugintranslatepb;
+
+// StartTranslateCommand - start translate
+message StartTranslateCommand {
+    string platform = 1;
+    string srcLang = 2;
+    string destLang = 3;
+    string username = 4;
+    string userid = 5;
+}
+
+// StopTranslateCommand - stop translate
+message StopTranslateCommand {
+    string username = 1;
+    string userid = 2;
+}
+
+// TextCommand - text
+message TextCommand {
+    string text = 1;
+}

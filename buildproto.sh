@@ -10,3 +10,5 @@ protoc -I plugins/filetemplate/proto/ plugins/filetemplate/proto/filetemplate.pr
 protoc -I plugins/assistant/proto/ plugins/assistant/proto/assistant.proto --go_out=plugins=grpc:plugins/assistant/proto
 protoc -I plugins/notekeyword/proto/ plugins/notekeyword/proto/notekeyword.proto --go_out=plugins=grpc:plugins/notekeyword/proto
 protoc -I plugins/crawler/proto/ plugins/crawler/proto/crawler.proto --go_out=plugins=grpc:plugins/crawler/proto
+protoc -I plugins/translate/servproto/ plugins/translate/servproto/result.proto --go_out=plugins=grpc:plugins/translate/servproto
+protoc -I plugins/translate/proto/ plugins/translate/proto/translate.proto --go_out=plugins=grpc:plugins/translate/proto
