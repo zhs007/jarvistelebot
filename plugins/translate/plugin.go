@@ -19,6 +19,7 @@ type translatePlugin struct {
 	cfg             *config
 	client          *translateClient
 	translateParams *plugintranslatepb.StartTranslateCommand
+	mapGroupInfo    *groupInfo
 }
 
 // NewPlugin - new xlsx2json plugin
@@ -39,9 +40,10 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("stoptranslate", &cmdStopTranslate{})
 
 	p := &translatePlugin{
-		cmd:    cmd,
-		cfg:    cfg,
-		client: newTranslateClient(cfg),
+		cmd:          cmd,
+		cfg:          cfg,
+		client:       newTranslateClient(cfg),
+		mapGroupInfo: &groupInfo{},
 	}
 
 	return p, nil
@@ -69,29 +71,69 @@ func (p *translatePlugin) OnMessage(ctx context.Context, params *chatbot.Message
 		}
 	}
 
-	if p.translateParams != nil && params.CommandLine != nil {
+	if params.CommandLine != nil {
+		cmd, ok := params.CommandLine.(*plugintranslatepb.TextCommand)
+		if ok {
+			if p.translateParams != nil {
+				str, err := p.client.translate(ctx, cmd.Text,
+					p.translateParams.SrcLang, p.translateParams.DestLang)
 
-		eacmd, ok := params.CommandLine.(*plugintranslatepb.TextCommand)
-		if !ok {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-				chatbot.ErrInvalidCommandLine.Error(), params.Msg)
+				if err != nil {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						err.Error(), params.Msg)
+				} else {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						str, params.Msg)
+				}
 
-			return false, chatbot.ErrInvalidCommandLine
+				return true, nil
+			}
+
+			if params.Msg.InGroup() {
+				groupid := params.Msg.GetGroupID()
+				uid := params.Msg.GetChatID()
+				gui := p.mapGroupInfo.getGroupUserInfo(groupid, uid)
+				if gui != nil {
+					str, err := p.client.translate(ctx, cmd.Text,
+						gui.srcLang, gui.destLang)
+
+					if err != nil {
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							err.Error(), params.Msg)
+					} else {
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							str, params.Msg)
+					}
+
+					return true, nil
+				}
+			}
 		}
-
-		str, err := p.client.translate(ctx, eacmd.Text,
-			p.translateParams.SrcLang, p.translateParams.DestLang)
-
-		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-				err.Error(), params.Msg)
-		} else {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-				str, params.Msg)
-		}
-
-		return true, nil
 	}
+
+	// if p.translateParams != nil && params.CommandLine != nil {
+
+	// 	eacmd, ok := params.CommandLine.(*plugintranslatepb.TextCommand)
+	// 	if !ok {
+	// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+	// 			chatbot.ErrInvalidCommandLine.Error(), params.Msg)
+
+	// 		return false, chatbot.ErrInvalidCommandLine
+	// 	}
+
+	// 	str, err := p.client.translate(ctx, eacmd.Text,
+	// 		p.translateParams.SrcLang, p.translateParams.DestLang)
+
+	// 	if err != nil {
+	// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+	// 			err.Error(), params.Msg)
+	// 	} else {
+	// 		chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+	// 			str, params.Msg)
+	// 	}
+
+	// 	return true, nil
+	// }
 
 	// if !params.ChatBot.IsMaster(from) {
 	// 	return false, nil
@@ -173,6 +215,19 @@ func (p *translatePlugin) ParseMessage(params *chatbot.MessageParams) (proto.Mes
 		}
 
 		return uac, nil
+	}
+
+	if params.Msg.InGroup() {
+		groupid := params.Msg.GetGroupID()
+		uid := params.Msg.GetChatID()
+		gui := p.mapGroupInfo.getGroupUserInfo(groupid, uid)
+		if gui != nil {
+			uac := &plugintranslatepb.TextCommand{
+				Text: params.Msg.GetText(),
+			}
+
+			return uac, nil
+		}
 	}
 
 	return nil, chatbot.ErrMsgNotMine

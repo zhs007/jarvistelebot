@@ -21,7 +21,7 @@ func (cmd *cmdStartTranslate) RunCommand(ctx context.Context, params *chatbot.Me
 	}
 
 	if params.CommandLine != nil {
-		eacmd, ok := params.CommandLine.(*plugintranslatepb.StartTranslateCommand)
+		cmd, ok := params.CommandLine.(*plugintranslatepb.StartTranslateCommand)
 		if !ok {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 				chatbot.ErrInvalidCommandLine.Error(), params.Msg)
@@ -37,7 +37,24 @@ func (cmd *cmdStartTranslate) RunCommand(ctx context.Context, params *chatbot.Me
 			return false
 		}
 
-		pluginTranslate.translateParams = eacmd
+		if params.Msg.InGroup() && cmd.Username != "" {
+			user, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(cmd.Username)
+			if err != nil {
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+					err.Error(), params.Msg)
+
+				return false
+			}
+
+			pluginTranslate.mapGroupInfo.setGroupUser(
+				params.Msg.GetGroupID(),
+				user.UserID,
+				cmd.SrcLang,
+				cmd.DestLang,
+			)
+		} else {
+			pluginTranslate.translateParams = cmd
+		}
 
 		return true
 	}
@@ -69,6 +86,7 @@ func parseStartTranslateCmd(lststr []string) (*plugintranslatepb.StartTranslateC
 	var srclang = flagset.StringP("srclang", "s", "", "source language")
 	var destlang = flagset.StringP("destlang", "d", "", "destination language")
 	var platform = flagset.StringP("platform", "p", "google", "platform")
+	var username = flagset.StringP("username", "u", "", "username")
 
 	err := flagset.Parse(lststr)
 	if err != nil {
@@ -80,6 +98,7 @@ func parseStartTranslateCmd(lststr []string) (*plugintranslatepb.StartTranslateC
 			Platform: *platform,
 			SrcLang:  *srclang,
 			DestLang: *destlang,
+			Username: *username,
 		}
 
 		return uac, nil

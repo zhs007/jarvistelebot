@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/spf13/pflag"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/plugins/translate/proto"
 )
@@ -20,7 +21,7 @@ func (cmd *cmdStopTranslate) RunCommand(ctx context.Context, params *chatbot.Mes
 	}
 
 	if params.CommandLine != nil {
-		_, ok := params.CommandLine.(*plugintranslatepb.StopTranslateCommand)
+		cmd, ok := params.CommandLine.(*plugintranslatepb.StopTranslateCommand)
 		if !ok {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 				chatbot.ErrInvalidCommandLine.Error(), params.Msg)
@@ -36,7 +37,28 @@ func (cmd *cmdStopTranslate) RunCommand(ctx context.Context, params *chatbot.Mes
 			return false
 		}
 
-		pluginTranslate.translateParams = nil
+		if params.Msg.InGroup() {
+			if cmd.Username != "" {
+				user, err := params.ChatBot.GetChatBotDB().GetUserWithUserName(cmd.Username)
+				if err != nil {
+					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+						err.Error(), params.Msg)
+
+					return false
+				}
+
+				pluginTranslate.mapGroupInfo.clearGroupUser(
+					params.Msg.GetGroupID(),
+					user.UserID,
+				)
+			} else {
+				pluginTranslate.mapGroupInfo.clearGroup(
+					params.Msg.GetGroupID(),
+				)
+			}
+		} else {
+			pluginTranslate.translateParams = nil
+		}
 
 		return true
 	}
@@ -63,18 +85,21 @@ func (cmd *cmdStopTranslate) ParseCommandLine(params *chatbot.MessageParams) (pr
 }
 
 func parseStopTranslateCmd(lststr []string) (*plugintranslatepb.StopTranslateCommand, error) {
-	// flagset := pflag.NewFlagSet("starttranslate", pflag.ContinueOnError)
+	flagset := pflag.NewFlagSet("starttranslate", pflag.ContinueOnError)
 
+	var username = flagset.StringP("username", "u", "", "username")
 	// var srclang = flagset.StringP("srclang", "s", "", "source language")
 	// var destlang = flagset.StringP("destlang", "d", "", "destination language")
 	// var platform = flagset.StringP("platform", "p", "google", "platform")
 
-	// err := flagset.Parse(lststr)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	err := flagset.Parse(lststr)
+	if err != nil {
+		return nil, err
+	}
 
-	return &plugintranslatepb.StopTranslateCommand{}, nil
+	return &plugintranslatepb.StopTranslateCommand{
+		Username: *username,
+	}, nil
 
 	// if *srclang != "" && *destlang != "" {
 	// 	uac := &plugintranslatepb.StopTranslateCommand{
