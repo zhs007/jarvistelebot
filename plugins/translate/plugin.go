@@ -91,7 +91,7 @@ func (p *translatePlugin) OnMessage(ctx context.Context, params *chatbot.Message
 
 			if params.Msg.InGroup() {
 				groupid := params.Msg.GetGroupID()
-				uid := params.Msg.GetChatID()
+				uid := params.Msg.GetFrom().GetUserID()
 				gui := p.mapGroupInfo.getGroupUserInfo(groupid, uid)
 				if gui != nil {
 					str, err := p.client.translate(ctx, cmd.Text,
@@ -219,7 +219,7 @@ func (p *translatePlugin) ParseMessage(params *chatbot.MessageParams) (proto.Mes
 
 	if params.Msg.InGroup() {
 		groupid := params.Msg.GetGroupID()
-		uid := params.Msg.GetChatID()
+		uid := params.Msg.GetFrom().GetUserID()
 		gui := p.mapGroupInfo.getGroupUserInfo(groupid, uid)
 		if gui != nil {
 			uac := &plugintranslatepb.TextCommand{
