@@ -52,6 +52,7 @@ func (cmd *cmdStartTranslate) RunCommand(ctx context.Context, params *chatbot.Me
 				user.UserID,
 				cmd.SrcLang,
 				cmd.DestLang,
+				cmd.Retranslate,
 			)
 
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),

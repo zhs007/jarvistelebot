@@ -3,8 +3,9 @@ package plugintranslate
 import "sync"
 
 type userinfo struct {
-	srcLang  string
-	destLang string
+	srcLang     string
+	destLang    string
+	retranslate bool
 }
 
 type groupUserInfo struct {
@@ -15,10 +16,11 @@ func (g *groupUserInfo) clearUser(uid string) {
 	g.mapUser.Delete(uid)
 }
 
-func (g *groupUserInfo) setUser(uid string, srclang string, destlang string) {
+func (g *groupUserInfo) setUser(uid string, srclang string, destlang string, retranslate bool) {
 	ui := &userinfo{
-		srcLang:  srclang,
-		destLang: destlang,
+		srcLang:     srclang,
+		destLang:    destlang,
+		retranslate: retranslate,
 	}
 
 	g.mapUser.Store(uid, ui)
@@ -42,18 +44,18 @@ type groupInfo struct {
 	mapGroup sync.Map
 }
 
-func (g *groupInfo) setGroupUser(groupid string, uid string, srclang string, destlang string) {
+func (g *groupInfo) setGroupUser(groupid string, uid string, srclang string, destlang string, retranslate bool) {
 	gui := g.getGroup(groupid)
 	if gui == nil {
 		gui = &groupUserInfo{}
-		gui.setUser(uid, srclang, destlang)
+		gui.setUser(uid, srclang, destlang, retranslate)
 
 		g.mapGroup.Store(groupid, gui)
 
 		return
 	}
 
-	gui.setUser(uid, srclang, destlang)
+	gui.setUser(uid, srclang, destlang, retranslate)
 }
 
 func (g *groupInfo) getGroup(groupid string) *groupUserInfo {
