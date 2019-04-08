@@ -116,18 +116,18 @@ func (p *translatePlugin) OnMessage(ctx context.Context, params *chatbot.Message
 							err.Error(), params.Msg)
 					} else {
 						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-							nickname+":"+str, params.Msg)
+							nickname+": "+str, params.Msg)
 
-						if p.translateParams.Retranslate {
+						if gui.retranslate {
 							restr, err := p.client.translate(ctx, str,
-								p.translateParams.DestLang, p.translateParams.SrcLang)
+								gui.destLang, gui.srcLang)
 
 							if err != nil {
 								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 									err.Error(), params.Msg)
 							} else {
 								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-									nickname+":"+restr, params.Msg)
+									nickname+": "+restr, params.Msg)
 							}
 						}
 					}
