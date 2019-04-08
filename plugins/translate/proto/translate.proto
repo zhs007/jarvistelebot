@@ -9,6 +9,7 @@ message StartTranslateCommand {
     string destLang = 3;
     string username = 4;
     string userid = 5;
+    bool retranslate = 6;
 }
 
 // StopTranslateCommand - stop translate
