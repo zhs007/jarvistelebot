@@ -84,6 +84,19 @@ func (p *translatePlugin) OnMessage(ctx context.Context, params *chatbot.Message
 				} else {
 					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 						str, params.Msg)
+
+					if p.translateParams.Retranslate {
+						restr, err := p.client.translate(ctx, str,
+							p.translateParams.DestLang, p.translateParams.SrcLang)
+
+						if err != nil {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								err.Error(), params.Msg)
+						} else {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								restr, params.Msg)
+						}
+					}
 				}
 
 				return true, nil
@@ -92,6 +105,7 @@ func (p *translatePlugin) OnMessage(ctx context.Context, params *chatbot.Message
 			if params.Msg.InGroup() {
 				groupid := params.Msg.GetGroupID()
 				uid := params.Msg.GetFrom().GetUserID()
+				nickname := params.Msg.GetFrom().GetNickName()
 				gui := p.mapGroupInfo.getGroupUserInfo(groupid, uid)
 				if gui != nil {
 					str, err := p.client.translate(ctx, cmd.Text,
@@ -102,7 +116,20 @@ func (p *translatePlugin) OnMessage(ctx context.Context, params *chatbot.Message
 							err.Error(), params.Msg)
 					} else {
 						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-							str, params.Msg)
+							nickname+":"+str, params.Msg)
+
+						if p.translateParams.Retranslate {
+							restr, err := p.client.translate(ctx, str,
+								p.translateParams.DestLang, p.translateParams.SrcLang)
+
+							if err != nil {
+								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+									err.Error(), params.Msg)
+							} else {
+								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+									nickname+":"+restr, params.Msg)
+							}
+						}
 					}
 
 					return true, nil

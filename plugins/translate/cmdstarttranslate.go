@@ -96,6 +96,7 @@ func parseStartTranslateCmd(lststr []string) (*plugintranslatepb.StartTranslateC
 	var destlang = flagset.StringP("destlang", "d", "", "destination language")
 	var platform = flagset.StringP("platform", "p", "google", "platform")
 	var username = flagset.StringP("username", "u", "", "username")
+	var retranslate = flagset.BoolP("retranslate", "r", false, "retranslate")
 
 	err := flagset.Parse(lststr)
 	if err != nil {
@@ -104,10 +105,11 @@ func parseStartTranslateCmd(lststr []string) (*plugintranslatepb.StartTranslateC
 
 	if *srclang != "" && *destlang != "" {
 		uac := &plugintranslatepb.StartTranslateCommand{
-			Platform: *platform,
-			SrcLang:  *srclang,
-			DestLang: *destlang,
-			Username: *username,
+			Platform:    *platform,
+			SrcLang:     *srclang,
+			DestLang:    *destlang,
+			Username:    *username,
+			Retranslate: *retranslate,
 		}
 
 		return uac, nil
