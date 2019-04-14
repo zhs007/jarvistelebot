@@ -19,6 +19,7 @@ type crawlerPlugin struct {
 	cmd       *chatbot.CommandMap
 	cfg       *config
 	urlParser *URLParser
+	client    *crawlerClient
 }
 
 // NewPlugin - new jarvisnode plugin
@@ -37,11 +38,13 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 
 	cmd.AddCommand("exparticle", &cmdExpArticle{})
 	cmd.AddCommand("updcrawler", &cmdUpdCrawler{})
+	cmd.AddCommand("getarticles", &cmdGetArticles{})
 
 	p := &crawlerPlugin{
 		cmd:       cmd,
 		cfg:       cfg,
 		urlParser: NewURLParser(),
+		client:    newCrawlerClient(cfg),
 	}
 
 	return p, nil

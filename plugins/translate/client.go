@@ -51,6 +51,12 @@ func (tc *translateClient) translate(ctx context.Context, text string, srclang s
 	if err != nil {
 		jarvisbase.Warn("translateClient.translate:Translate", zap.Error(err))
 
+		// if error, close connect
+		tc.conn.Close()
+
+		tc.conn = nil
+		tc.client = nil
+
 		return "", err
 	}
 

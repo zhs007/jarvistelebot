@@ -12,3 +12,4 @@ protoc -I plugins/notekeyword/proto/ plugins/notekeyword/proto/notekeyword.proto
 protoc -I plugins/crawler/proto/ plugins/crawler/proto/crawler.proto --go_out=plugins=grpc:plugins/crawler/proto
 protoc -I plugins/translate/servproto/ plugins/translate/servproto/result.proto --go_out=plugins=grpc:plugins/translate/servproto
 protoc -I plugins/translate/proto/ plugins/translate/proto/translate.proto --go_out=plugins=grpc:plugins/translate/proto
+protoc -I plugins/crawler/servproto/ plugins/crawler/servproto/result.proto --go_out=plugins=grpc:plugins/crawler/servproto
