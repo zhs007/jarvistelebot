@@ -2,7 +2,7 @@ package plugincrawler
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
@@ -43,19 +43,24 @@ func (cmd *cmdGetArticles) RunCommand(ctx context.Context, params *chatbot.Messa
 				err.Error(), params.Msg)
 		}
 
-		jret, err := json.Marshal(lst)
-		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
-
-			return false
+		for _, v := range lst.Articles {
+			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+				fmt.Sprintf("[%v](%v)", v.Title, v.Url), params.Msg)
 		}
 
-		strret, err := chatbot.FormatJSON(string(jret))
-		if err != nil {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(jret), params.Msg)
-		} else {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
-		}
+		// jret, err := json.Marshal(lst)
+		// if err != nil {
+		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+
+		// 	return false
+		// }
+
+		// strret, err := chatbot.FormatJSON(string(jret))
+		// if err != nil {
+		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), string(jret), params.Msg)
+		// } else {
+		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), strret, params.Msg)
+		// }
 		// return runExportArticle(ctx, params, eacmd)
 	}
 

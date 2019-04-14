@@ -1,5 +1,16 @@
 # JarvisTeleBot Development Log
 
+### 2019-04-14
+
+今天将``crawler``插件从命令行方式调整为service方式了，配置文件有修改。
+
+```yaml
+# crawler service addr
+crawlerservaddr: 127.0.0.1:7051
+```
+
+然后``Message``有点小修改，支持了``markdown``。
+
 ### 2019-04-05
 
 今天加了``translate``插件，当然，首先需要在``config.yaml``里配置加载插件。

@@ -454,6 +454,10 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 
 	telemsg := tgbotapi.NewMessage(chatid, msg.GetText())
 
+	if msg.IsMarkdownMode() {
+		telemsg.ParseMode = "Markdown"
+	}
+
 	if msg.HasOptions() {
 		var lst []tgbotapi.InlineKeyboardButton
 

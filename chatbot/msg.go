@@ -65,6 +65,11 @@ type Message interface {
 
 	// ToProto - to proto message
 	ToProto() *chatbotdbpb.Message
+
+	// SetMarkdownMode - set markdown mode
+	SetMarkdownMode(markdown bool)
+	// IsMarkdownMode - is markdown
+	IsMarkdownMode() bool
 }
 
 // BasicMessage - basic Message
@@ -72,6 +77,7 @@ type BasicMessage struct {
 	Options    []*MsgOption
 	IDSelected int
 	File       *chatbotdbpb.File
+	markdown   bool
 }
 
 // AddOption - add option
@@ -152,4 +158,14 @@ func (msg *BasicMessage) ToProto() *chatbotdbpb.Message {
 	}
 
 	return pbmsg
+}
+
+// SetMarkdownMode - set markdown mode
+func (msg *BasicMessage) SetMarkdownMode(markdown bool) {
+	msg.markdown = markdown
+}
+
+// IsMarkdownMode - is markdown
+func (msg *BasicMessage) IsMarkdownMode() bool {
+	return msg.markdown
 }
