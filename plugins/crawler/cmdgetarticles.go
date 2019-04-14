@@ -44,7 +44,7 @@ func (cmd *cmdGetArticles) RunCommand(ctx context.Context, params *chatbot.Messa
 		}
 
 		for _, v := range lst.Articles {
-			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+			chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
 				fmt.Sprintf("[%v](%v)", v.Title, v.Url), params.Msg)
 		}
 
