@@ -40,6 +40,7 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("exparticle", &cmdExpArticle{})
 	cmd.AddCommand("updcrawler", &cmdUpdCrawler{})
 	cmd.AddCommand("getarticles", &cmdGetArticles{})
+	cmd.AddCommand("subscribearticles", &cmdSubscribeArticles{})
 
 	dbCrawler, err := newCrawlerDB(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
 	if err != nil {

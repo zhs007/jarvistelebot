@@ -6,7 +6,7 @@ package plugincrawlerpb;
 message UpdCrawlerCommand {
 }
 
-// ExpArticleCommand - exparticle
+// ExpArticleCommand - export article
 message ExpArticleCommand {
     // URL - url
     string URL = 1;
@@ -14,7 +14,7 @@ message ExpArticleCommand {
     string PDF = 2;
 }
 
-// GetArticlesCommand - getarticles
+// GetArticlesCommand - get articles
 message GetArticlesCommand {
     // URL - url
     string URL = 1 [deprecated = true];
@@ -22,6 +22,14 @@ message GetArticlesCommand {
     bool attachJQuery = 2 [deprecated = true];
     // website - website
     string website = 3;
+}
+
+// SubscribeArticlesCommand - subscribe articles
+message SubscribeArticlesCommand {
+    // website - website
+    repeated string websites = 1;
+    // timer - timer
+    int32 timer = 2;
 }
 
 // URLCommand - url

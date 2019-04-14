@@ -93,5 +93,9 @@ type ChatBot interface {
 	OnUserEvent(ctx context.Context, chatbot ChatBot, eventid string, userID string) error
 
 	// OnTimer - ontimer
-	OnTimer()
+	OnTimer(ctx context.Context)
+	// AddTimer - add timer
+	AddTimer(timer int, times int, info string, onTimer FuncOnTimer) int
+	// DeleteTimer - delete timer
+	DeleteTimer(timerid int)
 }

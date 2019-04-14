@@ -245,6 +245,16 @@ func (base *BasicChatBot) GetFileTemplatesMgr() *FileTemplatesMgr {
 }
 
 // OnTimer - ontimer
-func (base *BasicChatBot) OnTimer() {
-	base.mgrTimer.OnTimer()
+func (base *BasicChatBot) OnTimer(ctx context.Context) {
+	base.mgrTimer.OnTimer(ctx)
+}
+
+// AddTimer - add timer
+func (base *BasicChatBot) AddTimer(timer int, times int, info string, onTimer FuncOnTimer) int {
+	return base.mgrTimer.AddTimer(timer, times, info, onTimer)
+}
+
+// DeleteTimer - delete timer
+func (base *BasicChatBot) DeleteTimer(timerid int) {
+	base.mgrTimer.DeleteTimer(timerid)
 }

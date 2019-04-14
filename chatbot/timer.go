@@ -1,6 +1,7 @@
 package chatbot
 
 import (
+	"context"
 	"sync"
 	"time"
 
@@ -8,8 +9,8 @@ import (
 	"go.uber.org/zap"
 )
 
-// FuncOnTimer - func onTimer() error
-type FuncOnTimer func() error
+// FuncOnTimer - func onTimer(ctx) error
+type FuncOnTimer func(ctx context.Context) error
 
 // Timer - timer
 type Timer struct {
@@ -57,14 +58,14 @@ func (mgr *TimerMgr) DeleteTimer(timerid int) {
 }
 
 // OnTimer - on timer
-func (mgr *TimerMgr) OnTimer() {
+func (mgr *TimerMgr) OnTimer(ctx context.Context) {
 	ct := time.Now().Second()
 
 	mgr.mapTimer.Range(func(key, val interface{}) bool {
 		t, typeok := val.(*Timer)
 		if typeok {
 			if ct-t.lasttime >= t.timer {
-				err := t.onTimer()
+				err := t.onTimer(ctx)
 				if err != nil {
 					jarvisbase.Warn("TimerMgr.OnTimer:onTimer",
 						zap.Error(err),
