@@ -458,6 +458,8 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 		telemsg.ParseMode = "Markdown"
 	}
 
+	telemsg.DisableWebPagePreview = true
+
 	if msg.HasOptions() {
 		var lst []tgbotapi.InlineKeyboardButton
 
