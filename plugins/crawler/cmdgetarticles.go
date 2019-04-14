@@ -41,6 +41,8 @@ func (cmd *cmdGetArticles) RunCommand(ctx context.Context, params *chatbot.Messa
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 				err.Error(), params.Msg)
+
+			return true
 		}
 
 		for _, v := range lst.Articles {
