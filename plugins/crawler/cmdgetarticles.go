@@ -37,7 +37,7 @@ func (cmd *cmdGetArticles) RunCommand(ctx context.Context, params *chatbot.Messa
 			return false
 		}
 
-		lst, err := pluginCrawler.client.getArticles(ctx, gacmd.URL, gacmd.AttachJQuery)
+		lst, err := pluginCrawler.client.getArticles(ctx, gacmd.Website)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 				err.Error(), params.Msg)
@@ -77,18 +77,16 @@ func (cmd *cmdGetArticles) ParseCommandLine(params *chatbot.MessageParams) (prot
 
 	flagset := pflag.NewFlagSet("getarticles", pflag.ContinueOnError)
 
-	var url = flagset.StringP("url", "u", "", "you want export this url.")
-	var jquery = flagset.BoolP("jquery", "j", false, "attach jquery")
+	var website = flagset.StringP("website", "w", "", "you want get this website.")
 
 	err := flagset.Parse(params.LstStr[1:])
 	if err != nil {
 		return nil, err
 	}
 
-	if *url != "" {
+	if *website != "" {
 		uac := &plugincrawlerpb.GetArticlesCommand{
-			URL:          *url,
-			AttachJQuery: *jquery,
+			Website: *website,
 		}
 
 		return uac, nil

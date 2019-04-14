@@ -29,7 +29,7 @@ func (m *UpdCrawlerCommand) Reset()         { *m = UpdCrawlerCommand{} }
 func (m *UpdCrawlerCommand) String() string { return proto.CompactTextString(m) }
 func (*UpdCrawlerCommand) ProtoMessage()    {}
 func (*UpdCrawlerCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_crawler_e156bedda2b761c5, []int{0}
+	return fileDescriptor_crawler_a36a458eb11b2901, []int{0}
 }
 func (m *UpdCrawlerCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UpdCrawlerCommand.Unmarshal(m, b)
@@ -64,7 +64,7 @@ func (m *ExpArticleCommand) Reset()         { *m = ExpArticleCommand{} }
 func (m *ExpArticleCommand) String() string { return proto.CompactTextString(m) }
 func (*ExpArticleCommand) ProtoMessage()    {}
 func (*ExpArticleCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_crawler_e156bedda2b761c5, []int{1}
+	return fileDescriptor_crawler_a36a458eb11b2901, []int{1}
 }
 func (m *ExpArticleCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ExpArticleCommand.Unmarshal(m, b)
@@ -101,9 +101,11 @@ func (m *ExpArticleCommand) GetPDF() string {
 // GetArticlesCommand - getarticles
 type GetArticlesCommand struct {
 	// URL - url
-	URL string `protobuf:"bytes,1,opt,name=URL,proto3" json:"URL,omitempty"`
+	URL string `protobuf:"bytes,1,opt,name=URL,proto3" json:"URL,omitempty"` // Deprecated: Do not use.
 	// attachJQuery - attach jquery
-	AttachJQuery         bool     `protobuf:"varint,2,opt,name=attachJQuery,proto3" json:"attachJQuery,omitempty"`
+	AttachJQuery bool `protobuf:"varint,2,opt,name=attachJQuery,proto3" json:"attachJQuery,omitempty"` // Deprecated: Do not use.
+	// website - website
+	Website              string   `protobuf:"bytes,3,opt,name=website,proto3" json:"website,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -113,7 +115,7 @@ func (m *GetArticlesCommand) Reset()         { *m = GetArticlesCommand{} }
 func (m *GetArticlesCommand) String() string { return proto.CompactTextString(m) }
 func (*GetArticlesCommand) ProtoMessage()    {}
 func (*GetArticlesCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_crawler_e156bedda2b761c5, []int{2}
+	return fileDescriptor_crawler_a36a458eb11b2901, []int{2}
 }
 func (m *GetArticlesCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetArticlesCommand.Unmarshal(m, b)
@@ -133,6 +135,7 @@ func (m *GetArticlesCommand) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetArticlesCommand proto.InternalMessageInfo
 
+// Deprecated: Do not use.
 func (m *GetArticlesCommand) GetURL() string {
 	if m != nil {
 		return m.URL
@@ -140,11 +143,19 @@ func (m *GetArticlesCommand) GetURL() string {
 	return ""
 }
 
+// Deprecated: Do not use.
 func (m *GetArticlesCommand) GetAttachJQuery() bool {
 	if m != nil {
 		return m.AttachJQuery
 	}
 	return false
+}
+
+func (m *GetArticlesCommand) GetWebsite() string {
+	if m != nil {
+		return m.Website
+	}
+	return ""
 }
 
 // URLCommand - url
@@ -158,7 +169,7 @@ func (m *URLCommand) Reset()         { *m = URLCommand{} }
 func (m *URLCommand) String() string { return proto.CompactTextString(m) }
 func (*URLCommand) ProtoMessage()    {}
 func (*URLCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_crawler_e156bedda2b761c5, []int{3}
+	return fileDescriptor_crawler_a36a458eb11b2901, []int{3}
 }
 func (m *URLCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_URLCommand.Unmarshal(m, b)
@@ -185,18 +196,20 @@ func init() {
 	proto.RegisterType((*URLCommand)(nil), "plugincrawlerpb.URLCommand")
 }
 
-func init() { proto.RegisterFile("crawler.proto", fileDescriptor_crawler_e156bedda2b761c5) }
+func init() { proto.RegisterFile("crawler.proto", fileDescriptor_crawler_a36a458eb11b2901) }
 
-var fileDescriptor_crawler_e156bedda2b761c5 = []byte{
-	// 159 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_crawler_a36a458eb11b2901 = []byte{
+	// 185 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4d, 0x2e, 0x4a, 0x2c,
 	0xcf, 0x49, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x2f, 0xc8, 0x29, 0x4d, 0xcf,
 	0xcc, 0x83, 0x0a, 0x16, 0x24, 0x29, 0x09, 0x73, 0x09, 0x86, 0x16, 0xa4, 0x38, 0x43, 0xf8, 0xce,
 	0xf9, 0xb9, 0xb9, 0x89, 0x79, 0x29, 0x4a, 0xe6, 0x5c, 0x82, 0xae, 0x15, 0x05, 0x8e, 0x45, 0x25,
 	0x99, 0xc9, 0x39, 0xa9, 0x50, 0x41, 0x21, 0x01, 0x2e, 0xe6, 0xd0, 0x20, 0x1f, 0x09, 0x46, 0x05,
 	0x46, 0x0d, 0xce, 0x20, 0x10, 0x13, 0x24, 0x12, 0xe0, 0xe2, 0x26, 0xc1, 0x04, 0x11, 0x09, 0x70,
-	0x71, 0x53, 0xf2, 0xe2, 0x12, 0x72, 0x4f, 0x2d, 0x81, 0x6a, 0x2c, 0xc6, 0xad, 0x53, 0x89, 0x8b,
-	0x27, 0xb1, 0xa4, 0x24, 0x31, 0x39, 0xc3, 0x2b, 0xb0, 0x34, 0xb5, 0xa8, 0x12, 0x6c, 0x04, 0x47,
-	0x10, 0x8a, 0x98, 0x12, 0x0f, 0x17, 0x57, 0x68, 0x90, 0x0f, 0xd4, 0x8c, 0x24, 0x36, 0xb0, 0xfb,
-	0x8d, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x96, 0x65, 0x79, 0x7e, 0xd0, 0x00, 0x00, 0x00,
+	0x71, 0x53, 0xca, 0xe1, 0x12, 0x72, 0x4f, 0x2d, 0x81, 0x6a, 0x2c, 0x86, 0xe9, 0x14, 0x41, 0xd2,
+	0xe9, 0xc4, 0x24, 0xc1, 0x08, 0xd1, 0xad, 0xc6, 0xc5, 0x93, 0x58, 0x52, 0x92, 0x98, 0x9c, 0xe1,
+	0x15, 0x58, 0x9a, 0x5a, 0x54, 0x09, 0x36, 0x86, 0x03, 0x2c, 0x8d, 0x22, 0x2e, 0x24, 0xc1, 0xc5,
+	0x5e, 0x9e, 0x9a, 0x54, 0x9c, 0x59, 0x92, 0x2a, 0xc1, 0x0c, 0xb6, 0x09, 0xc6, 0x55, 0xe2, 0xe1,
+	0xe2, 0x0a, 0x0d, 0xf2, 0x81, 0xda, 0x92, 0xc4, 0x06, 0xf6, 0xa1, 0x31, 0x20, 0x00, 0x00, 0xff,
+	0xff, 0x93, 0xad, 0xa9, 0x61, 0xf2, 0x00, 0x00, 0x00,
 }

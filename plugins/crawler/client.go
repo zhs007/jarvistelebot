@@ -24,7 +24,7 @@ func newCrawlerClient(cfg *config) *crawlerClient {
 }
 
 // getArticles -
-func (cc *crawlerClient) getArticles(ctx context.Context, url string, attachjquery bool) (*jarviscrawlercore.ArticleList, error) {
+func (cc *crawlerClient) getArticles(ctx context.Context, website string) (*jarviscrawlercore.ArticleList, error) {
 	if cc.cfg == nil {
 		return nil, ErrNoConfig
 	}
@@ -43,8 +43,7 @@ func (cc *crawlerClient) getArticles(ctx context.Context, url string, attachjque
 	}
 
 	reply, err := cc.client.GetArticles(ctx, &jarviscrawlercore.RequestArticles{
-		Url:          url,
-		AttachJQuery: attachjquery,
+		Website: website,
 	})
 	if err != nil {
 		jarvisbase.Warn("crawlerClient.getArticles:GetArticles", zap.Error(err))

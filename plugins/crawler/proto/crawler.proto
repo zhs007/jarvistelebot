@@ -17,9 +17,11 @@ message ExpArticleCommand {
 // GetArticlesCommand - getarticles
 message GetArticlesCommand {
     // URL - url
-    string URL = 1;
+    string URL = 1 [deprecated = true];
     // attachJQuery - attach jquery
-    bool attachJQuery = 2;
+    bool attachJQuery = 2 [deprecated = true];
+    // website - website
+    string website = 3;
 }
 
 // URLCommand - url
