@@ -6,7 +6,7 @@ import (
 	"github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
 
-	"github.com/zhs007/jarvistelebot/plugins/crawler/servproto"
+	"github.com/zhs007/jarvistelebot/jarviscrawlercore"
 	"google.golang.org/grpc"
 )
 
