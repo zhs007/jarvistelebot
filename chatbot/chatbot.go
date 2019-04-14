@@ -91,4 +91,7 @@ type ChatBot interface {
 	RegUserEventFunc(eventid string, eventfunc FuncUserEvent) error
 	// OnUserEvent - on event
 	OnUserEvent(ctx context.Context, chatbot ChatBot, eventid string, userID string) error
+
+	// OnTimer - ontimer
+	OnTimer()
 }

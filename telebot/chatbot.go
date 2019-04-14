@@ -296,6 +296,8 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 	cb.OnEvent(ctx, cb, chatbot.EventOnStarted)
 
 	for update := range updates {
+		cb.OnTimer()
+
 		if update.CallbackQuery != nil {
 			cb.procCallbackQuery(ctx, update.CallbackQuery)
 
