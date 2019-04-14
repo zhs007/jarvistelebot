@@ -15,6 +15,12 @@ type config struct {
 	CrawlerPath      string
 	UpdateScript     string
 	ExpArticleScript string
+
+	AnkaDB struct {
+		DBPath   string
+		Engine   string
+		HTTPAddr string
+	}
 }
 
 // LoadConfig - load config

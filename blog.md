@@ -7,6 +7,15 @@
 ```yaml
 # crawler service addr
 crawlerservaddr: 127.0.0.1:7051
+
+# ankadb config
+ankadb:
+  # dbpath
+  dbpath: './dat'
+  # engine
+  engine: 'leveldb'
+  # httpaddr
+  httpaddr: ''
 ```
 
 然后``Message``有点小修改，支持了``markdown``。

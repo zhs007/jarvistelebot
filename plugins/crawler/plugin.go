@@ -20,6 +20,7 @@ type crawlerPlugin struct {
 	cfg       *config
 	urlParser *URLParser
 	client    *crawlerClient
+	dbCrawler *crawlerDB
 }
 
 // NewPlugin - new jarvisnode plugin
@@ -40,11 +41,19 @@ func NewPlugin(cfgPath string) (chatbot.Plugin, error) {
 	cmd.AddCommand("updcrawler", &cmdUpdCrawler{})
 	cmd.AddCommand("getarticles", &cmdGetArticles{})
 
+	dbCrawler, err := newCrawlerDB(cfg.AnkaDB.DBPath, cfg.AnkaDB.HTTPAddr, cfg.AnkaDB.Engine)
+	if err != nil {
+		jarvisbase.Warn("plugincrawler.NewPlugin:newCrawlerDB")
+
+		return nil, err
+	}
+
 	p := &crawlerPlugin{
 		cmd:       cmd,
 		cfg:       cfg,
 		urlParser: NewURLParser(),
 		client:    newCrawlerClient(cfg),
+		dbCrawler: dbCrawler,
 	}
 
 	return p, nil

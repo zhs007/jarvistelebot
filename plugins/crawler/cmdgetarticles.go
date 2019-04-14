@@ -46,12 +46,20 @@ func (cmd *cmdGetArticles) RunCommand(ctx context.Context, params *chatbot.Messa
 		}
 
 		for _, v := range lst.Articles {
-			if v.Summary != "" {
-				chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
-					fmt.Sprintf("[*%v*](%v)\n%v", v.Title, v.Url, v.Summary), params.Msg)
-			} else {
-				chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
-					fmt.Sprintf("[*%v*](%v)", v.Title, v.Url), params.Msg)
+			isok, err := pluginCrawler.dbCrawler.addArticle(ctx, params.Msg.GetFrom().GetUserID(), gacmd.Website, v.Url)
+			if err != nil {
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+					err.Error(), params.Msg)
+			}
+
+			if isok {
+				if v.Summary != "" {
+					chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+						fmt.Sprintf("[%v](%v)\n%v", v.Title, v.Url, v.Summary), params.Msg)
+				} else {
+					chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+						fmt.Sprintf("[%v](%v)", v.Title, v.Url), params.Msg)
+				}
 			}
 		}
 
