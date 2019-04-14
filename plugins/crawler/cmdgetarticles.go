@@ -63,6 +63,9 @@ func (cmd *cmdGetArticles) RunCommand(ctx context.Context, params *chatbot.Messa
 			}
 		}
 
+		chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+			"It's done.", params.Msg)
+
 		// jret, err := json.Marshal(lst)
 		// if err != nil {
 		// 	chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
