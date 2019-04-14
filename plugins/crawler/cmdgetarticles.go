@@ -48,10 +48,10 @@ func (cmd *cmdGetArticles) RunCommand(ctx context.Context, params *chatbot.Messa
 		for _, v := range lst.Articles {
 			if v.Summary != "" {
 				chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
-					fmt.Sprintf("**[%v](%v)**\n%v", v.Title, v.Url, v.Summary), params.Msg)
+					fmt.Sprintf("*[%v](%v)*\n%v", v.Title, v.Url, v.Summary), params.Msg)
 			} else {
 				chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
-					fmt.Sprintf("**[%v](%v)**", v.Title, v.Url), params.Msg)
+					fmt.Sprintf("*[%v](%v)*", v.Title, v.Url), params.Msg)
 			}
 		}
 
