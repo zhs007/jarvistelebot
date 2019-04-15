@@ -16,7 +16,7 @@ type FuncOnTimer func(ctx context.Context) error
 type Timer struct {
 	timerid  int
 	timer    int
-	lasttime int
+	lasttime int64
 	times    int
 	info     string
 	onTimer  FuncOnTimer
@@ -45,7 +45,7 @@ func (mgr *TimerMgr) AddTimer(timer int, times int, info string, onTimer FuncOnT
 		times:    times,
 		info:     info,
 		onTimer:  onTimer,
-		lasttime: time.Now().Second(),
+		lasttime: time.Now().Unix(),
 	}
 
 	mgr.mapTimer.Store(t.timerid, t)
@@ -60,19 +60,19 @@ func (mgr *TimerMgr) DeleteTimer(timerid int) {
 
 // OnTimer - on timer
 func (mgr *TimerMgr) OnTimer(ctx context.Context) {
-	ct := time.Now().Second()
+	ct := time.Now().Unix()
 
 	jarvisbase.Info("TimerMgr.OnTimer",
-		zap.Int("curtime", ct))
+		zap.Int64("curtime", ct))
 
 	mgr.mapTimer.Range(func(key, val interface{}) bool {
 		t, typeok := val.(*Timer)
 		if typeok {
 			jarvisbase.Info("TimerMgr.OnTimer:range",
-				zap.Int("lasttime", t.lasttime),
+				zap.Int64("lasttime", t.lasttime),
 				zap.Int("timer", t.timer))
 
-			if ct-t.lasttime >= t.timer {
+			if ct-t.lasttime >= int64(t.timer) {
 				err := t.onTimer(ctx)
 				if err != nil {
 					jarvisbase.Warn("TimerMgr.OnTimer:onTimer",
@@ -90,7 +90,7 @@ func (mgr *TimerMgr) OnTimer(ctx context.Context) {
 					}
 				}
 
-				t.lasttime += t.timer
+				t.lasttime += int64(t.timer)
 			}
 		}
 
