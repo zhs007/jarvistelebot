@@ -62,12 +62,56 @@ func (cmd *cmdSubscribeArticles) RunCommand(ctx context.Context, params *chatbot
 						}
 
 						if isok {
-							if v.Summary != "" {
-								chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
-									fmt.Sprintf("[%v](%v)\n%v", v.Title, v.Url, v.Summary), params.Msg)
+							if v.Lang == "en" {
+								zhtitle, err := pluginCrawler.client.translate(ctx, v.Title, "en", "zh-CN")
+								if err != nil {
+									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+										err.Error(), params.Msg)
+								}
+
+								if v.Summary != "" {
+									zhsummary, err := pluginCrawler.client.translate(ctx, v.Summary, "en", "zh-CN")
+									if err != nil {
+										chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+											err.Error(), params.Msg)
+									}
+
+									if v.Premium {
+										chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("[%v](%v) Premium\n%v\n%v\n%v",
+												v.Title, v.Url, zhtitle, v.Summary, zhsummary), params.Msg)
+									} else {
+										chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("[%v](%v)\n%v\n%v\n%v",
+												v.Title, v.Url, zhtitle, v.Summary, zhsummary), params.Msg)
+									}
+								} else {
+									if v.Premium {
+										chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("[%v](%v) Premium\n%v", v.Title, v.Url, zhtitle), params.Msg)
+									} else {
+										chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("[%v](%v)\n%v", v.Title, v.Url, zhtitle), params.Msg)
+									}
+								}
 							} else {
-								chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
-									fmt.Sprintf("[%v](%v)", v.Title, v.Url), params.Msg)
+								if v.Summary != "" {
+									if v.Premium {
+										chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("[%v](%v) Premium\n%v", v.Title, v.Url, v.Summary), params.Msg)
+									} else {
+										chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("[%v](%v)\n%v", v.Title, v.Url, v.Summary), params.Msg)
+									}
+								} else {
+									if v.Premium {
+										chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("[%v](%v) Premium", v.Title, v.Url), params.Msg)
+									} else {
+										chatbot.SendMarkdownMsg(params.ChatBot, params.Msg.GetFrom(),
+											fmt.Sprintf("[%v](%v)", v.Title, v.Url), params.Msg)
+									}
+								}
 							}
 						}
 					}

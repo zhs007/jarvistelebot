@@ -59,3 +59,43 @@ func (cc *crawlerClient) getArticles(ctx context.Context, website string) (*jarv
 
 	return reply.Articles, nil
 }
+
+// translate -
+func (cc *crawlerClient) translate(ctx context.Context, text string, srclang string, destlang string) (string, error) {
+	if cc.cfg == nil {
+		return "", ErrNoConfig
+	}
+
+	if cc.conn == nil || cc.client == nil {
+		conn, err := grpc.Dial(cc.cfg.CrawlerServAddr, grpc.WithInsecure())
+		if err != nil {
+			jarvisbase.Warn("crawlerClient.translate:grpc.Dial", zap.Error(err))
+
+			return "", err
+		}
+
+		cc.conn = conn
+
+		cc.client = jarviscrawlercore.NewJarvisCrawlerServiceClient(conn)
+	}
+
+	reply, err := cc.client.Translate(ctx, &jarviscrawlercore.RequestTranslate{
+		Text:     text,
+		Platform: "google",
+		SrcLang:  srclang,
+		DestLang: destlang,
+	})
+	if err != nil {
+		jarvisbase.Warn("crawlerClient.translate:Translate", zap.Error(err))
+
+		// if error, close connect
+		cc.conn.Close()
+
+		cc.conn = nil
+		cc.client = nil
+
+		return "", err
+	}
+
+	return reply.Text, nil
+}
