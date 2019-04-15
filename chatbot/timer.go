@@ -40,11 +40,12 @@ func (mgr *TimerMgr) AddTimer(timer int, times int, info string, onTimer FuncOnT
 	mgr.curTimerid++
 
 	t := &Timer{
-		timerid: mgr.curTimerid,
-		timer:   timer,
-		times:   times,
-		info:    info,
-		onTimer: onTimer,
+		timerid:  mgr.curTimerid,
+		timer:    timer,
+		times:    times,
+		info:     info,
+		onTimer:  onTimer,
+		lasttime: time.Now().Second(),
 	}
 
 	mgr.mapTimer.Store(t.timerid, t)
@@ -61,9 +62,16 @@ func (mgr *TimerMgr) DeleteTimer(timerid int) {
 func (mgr *TimerMgr) OnTimer(ctx context.Context) {
 	ct := time.Now().Second()
 
+	jarvisbase.Info("TimerMgr.OnTimer",
+		zap.Int("curtime", ct))
+
 	mgr.mapTimer.Range(func(key, val interface{}) bool {
 		t, typeok := val.(*Timer)
 		if typeok {
+			jarvisbase.Info("TimerMgr.OnTimer:range",
+				zap.Int("lasttime", t.lasttime),
+				zap.Int("timer", t.timer))
+
 			if ct-t.lasttime >= t.timer {
 				err := t.onTimer(ctx)
 				if err != nil {
