@@ -27,6 +27,7 @@ type BasicChatBot struct {
 	mgrUserScripts       *UserScriptsMgr
 	mgrFileTemplates     *FileTemplatesMgr
 	mgrTimer             *TimerMgr
+	// MutexTimer           sync.Mutex
 	// mgrUser              UserMgr
 }
 
