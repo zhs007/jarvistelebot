@@ -62,15 +62,15 @@ func (mgr *TimerMgr) DeleteTimer(timerid int) {
 func (mgr *TimerMgr) OnTimer(ctx context.Context) {
 	ct := time.Now().Unix()
 
-	jarvisbase.Info("TimerMgr.OnTimer",
-		zap.Int64("curtime", ct))
+	// jarvisbase.Info("TimerMgr.OnTimer",
+	// 	zap.Int64("curtime", ct))
 
 	mgr.mapTimer.Range(func(key, val interface{}) bool {
 		t, typeok := val.(*Timer)
 		if typeok {
-			jarvisbase.Info("TimerMgr.OnTimer:range",
-				zap.Int64("lasttime", t.lasttime),
-				zap.Int("timer", t.timer))
+			// jarvisbase.Info("TimerMgr.OnTimer:range",
+			// 	zap.Int64("lasttime", t.lasttime),
+			// 	zap.Int("timer", t.timer))
 
 			if ct-t.lasttime >= int64(t.timer) {
 				err := t.onTimer(ctx)
