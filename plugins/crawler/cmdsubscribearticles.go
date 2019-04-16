@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/zhs007/jarviscore/base"
+
 	"github.com/zhs007/jarviscore"
 
 	"github.com/golang/protobuf/proto"
@@ -42,6 +44,7 @@ func (cmd *cmdSubscribeArticles) RunCommand(ctx context.Context, params *chatbot
 		timerid := params.ChatBot.AddTimer(int(sacmd.Timer), -1,
 			jarviscore.AppendString(params.Msg.GetFrom().GetUserID(), "cmdSubscribeArticles.timer"),
 			func(ctx context.Context) error {
+				jarvisbase.Info("cmdSubscribeArticles.timer")
 
 				for _, website := range sacmd.Websites {
 					lst, err := pluginCrawler.client.getArticles(ctx, website)
