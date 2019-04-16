@@ -299,10 +299,25 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 	go cb.procTimer(ctx)
 
 	for update := range updates {
+		if update.Message != nil {
+			if update.Message.Document != nil {
+				chatbot.Info("teleChatBot.Start", zap.String("info", "I got a document"))
+			}
+
+			if update.Message.Photo != nil {
+				chatbot.Info("teleChatBot.Start", zap.String("info", "I got a photo"))
+			}
+
+			if update.Message.Text != "" {
+				chatbot.Info("teleChatBot.Start", zap.String("text", update.Message.Text))
+			}
+		}
+
 		cb.chanMain <- teleChatBotChan{
 			isTimer: false,
 			update:  update,
 		}
+
 		// if update.CallbackQuery != nil {
 		// 	cb.procCallbackQuery(ctx, update.CallbackQuery)
 
@@ -536,11 +551,15 @@ func (cb *teleChatBot) onProcMain(ctx context.Context) error {
 		select {
 		case cur, isok := <-cb.chanMain:
 			if isok {
-				cb.onProc(ctx, &cur)
+				go cb.onProc(ctx, &cur)
 			} else {
+				jarvisbase.Info("teleChatBot.onProcMain", zap.String("info", "chanMain is not ok"))
+
 				return nil
 			}
 		case <-ctx.Done():
+			jarvisbase.Info("teleChatBot.onProcMain", zap.String("info", "ctx done"))
+
 			return nil
 		}
 	}
