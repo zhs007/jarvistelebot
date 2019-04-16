@@ -551,7 +551,7 @@ func (cb *teleChatBot) onProcMain(ctx context.Context) error {
 		select {
 		case cur, isok := <-cb.chanMain:
 			if isok {
-				go cb.onProc(ctx, &cur)
+				cb.onProc(ctx, &cur)
 			} else {
 				jarvisbase.Info("teleChatBot.onProcMain", zap.String("info", "chanMain is not ok"))
 
