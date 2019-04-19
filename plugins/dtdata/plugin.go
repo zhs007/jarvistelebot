@@ -63,6 +63,12 @@ func (p *dtdataPlugin) OnMessage(ctx context.Context, params *chatbot.MessagePar
 		return false, nil
 	}
 
+	if params.CommandLine != nil {
+		p.cmd.Run(ctx, params.LstStr[0], params)
+
+		return true, nil
+	}
+
 	// if len(params.LstStr) >= 1 {
 	// 	ret := p.urlParser.ParseURL(params.LstStr[0])
 	// 	if ret != nil {

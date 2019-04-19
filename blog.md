@@ -4,6 +4,12 @@
 
 今天增加了``dtdata``，还是有单独的配置文件，并需要配置插件开关。
 
+这个是目前最全的订阅新闻配置。
+
+```
+subscribearticles -t 300 -w=huxiu -w=baijingapp -w=tmtpost -w=36kr -w=geekpark -w=lieyunwang -w=techcrunch
+```
+
 ### 2019-04-17
 
 昨天开始实际的部署rasa了，今天把最简单那个joke的项目试了一遍，觉得那个太简单了。  
