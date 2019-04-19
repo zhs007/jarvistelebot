@@ -20,6 +20,7 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/assistant"
 	"github.com/zhs007/jarvistelebot/plugins/core"
 	"github.com/zhs007/jarvistelebot/plugins/crawler"
+	"github.com/zhs007/jarvistelebot/plugins/dtdata"
 	"github.com/zhs007/jarvistelebot/plugins/filetemplate"
 	"github.com/zhs007/jarvistelebot/plugins/filetransfer"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
@@ -65,6 +66,7 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(pluginnotekeyword.PluginName, pluginnotekeyword.NewPlugin)
 	mgrPlugins.RegPlugin(plugincrawler.PluginName, plugincrawler.NewPlugin)
 	mgrPlugins.RegPlugin(plugintranslate.PluginName, plugintranslate.NewPlugin)
+	mgrPlugins.RegPlugin(plugindtdata.PluginName, plugindtdata.NewPlugin)
 
 	mgrPlugins.SetDefaultPlugin(cfg.DefaultPlugin)
 
