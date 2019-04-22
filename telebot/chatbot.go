@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path"
 	"strconv"
+	"time"
 
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarviscore/base"
@@ -19,6 +20,7 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/assistant"
 	"github.com/zhs007/jarvistelebot/plugins/core"
 	"github.com/zhs007/jarvistelebot/plugins/crawler"
+	"github.com/zhs007/jarvistelebot/plugins/dtdata"
 	"github.com/zhs007/jarvistelebot/plugins/filetemplate"
 	"github.com/zhs007/jarvistelebot/plugins/filetransfer"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
@@ -34,16 +36,19 @@ import (
 	"go.uber.org/zap"
 )
 
+type teleChatBotChan struct {
+	isTimer bool
+	update  tgbotapi.Update
+}
+
 // teleChatBot - tele chat bot
 type teleChatBot struct {
 	*chatbot.BasicChatBot
 
 	teleBotAPI *tgbotapi.BotAPI
 	cfg        *Config
-	// mgrUser    chatbot.UserMgr
-
 	scriptUser chatbot.User
-	// mgrPlugins chatbot.PluginsMgr
+	chanMain   chan teleChatBotChan
 }
 
 func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
@@ -61,6 +66,7 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(pluginnotekeyword.PluginName, pluginnotekeyword.NewPlugin)
 	mgrPlugins.RegPlugin(plugincrawler.PluginName, plugincrawler.NewPlugin)
 	mgrPlugins.RegPlugin(plugintranslate.PluginName, plugintranslate.NewPlugin)
+	mgrPlugins.RegPlugin(plugindtdata.PluginName, plugindtdata.NewPlugin)
 
 	mgrPlugins.SetDefaultPlugin(cfg.DefaultPlugin)
 
@@ -87,16 +93,12 @@ func NewTeleChatBot(cfg *Config) (chatbot.ChatBot, error) {
 	tcb := &teleChatBot{
 		BasicChatBot: chatbot.NewBasicChatBot(),
 		teleBotAPI:   bot,
-		// mgrUser:    chatbot.NewUserMgr(),
-		// MgrPlugins: mgrPlugins,
+		chanMain:     make(chan teleChatBotChan, 256),
 	}
-
-	// tcb.MgrUser = newTeleUserMgr(cfg.TeleBotMaster)
 
 	tcb.Init(path.Join(cfg.CfgPath, "chatbot.yaml"), mgrPlugins)
 
 	tcb.SetMaster("", cfg.TeleBotMaster)
-	// tcb.NewEventMgr(tcb)
 
 	return tcb, nil
 }
@@ -295,72 +297,94 @@ func (cb *teleChatBot) Start(ctx context.Context, node jarviscore.JarvisNode) er
 
 	cb.OnEvent(ctx, cb, chatbot.EventOnStarted)
 
+	go cb.onProcMain(ctx)
+	go cb.procTimer(ctx)
+
 	for update := range updates {
-		if update.CallbackQuery != nil {
-			cb.procCallbackQuery(ctx, update.CallbackQuery)
-
-			continue
-		}
-
-		if update.Message == nil { // ignore any non-Message Updates
-			continue
-		}
-
-		user, err := cb.procMessageUser(update.Message.From)
-		if err != nil {
-			chatbot.Warn("teleChatBot.Start:procMessageUser", zap.Error(err))
-
-			continue
-		}
-
-		lastmsgid := int64(update.Message.MessageID)
-		if lastmsgid <= user.GetLastMsgID() {
-			continue
-		}
-
-		user.UpdLastMsgID(lastmsgid)
-		cb.GetChatBotDB().UpdUser(user.ToProto())
-
-		if update.Message.Text == "" && update.Message.Document == nil && update.Message.Photo == nil {
-			continue
-		}
-
-		msgid := strconv.Itoa(update.Message.MessageID)
-		msg := cb.NewMsg(chatbot.MakeChatID(user.GetUserID(), msgid), msgid, user, nil,
-			update.Message.Text, int64(update.Message.Date))
-
-		cb.procGroup(msg, update.Message)
-
-		if update.Message.Document != nil {
-			err = cb.procDocumentWithMsg(msg, update.Message.Document)
-			if err != nil {
-				chatbot.Warn("teleChatBot.Start:procDocumentWithMsg", zap.Error(err))
+		if update.Message != nil {
+			if update.Message.Document != nil {
+				chatbot.Info("teleChatBot.Start", zap.String("info", "I got a document"))
 			}
 
-			msg.SetText(update.Message.Caption)
-		} else if update.Message.Photo != nil && len(*update.Message.Photo) > 0 {
-			if len(*update.Message.Photo) == 2 {
-				err = cb.procPhotoWithMsg(msg, &(*update.Message.Photo)[1])
-				if err != nil {
-					chatbot.Warn("teleChatBot.Start:procPhotoWithMsg", zap.Error(err))
-				}
+			if update.Message.Photo != nil {
+				chatbot.Info("teleChatBot.Start", zap.String("info", "I got a photo"))
+			}
 
-				msg.SetText(update.Message.Caption)
+			if update.Message.Text != "" {
+				chatbot.Info("teleChatBot.Start", zap.String("text", update.Message.Text))
 			}
 		}
 
-		err = cb.SaveMsg(msg)
-		if err != nil {
-			chatbot.Warn("teleChatBot.Start", zap.Error(err))
+		cb.chanMain <- teleChatBotChan{
+			isTimer: false,
+			update:  update,
 		}
 
-		curctx, cancel := context.WithCancel(ctx)
-		defer cancel()
+		// if update.CallbackQuery != nil {
+		// 	cb.procCallbackQuery(ctx, update.CallbackQuery)
 
-		err = cb.MgrPlugins.OnMessage(curctx, cb, msg)
-		if err != nil {
-			chatbot.Error("mgrPlugins.OnMessage", zap.Error(err))
-		}
+		// 	continue
+		// }
+
+		// if update.Message == nil { // ignore any non-Message Updates
+		// 	continue
+		// }
+
+		// user, err := cb.procMessageUser(update.Message.From)
+		// if err != nil {
+		// 	chatbot.Warn("teleChatBot.Start:procMessageUser", zap.Error(err))
+
+		// 	continue
+		// }
+
+		// lastmsgid := int64(update.Message.MessageID)
+		// if lastmsgid <= user.GetLastMsgID() {
+		// 	continue
+		// }
+
+		// user.UpdLastMsgID(lastmsgid)
+		// cb.GetChatBotDB().UpdUser(user.ToProto())
+
+		// if update.Message.Text == "" && update.Message.Document == nil && update.Message.Photo == nil {
+		// 	continue
+		// }
+
+		// msgid := strconv.Itoa(update.Message.MessageID)
+		// msg := cb.NewMsg(chatbot.MakeChatID(user.GetUserID(), msgid), msgid, user, nil,
+		// 	update.Message.Text, int64(update.Message.Date))
+
+		// cb.procGroup(msg, update.Message)
+
+		// if update.Message.Document != nil {
+		// 	err = cb.procDocumentWithMsg(msg, update.Message.Document)
+		// 	if err != nil {
+		// 		chatbot.Warn("teleChatBot.Start:procDocumentWithMsg", zap.Error(err))
+		// 	}
+
+		// 	msg.SetText(update.Message.Caption)
+		// } else if update.Message.Photo != nil && len(*update.Message.Photo) > 0 {
+		// 	if len(*update.Message.Photo) == 2 {
+		// 		err = cb.procPhotoWithMsg(msg, &(*update.Message.Photo)[1])
+		// 		if err != nil {
+		// 			chatbot.Warn("teleChatBot.Start:procPhotoWithMsg", zap.Error(err))
+		// 		}
+
+		// 		msg.SetText(update.Message.Caption)
+		// 	}
+		// }
+
+		// err = cb.SaveMsg(msg)
+		// if err != nil {
+		// 	chatbot.Warn("teleChatBot.Start", zap.Error(err))
+		// }
+
+		// curctx, cancel := context.WithCancel(ctx)
+		// defer cancel()
+
+		// err = cb.MgrPlugins.OnMessage(curctx, cb, msg)
+		// if err != nil {
+		// 	chatbot.Error("mgrPlugins.OnMessage", zap.Error(err))
+		// }
 	}
 
 	return nil
@@ -454,6 +478,12 @@ func (cb *teleChatBot) SendMsg(msg chatbot.Message) (chatbot.Message, error) {
 
 	telemsg := tgbotapi.NewMessage(chatid, msg.GetText())
 
+	if msg.IsMarkdownMode() {
+		telemsg.ParseMode = "Markdown"
+	}
+
+	telemsg.DisableWebPagePreview = true
+
 	if msg.HasOptions() {
 		var lst []tgbotapi.InlineKeyboardButton
 
@@ -515,4 +545,118 @@ func (cb *teleChatBot) GetMsg(chatid string) (chatbot.Message, error) {
 	}
 
 	return cb.NewMsgFromProto(msg), nil
+}
+
+// onProcMain -
+func (cb *teleChatBot) onProcMain(ctx context.Context) error {
+	for {
+		select {
+		case cur, isok := <-cb.chanMain:
+			if isok {
+				cb.onProc(ctx, &cur)
+			} else {
+				jarvisbase.Info("teleChatBot.onProcMain", zap.String("info", "chanMain is not ok"))
+
+				return nil
+			}
+		case <-ctx.Done():
+			jarvisbase.Info("teleChatBot.onProcMain", zap.String("info", "ctx done"))
+
+			return nil
+		}
+	}
+}
+
+// onProc -
+func (cb *teleChatBot) onProc(ctx context.Context, cur *teleChatBotChan) error {
+	if cur.isTimer {
+		cb.OnTimer(ctx)
+
+		return nil
+	}
+
+	if cur.update.CallbackQuery != nil {
+		cb.procCallbackQuery(ctx, cur.update.CallbackQuery)
+
+		return nil
+	}
+
+	if cur.update.Message == nil { // ignore any non-Message Updates
+		return nil
+	}
+
+	user, err := cb.procMessageUser(cur.update.Message.From)
+	if err != nil {
+		chatbot.Warn("teleChatBot.Start:procMessageUser", zap.Error(err))
+
+		return nil
+	}
+
+	lastmsgid := int64(cur.update.Message.MessageID)
+	if lastmsgid <= user.GetLastMsgID() {
+		return nil
+	}
+
+	user.UpdLastMsgID(lastmsgid)
+	cb.GetChatBotDB().UpdUser(user.ToProto())
+
+	if cur.update.Message.Text == "" && cur.update.Message.Document == nil && cur.update.Message.Photo == nil {
+		return nil
+	}
+
+	msgid := strconv.Itoa(cur.update.Message.MessageID)
+	msg := cb.NewMsg(chatbot.MakeChatID(user.GetUserID(), msgid), msgid, user, nil,
+		cur.update.Message.Text, int64(cur.update.Message.Date))
+
+	cb.procGroup(msg, cur.update.Message)
+
+	if cur.update.Message.Document != nil {
+		err = cb.procDocumentWithMsg(msg, cur.update.Message.Document)
+		if err != nil {
+			chatbot.Warn("teleChatBot.Start:procDocumentWithMsg", zap.Error(err))
+		}
+
+		msg.SetText(cur.update.Message.Caption)
+	} else if cur.update.Message.Photo != nil && len(*cur.update.Message.Photo) > 0 {
+		if len(*cur.update.Message.Photo) == 2 {
+			err = cb.procPhotoWithMsg(msg, &(*cur.update.Message.Photo)[1])
+			if err != nil {
+				chatbot.Warn("teleChatBot.Start:procPhotoWithMsg", zap.Error(err))
+			}
+
+			msg.SetText(cur.update.Message.Caption)
+		}
+	}
+
+	err = cb.SaveMsg(msg)
+	if err != nil {
+		chatbot.Warn("teleChatBot.Start", zap.Error(err))
+	}
+
+	curctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	err = cb.MgrPlugins.OnMessage(curctx, cb, msg)
+	if err != nil {
+		chatbot.Error("mgrPlugins.OnMessage", zap.Error(err))
+	}
+
+	return nil
+}
+
+// procTimer - proc timer
+func (cb *teleChatBot) procTimer(ctx context.Context) error {
+	t := time.NewTimer(time.Second)
+
+	for {
+		select {
+		case <-t.C:
+			cb.chanMain <- teleChatBotChan{isTimer: true}
+
+			t.Reset(time.Second)
+
+		case <-ctx.Done():
+			return nil
+		}
+	}
 }

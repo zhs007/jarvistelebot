@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package plugindtdatapb;
+
+// GetDTDataCommand - get dtdata
+message GetDTDataCommand {
+    // mode - mode
+    string mode = 1;
+    // startTime - start time
+    string startTime = 2;
+    // endTime - end time
+    string endTime = 3;
+}

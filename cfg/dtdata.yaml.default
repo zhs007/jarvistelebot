@@ -1,0 +1,4 @@
+# jarvis telegram bot plugin dtdata config file
+
+# dtdata service addr
+dtdataservaddr: servaddr

@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/zhs007/jarviscore/proto"
 
@@ -133,6 +134,40 @@ func SendFileMsg(bot ChatBot, user User, fd *chatbotdbpb.File, srcmsg Message) e
 	return err
 }
 
+// SendMarkdownMsg - sendmsg
+func SendMarkdownMsg(bot ChatBot, user User, text string, srcmsg Message) error {
+	// jarvisbase.Debug("SendTextMsg", zap.String("text", text))
+
+	if text == "" {
+		jarvisbase.Warn("SendTextMsg:checkText", zap.Error(ErrEmptyMsg))
+
+		return ErrEmptyMsg
+	}
+
+	if len(text) >= basedef.MaxTextMessageSize {
+		return SendFileMsg(bot, user, &chatbotdbpb.File{
+			Filename: GetMD5String([]byte(text)) + ".txt",
+			Data:     []byte(text),
+		}, srcmsg)
+	}
+
+	msg := bot.NewMsg("", "", nil, user, text, time.Now().Unix())
+	if srcmsg != nil && srcmsg.InGroup() {
+		// jarvisbase.Debug("SendTextMsg", zap.String("groupid", srcmsg.GetGroupID()))
+
+		msg.SetGroupID(srcmsg.GetGroupID())
+	}
+
+	msg.SetMarkdownMode(true)
+
+	_, err := bot.SendMsg(msg)
+	if err != nil {
+		jarvisbase.Warn("SendTextMsg", zap.Error(err))
+	}
+
+	return err
+}
+
 // GetMD5String - md5 buf and return string
 func GetMD5String(buf []byte) string {
 	return fmt.Sprintf("%x", md5.Sum(buf))
@@ -227,4 +262,53 @@ func ProcReplyRequestFile(msg *jarviscorepb.JarvisMsg, buf *bytes.Buffer) (bool,
 	}
 
 	return true, nil
+}
+
+// SplitString - split string
+func SplitString(str string) []string {
+	var arr []string
+
+	si := -1
+	ysi := -1
+
+	for i, v := range str {
+		if ysi >= 0 {
+			if v == '"' {
+				if i > ysi+1 {
+					arr = append(arr, str[(ysi+1):i])
+				}
+
+				ysi = -1
+			}
+
+			continue
+		}
+
+		if v == '"' {
+			ysi = i
+			si = -1
+		} else if unicode.IsSpace(v) {
+			if si < 0 {
+				si = i + 1
+			} else {
+				if i == si {
+					si = i + 1
+				} else {
+					arr = append(arr, str[si:i])
+
+					si = -1
+				}
+			}
+		} else {
+			if si < 0 {
+				si = i
+			}
+		}
+	}
+
+	if si >= 0 && si != len(str) {
+		arr = append(arr, str[si:len(str)])
+	}
+
+	return arr
 }

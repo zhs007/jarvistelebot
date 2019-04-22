@@ -1,5 +1,8 @@
 # jarvis telegram bot plugin crawler config file
 
+# crawler service addr
+crawlerservaddr: 127.0.0.1:7051
+
 # crawler node addr
 crawlernodeaddr: 12LyThj17Dj88EsHgVonn1eJffMSwjsXf4
 # crawler path

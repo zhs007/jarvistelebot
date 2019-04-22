@@ -26,6 +26,8 @@ type BasicChatBot struct {
 	mgrEvent             *eventMgr
 	mgrUserScripts       *UserScriptsMgr
 	mgrFileTemplates     *FileTemplatesMgr
+	mgrTimer             *TimerMgr
+	// MutexTimer           sync.Mutex
 	// mgrUser              UserMgr
 }
 
@@ -54,6 +56,7 @@ func (base *BasicChatBot) Init(cfgfilename string, mgr PluginsMgr) error {
 	base.MgrUser = NewBasicUserMgr()
 	base.mgrUserScripts = &UserScriptsMgr{}
 	base.mgrFileTemplates = &FileTemplatesMgr{}
+	base.mgrTimer = newTimerMgr()
 
 	base.mgrEvent = newEventMgr()
 	base.RegEventFunc(EventOnStarted, onEventStarted)
@@ -240,4 +243,19 @@ func (base *BasicChatBot) GetUserScriptsMgr() *UserScriptsMgr {
 // GetFileTemplatesMgr - get user file template manager
 func (base *BasicChatBot) GetFileTemplatesMgr() *FileTemplatesMgr {
 	return base.mgrFileTemplates
+}
+
+// OnTimer - ontimer
+func (base *BasicChatBot) OnTimer(ctx context.Context) {
+	base.mgrTimer.OnTimer(ctx)
+}
+
+// AddTimer - add timer
+func (base *BasicChatBot) AddTimer(timer int, times int, info string, onTimer FuncOnTimer) int {
+	return base.mgrTimer.AddTimer(timer, times, info, onTimer)
+}
+
+// DeleteTimer - delete timer
+func (base *BasicChatBot) DeleteTimer(timerid int) {
+	base.mgrTimer.DeleteTimer(timerid)
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
 
-	"github.com/zhs007/jarvistelebot/plugins/translate/servproto"
+	"github.com/zhs007/jarvistelebot/jarviscrawlercore"
 	"google.golang.org/grpc"
 )
 
@@ -50,6 +50,12 @@ func (tc *translateClient) translate(ctx context.Context, text string, srclang s
 	})
 	if err != nil {
 		jarvisbase.Warn("translateClient.translate:Translate", zap.Error(err))
+
+		// if error, close connect
+		tc.conn.Close()
+
+		tc.conn = nil
+		tc.client = nil
 
 		return "", err
 	}

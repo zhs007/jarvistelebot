@@ -10,10 +10,17 @@ import (
 
 // config - config
 type config struct {
+	CrawlerServAddr  string
 	CrawlerNodeAddr  string
 	CrawlerPath      string
 	UpdateScript     string
 	ExpArticleScript string
+
+	AnkaDB struct {
+		DBPath   string
+		Engine   string
+		HTTPAddr string
+	}
 }
 
 // LoadConfig - load config
@@ -43,6 +50,10 @@ func loadConfig(filename string) *config {
 func checkConfig(cfg *config) error {
 	if cfg == nil {
 		return ErrNoConfig
+	}
+
+	if cfg.CrawlerServAddr == "" {
+		return ErrConfigNoCrawlerServAddr
 	}
 
 	if cfg.CrawlerNodeAddr == "" {

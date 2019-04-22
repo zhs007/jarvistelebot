@@ -40,22 +40,32 @@ func TestCheckConfig(t *testing.T) {
 		},
 		data{
 			cfg: &config{},
-			err: ErrConfigNoCrawlerNodeAddr,
+			err: ErrConfigNoCrawlerServAddr,
 		},
 		data{
-			cfg: &config{CrawlerNodeAddr: "12LyThj17Dj88EsHgVonn1eJffMSwjsXf4"},
+			cfg: &config{
+				CrawlerServAddr: "127.0.0.1:7081",
+				CrawlerNodeAddr: "12LyThj17Dj88EsHgVonn1eJffMSwjsXf4",
+			},
 			err: ErrConfigNoCrawlerPath,
 		},
 		data{
-			cfg: &config{CrawlerNodeAddr: "12LyThj17Dj88EsHgVonn1eJffMSwjsXf45"},
-			err: ErrConfigInvalidCrawlerNodeAddr,
-		},
-		data{
-			cfg: &config{CrawlerNodeAddr: "12LyThj17Dj88EsHgVonn1eJffMSwjsXf"},
+			cfg: &config{
+				CrawlerServAddr: "127.0.0.1:7081",
+				CrawlerNodeAddr: "12LyThj17Dj88EsHgVonn1eJffMSwjsXf45",
+			},
 			err: ErrConfigInvalidCrawlerNodeAddr,
 		},
 		data{
 			cfg: &config{
+				CrawlerServAddr: "127.0.0.1:7081",
+				CrawlerNodeAddr: "12LyThj17Dj88EsHgVonn1eJffMSwjsXf",
+			},
+			err: ErrConfigInvalidCrawlerNodeAddr,
+		},
+		data{
+			cfg: &config{
+				CrawlerServAddr: "127.0.0.1:7081",
 				CrawlerNodeAddr: "12LyThj17Dj88EsHgVonn1eJffMSwjsXf4",
 				CrawlerPath:     "/jarviscrawlercore",
 			},
@@ -63,6 +73,7 @@ func TestCheckConfig(t *testing.T) {
 		},
 		data{
 			cfg: &config{
+				CrawlerServAddr: "127.0.0.1:7081",
 				CrawlerNodeAddr: "12LyThj17Dj88EsHgVonn1eJffMSwjsXf4",
 				CrawlerPath:     "/jarviscrawlercore",
 				UpdateScript:    "update",
@@ -71,6 +82,7 @@ func TestCheckConfig(t *testing.T) {
 		},
 		data{
 			cfg: &config{
+				CrawlerServAddr:  "127.0.0.1:7081",
 				CrawlerNodeAddr:  "12LyThj17Dj88EsHgVonn1eJffMSwjsXf4",
 				CrawlerPath:      "/jarviscrawlercore",
 				UpdateScript:     "update",

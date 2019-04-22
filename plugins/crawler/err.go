@@ -3,6 +3,8 @@ package plugincrawler
 import "errors"
 
 var (
+	// ErrConfigNoCrawlerServAddr - no crawlerservaddr in crawler.yaml
+	ErrConfigNoCrawlerServAddr = errors.New("no crawlerservaddr in crawler.yaml")
 	// ErrConfigNoCrawlerNodeAddr - no crawlernodeaddr in crawler.yaml
 	ErrConfigNoCrawlerNodeAddr = errors.New("no crawlernodeaddr in crawler.yaml")
 	// ErrConfigInvalidCrawlerNodeAddr - invalid crawlernodeaddr in crawler.yaml

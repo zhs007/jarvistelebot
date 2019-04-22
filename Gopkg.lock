@@ -121,7 +121,7 @@
     "crypto",
     "proto"
   ]
-  revision = "417c334c1032b999df957f710eb006b2ee613d4b"
+  revision = "84a6466154c4ca830983b4f6eeeddd7deae97d74"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -152,7 +152,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ripemd160"]
-  revision = "8e1b8d32e692162a446e97250c5d34f5a52efed6"
+  revision = "88737f569e3a9c7ab309cdc09a07fe7fc87233c3"
 
 [[projects]]
   branch = "master"
@@ -166,13 +166,13 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "b630fd6fe46bcfc98f989005d8b8ec1400e60a6e"
+  revision = "eb5bcb51f2a31c7d5141d810b70815c05d9c9146"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "81d4e9dc473e5e8c933f2aaeba2a3d81efb9aed2"
+  revision = "97732733099d6a942a73b889770774366de963ed"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -199,7 +199,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "f467c93bbac2133ff463e1f93d18d8f9f3f04451"
+  revision = "64821d5d210748c883cd2b809589555ae4654203"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -218,6 +218,7 @@
     "grpclog",
     "internal",
     "internal/backoff",
+    "internal/balancerload",
     "internal/binarylog",
     "internal/channelz",
     "internal/envconfig",
@@ -236,8 +237,8 @@
     "status",
     "tap"
   ]
-  revision = "3507fb8e1a5ad030303c106fef3a47c9fdad16ad"
-  version = "v1.19.1"
+  revision = "236199dd5f8031d698fb64091194aecd1c3895b2"
+  version = "v1.20.0"
 
 [[projects]]
   name = "gopkg.in/yaml.v2"
@@ -248,6 +249,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b0de5afd82ebda6ffa9584c7ad259202e177b9e18e1be1006621ae17b7827999"
+  inputs-digest = "6f492b0b7be2e735517e65e7c220c30cbd94ebabcf4f5182a38360b87451b1a7"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -2,7 +2,6 @@ package chatbot
 
 import (
 	"context"
-	"strings"
 
 	"github.com/golang/protobuf/proto"
 )
@@ -123,7 +122,7 @@ func (mgr *pluginsMgr) OnMessage(ctx context.Context, bot ChatBot, msg Message) 
 		ChatBot:    bot,
 		MgrPlugins: mgr,
 		Msg:        msg,
-		LstStr:     strings.Fields(msg.GetText()),
+		LstStr:     SplitString(msg.GetText()),
 	}
 
 	if mgr.curPlugin != nil {
