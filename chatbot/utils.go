@@ -23,7 +23,7 @@ import (
 
 // FormatJSON - format JSON string
 func FormatJSON(str string) (string, error) {
-	var mapResult map[string]interface{}
+	var mapResult interface{} //map[string]interface{}
 	err := json.Unmarshal([]byte(str), &mapResult)
 	if err != nil {
 		return "", err
