@@ -6,7 +6,10 @@ import (
 	"net/http"
 	"strings"
 
+	"go.uber.org/zap"
+
 	"github.com/zhs007/jarviscore"
+	"github.com/zhs007/jarviscore/base"
 )
 
 type ducklingClient struct {
@@ -38,6 +41,8 @@ func (dc *ducklingClient) request(ctx context.Context, lang string, text string)
 	if err != nil {
 		return "", err
 	}
+
+	jarvisbase.Info("ducklingClient.request", zap.String("body", string(body)))
 
 	return string(body), nil
 }
