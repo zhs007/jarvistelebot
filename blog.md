@@ -1,5 +1,18 @@
 # JarvisTeleBot Development Log
 
+### 2019-04-22
+
+前几天基本上都在尝试rasa，也做了一些训练，基本的基本上搞清楚了。  
+现在最大的问题其实是我觉得准确率堪忧，首先就是ner的识别率不够高，前期缺少时间的识别，后来发现duckling就是干这事的，然后看到duckling上还有人问rasa和duckling结果不一样，我看rasa维护的duckling是4个月以前的，所以就自己做了duckling的服务。  
+haskell编译很慢，不知道是不是服务器机器配置的问题，折腾了几次都失败了，后来干脆直接丢给Jarvis处理了，比我ssh连上去要顺利多了。
+
+接下来，想用bert来做ner，缺数据。  
+
+估计还是会分几步走，一方面训练现在的rasa，一方面用自己的想法来优化吧。
+
+今天加入了duckling的plugin，可以先测一下duckling解析。  
+还是加了duckling的配置文件，以及需要修改config.yaml，开启duckling插件。
+
 ### 2019-04-18
 
 今天增加了``dtdata``，还是有单独的配置文件，并需要配置插件开关。  

@@ -1,0 +1,4 @@
+# jarvis telegram bot plugin duckling config file
+
+# duckling service addr
+ducklingservaddr: duckling url

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package pluginducklingpb;
+
+// RequestDuckling - request duckling
+message RequestDuckling {
+    // lang - lang
+    string lang = 1;
+    // text - text
+    string text = 2;
+}
