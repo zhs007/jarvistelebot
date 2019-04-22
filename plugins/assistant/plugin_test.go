@@ -1,7 +1,6 @@
 package pluginassistant
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/zhs007/jarviscore/base"
@@ -112,7 +111,7 @@ func Test_assistantPlugin_IsMyMessage(t *testing.T) {
 			ChatBot:    nil,
 			MgrPlugins: nil,
 			Msg:        curmsg,
-			LstStr:     strings.Fields(curmsg.GetText()),
+			LstStr:     chatbot.SplitString(curmsg.GetText()),
 		}
 
 		_, err := p.ParseMessage(params)

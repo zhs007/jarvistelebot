@@ -1,7 +1,6 @@
 package plugincore
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/zhs007/jarvistelebot/plugins/core/proto"
@@ -57,7 +56,7 @@ func Test_cmdUser_Parse(t *testing.T) {
 
 	for _, v := range arrOK {
 		lstfullcmd := []string{"user"}
-		lstcmd := strings.Fields(v.cmd)
+		lstcmd := chatbot.SplitString(v.cmd)
 
 		// t.Logf("%v", len(lstcmd))
 

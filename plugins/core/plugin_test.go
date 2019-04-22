@@ -1,7 +1,6 @@
 package plugincore
 
 import (
-	"strings"
 	"testing"
 
 	"go.uber.org/zap/zapcore"
@@ -112,7 +111,7 @@ func Test_corePlugin_IsMyMessage(t *testing.T) {
 			ChatBot:    nil,
 			MgrPlugins: nil,
 			Msg:        curmsg,
-			LstStr:     strings.Fields(curmsg.GetText()),
+			LstStr:     chatbot.SplitString(curmsg.GetText()),
 		}
 
 		_, err := p.ParseMessage(params)
@@ -131,7 +130,7 @@ func Test_corePlugin_IsMyMessage(t *testing.T) {
 			ChatBot:    nil,
 			MgrPlugins: nil,
 			Msg:        curmsg,
-			LstStr:     strings.Fields(curmsg.GetText()),
+			LstStr:     chatbot.SplitString(curmsg.GetText()),
 		}
 
 		_, err := p.ParseMessage(params)

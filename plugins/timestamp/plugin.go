@@ -3,7 +3,6 @@ package plugintimestamp
 import (
 	"context"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/golang/protobuf/proto"
@@ -45,7 +44,7 @@ func (p *timestampPlugin) OnMessage(ctx context.Context, params *chatbot.Message
 	}
 
 	if params.ChatBot.IsMaster(from) {
-		arr := strings.Fields(params.Msg.GetText())
+		arr := chatbot.SplitString(params.Msg.GetText())
 
 		ts, err := strconv.ParseInt(arr[0], 10, 64)
 		if err == nil {
