@@ -4,7 +4,6 @@ import (
 	"context"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"go.uber.org/zap"
@@ -32,7 +31,8 @@ func (dc *ducklingClient) request(ctx context.Context, lang string, text string)
 
 	resp, err := http.Post(dc.cfg.DucklingServAddr,
 		"application/x-www-form-urlencoded",
-		strings.NewReader(url.QueryEscape(jarviscore.AppendString("local=", lang, "&text=", text))))
+		strings.NewReader(jarviscore.AppendString("locale=", lang, "&text=", text)))
+	// strings.NewReader(url.QueryEscape(jarviscore.AppendString("locale=", lang, "&text=", text))))
 	if err != nil {
 		return "", err
 	}
