@@ -44,7 +44,7 @@ func (cmd *cmdSubscribeArticles) RunCommand(ctx context.Context, params *chatbot
 		timerid := params.ChatBot.AddTimer(int(sacmd.Timer), -1,
 			jarviscore.AppendString(params.Msg.GetFrom().GetUserID(), "cmdSubscribeArticles.timer"),
 			func(ctx context.Context) error {
-				jarvisbase.Info("cmdSubscribeArticles.timer")
+				jarvisbase.Info("cmdSubscribeArticles.timer start...")
 
 				for _, website := range sacmd.Websites {
 					lst, err := pluginCrawler.client.getArticles(ctx, website)
@@ -119,6 +119,8 @@ func (cmd *cmdSubscribeArticles) RunCommand(ctx context.Context, params *chatbot
 						}
 					}
 				}
+
+				jarvisbase.Info("cmdSubscribeArticles.timer end")
 				return nil
 			})
 
