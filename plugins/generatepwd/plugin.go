@@ -100,7 +100,7 @@ func (p *generatePasswordPlugin) GetPluginType() int {
 // ParseMessage - If this message is what I can process,
 //	it will return to the command line, otherwise it will return an error.
 func (p *generatePasswordPlugin) ParseMessage(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) > 1 {
+	if len(params.LstStr) >= 1 {
 		// ret := p.urlParser.ParseURL(params.LstStr[0])
 		// if ret != nil {
 		// 	return &plugincrawlerpb.URLCommand{}, nil
