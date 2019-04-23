@@ -13,4 +13,5 @@ protoc -I plugins/crawler/proto/ plugins/crawler/proto/crawler.proto --go_out=pl
 protoc -I plugins/translate/proto/ plugins/translate/proto/translate.proto --go_out=plugins=grpc:plugins/translate/proto
 protoc -I plugins/dtdata/proto/ plugins/dtdata/proto/dtdata.proto --go_out=plugins=grpc:plugins/dtdata/proto
 protoc -I plugins/duckling/proto/ plugins/duckling/proto/duckling.proto --go_out=plugins=grpc:plugins/duckling/proto
+protoc -I plugins/generatepwd/proto/ plugins/generatepwd/proto/generatepwd.proto --go_out=plugins=grpc:plugins/generatepwd/proto
 protoc -I jarviscrawlercore/ jarviscrawlercore/result.proto --go_out=plugins=grpc:jarviscrawlercore

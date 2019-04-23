@@ -1,5 +1,14 @@
 # JarvisTeleBot Development Log
 
+### 2019-04-23
+
+增加了随机密码插件。  
+一样需要在config.yaml里开启。
+
+```
+generatepassword -m normal -l 16
+```
+
 ### 2019-04-22
 
 前几天基本上都在尝试rasa，也做了一些训练，基本的基本上搞清楚了。  
