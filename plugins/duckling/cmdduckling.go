@@ -9,6 +9,8 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/duckling/proto"
 )
 
+const commandRequestDuckling = "duckling"
+
 // cmdRequestDuckling - duckling
 type cmdRequestDuckling struct {
 }
@@ -55,18 +57,22 @@ func (cmd *cmdRequestDuckling) RunCommand(ctx context.Context, params *chatbot.M
 	return false
 }
 
-// Parse - parse command line
-func (cmd *cmdRequestDuckling) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
-	if len(params.LstStr) < 1 {
+// parse - parse command line
+func (cmd *cmdRequestDuckling) parse(lstStr []string) (*pluginducklingpb.RequestDuckling, error) {
+	if len(lstStr) <= 1 {
 		return nil, chatbot.ErrInvalidCommandLineItemNums
 	}
 
-	flagset := pflag.NewFlagSet("duckling", pflag.ContinueOnError)
+	if lstStr[0] != commandRequestDuckling {
+		return nil, chatbot.ErrInvalidCommandLineCommand
+	}
+
+	flagset := pflag.NewFlagSet(commandRequestDuckling, pflag.ContinueOnError)
 
 	var lang = flagset.StringP("lang", "l", "", "language")
 	var text = flagset.StringP("text", "t", "", "text")
 
-	err := flagset.Parse(params.LstStr[1:])
+	err := flagset.Parse(lstStr[1:])
 	if err != nil {
 		return nil, err
 	}
@@ -81,4 +87,9 @@ func (cmd *cmdRequestDuckling) ParseCommandLine(params *chatbot.MessageParams) (
 	}
 
 	return nil, chatbot.ErrInvalidCommandLine
+}
+
+// Parse - parse command line
+func (cmd *cmdRequestDuckling) ParseCommandLine(params *chatbot.MessageParams) (proto.Message, error) {
+	return cmd.parse(params.LstStr)
 }
