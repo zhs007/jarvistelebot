@@ -7,19 +7,19 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/dtdata/proto"
 )
 
-func hasBusinessInDTGameReport(game *plugindtdatapb.DTGameReport, businessid string) bool {
-	for _, v := range game.Businessid {
-		if v == businessid {
-			return true
+func findBusinessInDTGameReport(game *plugindtdatapb.DTGameReport, businessid string) *plugindtdatapb.DTBusinessReport {
+	for _, v := range game.BusinessReport {
+		if v.BusinessID == businessid {
+			return v
 		}
 	}
 
-	return false
+	return nil
 }
 
 func hasGameInDTBusinessReport(business *plugindtdatapb.DTBusinessReport, gameCode string) bool {
-	for _, v := range business.Gamecode {
-		if v == gameCode {
+	for _, v := range business.GameReport {
+		if v.GameCode == gameCode {
 			return true
 		}
 	}
@@ -76,10 +76,20 @@ func countDTReportWithBusinessGameReport(reply *jarviscrawlercore.ReplyDTData, m
 			cg.TotalWin += v.TotalWin / 100.0
 			cg.SpinNums += int64(v.GameNums)
 
-			if !hasBusinessInDTGameReport(cg, v.Businessid) {
-				cg.Businessid = append(cg.Businessid, v.Businessid)
+			cgb := findBusinessInDTGameReport(cg, v.Businessid)
+			if cgb == nil {
+				cg.BusinessReport = append(cg.BusinessReport, &plugindtdatapb.DTBusinessReport{
+					BusinessID: v.Businessid,
+					TotalBet:   v.TotalBet / 100.0,
+					TotalWin:   v.TotalWin / 100.0,
+					SpinNums:   int64(v.GameNums),
+				})
 
 				cg.BusinessNums++
+			} else {
+				cgb.TotalBet += v.TotalBet / 100.0
+				cgb.TotalWin += v.TotalWin / 100.0
+				cgb.SpinNums += int64(v.GameNums)
 			}
 
 			cb := findDTBusinessReport(lstBusiness, v.Businessid)
@@ -96,7 +106,13 @@ func countDTReportWithBusinessGameReport(reply *jarviscrawlercore.ReplyDTData, m
 			cb.SpinNums += int64(v.GameNums)
 
 			if !hasGameInDTBusinessReport(cb, v.Gamecode) {
-				cb.Gamecode = append(cb.Gamecode, v.Gamecode)
+				cb.GameReport = append(cb.GameReport, &plugindtdatapb.DTGameReport{
+					GameCode: v.Gamecode,
+					TotalBet: v.TotalBet / 100.0,
+					TotalWin: v.TotalWin / 100.0,
+					SpinNums: int64(v.GameNums),
+				})
+				// cb.Gamecode = append(cb.Gamecode, v.Gamecode)
 
 				cb.GameNums++
 			}
@@ -115,27 +131,29 @@ func countDTReportWithBusinessGameReport(reply *jarviscrawlercore.ReplyDTData, m
 	})
 
 	for i := 0; i < len(lstGame); i++ {
-		for _, v := range lstGame[i].Businessid {
-			ccb := findDTBusinessReport(lstBusiness, v)
-			if ccb != nil {
-				lstGame[i].BusinessReport = append(lstGame[i].BusinessReport, ccb)
-			}
-		}
+		// for _, v := range lstGame[i].Businessid {
+		// 	ccb := findDTBusinessReport(lstBusiness, v)
+		// 	if ccb != nil {
+		// 		lstGame[i].BusinessReport = append(lstGame[i].BusinessReport, &plugindtdatapb.DTBusinessReport{
+		// 			BusinessID: ccb.G
+		// 		})
+		// 	}
+		// }
 
-		lstGame[i].Businessid = nil
+		// lstGame[i].Businessid = nil
 
 		dtreport.TopGames = append(dtreport.TopGames, lstGame[i])
 	}
 
 	for i := 0; i < len(lstBusiness); i++ {
-		for _, v := range lstBusiness[i].Gamecode {
-			ccg := findDTGameReport(lstGame, v)
-			if ccg != nil {
-				lstBusiness[i].GameReport = append(lstBusiness[i].GameReport, ccg)
-			}
-		}
+		// for _, v := range lstBusiness[i].Gamecode {
+		// 	ccg := findDTGameReport(lstGame, v)
+		// 	if ccg != nil {
+		// 		lstBusiness[i].GameReport = append(lstBusiness[i].GameReport, ccg)
+		// 	}
+		// }
 
-		lstBusiness[i].Gamecode = nil
+		// lstBusiness[i].Gamecode = nil
 
 		dtreport.TopBusiness = append(dtreport.TopBusiness, lstBusiness[i])
 	}
