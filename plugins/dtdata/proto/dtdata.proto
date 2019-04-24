@@ -23,6 +23,7 @@ message DTGameReport {
     int32 businessNums = 7;
 
     repeated string businessid = 20;
+    repeated DTBusinessReport businessReport = 21;
 
     string gameCode = 100;
 }
@@ -38,6 +39,7 @@ message DTBusinessReport {
     string mainCurrency = 7;
 
     repeated string gamecode = 20;
+    repeated DTGameReport gameReport = 21;
 
     string businessID = 100;
 }

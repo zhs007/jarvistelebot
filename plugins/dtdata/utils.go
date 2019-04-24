@@ -115,13 +115,27 @@ func countDTReportWithBusinessGameReport(reply *jarviscrawlercore.ReplyDTData, m
 	})
 
 	for i := 0; i < len(lstGame); i++ {
-		// lstGame[i].Businessid = nil
+		for _, v := range lstGame[i].Businessid {
+			ccb := findDTBusinessReport(lstBusiness, v)
+			if ccb != nil {
+				lstGame[i].BusinessReport = append(lstGame[i].BusinessReport, ccb)
+			}
+		}
+
+		lstGame[i].Businessid = nil
 
 		dtreport.TopGames = append(dtreport.TopGames, lstGame[i])
 	}
 
 	for i := 0; i < len(lstBusiness); i++ {
-		// lstBusiness[i].Gamecode = nil
+		for _, v := range lstBusiness[i].Gamecode {
+			ccg := findDTGameReport(lstGame, v)
+			if ccg != nil {
+				lstBusiness[i].GameReport = append(lstBusiness[i].GameReport, ccg)
+			}
+		}
+
+		lstBusiness[i].Gamecode = nil
 
 		dtreport.TopBusiness = append(dtreport.TopBusiness, lstBusiness[i])
 	}
