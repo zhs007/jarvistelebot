@@ -114,14 +114,14 @@ func countDTReportWithBusinessGameReport(reply *jarviscrawlercore.ReplyDTData, m
 		return lstBusiness[i].TotalBet > lstBusiness[j].TotalBet
 	})
 
-	for i := 0; i < topNumsGame; i++ {
-		lstGame[i].Businessid = nil
+	for i := 0; i < len(lstGame); i++ {
+		// lstGame[i].Businessid = nil
 
 		dtreport.TopGames = append(dtreport.TopGames, lstGame[i])
 	}
 
-	for i := 0; i < topNumsBusiness; i++ {
-		lstBusiness[i].Gamecode = nil
+	for i := 0; i < len(lstBusiness); i++ {
+		// lstBusiness[i].Gamecode = nil
 
 		dtreport.TopBusiness = append(dtreport.TopBusiness, lstBusiness[i])
 	}
