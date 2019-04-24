@@ -59,8 +59,8 @@ func countDTReportWithBusinessGameReport(reply *jarviscrawlercore.ReplyDTData, m
 
 	for _, v := range reply.GameReports {
 		if v.Currency == mainCurrency {
-			dtreport.TotalBet += v.TotalBet
-			dtreport.TotalWin += v.TotalWin
+			dtreport.TotalBet += v.TotalBet / 100.0
+			dtreport.TotalWin += v.TotalWin / 100.0
 			dtreport.SpinNums += int64(v.GameNums)
 
 			cg := findDTGameReport(lstGame, v.Gamecode)
@@ -72,8 +72,8 @@ func countDTReportWithBusinessGameReport(reply *jarviscrawlercore.ReplyDTData, m
 				lstGame = append(lstGame, cg)
 			}
 
-			cg.TotalBet += v.TotalBet
-			cg.TotalWin += v.TotalWin
+			cg.TotalBet += v.TotalBet / 100.0
+			cg.TotalWin += v.TotalWin / 100.0
 			cg.SpinNums += int64(v.GameNums)
 
 			if !hasBusinessInDTGameReport(cg, v.Businessid) {
@@ -91,8 +91,8 @@ func countDTReportWithBusinessGameReport(reply *jarviscrawlercore.ReplyDTData, m
 				lstBusiness = append(lstBusiness, cb)
 			}
 
-			cb.TotalBet += v.TotalBet
-			cb.TotalWin += v.TotalWin
+			cb.TotalBet += v.TotalBet / 100.0
+			cb.TotalWin += v.TotalWin / 100.0
 			cb.SpinNums += int64(v.GameNums)
 
 			if !hasGameInDTBusinessReport(cb, v.Gamecode) {
