@@ -42,6 +42,19 @@ func (cmd *cmdGetDTData) RunCommand(ctx context.Context, params *chatbot.Message
 			return false
 		}
 
+		if cmdGetDTData.Mode == "gamedatareport" {
+			report := countDTReportWithBusinessGameReport(reply, "CNY", 20, 10)
+
+			str, err := chatbot.FormatJSONObj(report)
+			if err != nil {
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
+			} else {
+				chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), str, params.Msg)
+			}
+
+			return true
+		}
+
 		str, err := chatbot.FormatJSONObj(reply)
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)

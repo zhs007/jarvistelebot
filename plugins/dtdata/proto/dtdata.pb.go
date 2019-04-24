@@ -35,7 +35,7 @@ func (m *GetDTDataCommand) Reset()         { *m = GetDTDataCommand{} }
 func (m *GetDTDataCommand) String() string { return proto.CompactTextString(m) }
 func (*GetDTDataCommand) ProtoMessage()    {}
 func (*GetDTDataCommand) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dtdata_039196e787559ece, []int{0}
+	return fileDescriptor_dtdata_62dc9fc679648e5e, []int{0}
 }
 func (m *GetDTDataCommand) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetDTDataCommand.Unmarshal(m, b)
@@ -76,20 +76,356 @@ func (m *GetDTDataCommand) GetEndTime() string {
 	return ""
 }
 
-func init() {
-	proto.RegisterType((*GetDTDataCommand)(nil), "plugindtdatapb.GetDTDataCommand")
+// DTGameReport - dt game report
+type DTGameReport struct {
+	Rtp                  float32  `protobuf:"fixed32,1,opt,name=rtp,proto3" json:"rtp,omitempty"`
+	TotalBet             float32  `protobuf:"fixed32,2,opt,name=totalBet,proto3" json:"totalBet,omitempty"`
+	TotalWin             float32  `protobuf:"fixed32,3,opt,name=totalWin,proto3" json:"totalWin,omitempty"`
+	SpinNums             int64    `protobuf:"varint,4,opt,name=spinNums,proto3" json:"spinNums,omitempty"`
+	CurrencyNums         int32    `protobuf:"varint,5,opt,name=currencyNums,proto3" json:"currencyNums,omitempty"`
+	MainCurrency         string   `protobuf:"bytes,6,opt,name=mainCurrency,proto3" json:"mainCurrency,omitempty"`
+	BusinessNums         int32    `protobuf:"varint,7,opt,name=businessNums,proto3" json:"businessNums,omitempty"`
+	Businessid           []string `protobuf:"bytes,20,rep,name=businessid,proto3" json:"businessid,omitempty"`
+	GameCode             string   `protobuf:"bytes,100,opt,name=gameCode,proto3" json:"gameCode,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func init() { proto.RegisterFile("dtdata.proto", fileDescriptor_dtdata_039196e787559ece) }
+func (m *DTGameReport) Reset()         { *m = DTGameReport{} }
+func (m *DTGameReport) String() string { return proto.CompactTextString(m) }
+func (*DTGameReport) ProtoMessage()    {}
+func (*DTGameReport) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dtdata_62dc9fc679648e5e, []int{1}
+}
+func (m *DTGameReport) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DTGameReport.Unmarshal(m, b)
+}
+func (m *DTGameReport) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DTGameReport.Marshal(b, m, deterministic)
+}
+func (dst *DTGameReport) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DTGameReport.Merge(dst, src)
+}
+func (m *DTGameReport) XXX_Size() int {
+	return xxx_messageInfo_DTGameReport.Size(m)
+}
+func (m *DTGameReport) XXX_DiscardUnknown() {
+	xxx_messageInfo_DTGameReport.DiscardUnknown(m)
+}
 
-var fileDescriptor_dtdata_039196e787559ece = []byte{
-	// 124 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x49, 0x29, 0x49, 0x49,
-	0x2c, 0x49, 0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x2b, 0xc8, 0x29, 0x4d, 0xcf, 0xcc,
-	0x83, 0x88, 0x15, 0x24, 0x29, 0xc5, 0x71, 0x09, 0xb8, 0xa7, 0x96, 0xb8, 0x84, 0xb8, 0x24, 0x96,
-	0x24, 0x3a, 0xe7, 0xe7, 0xe6, 0x26, 0xe6, 0xa5, 0x08, 0x09, 0x71, 0xb1, 0xe4, 0xe6, 0xa7, 0xa4,
-	0x4a, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x06, 0x81, 0xd9, 0x42, 0x32, 0x5c, 0x9c, 0xc5, 0x25, 0x89,
-	0x45, 0x25, 0x21, 0x99, 0xb9, 0xa9, 0x12, 0x4c, 0x60, 0x09, 0x84, 0x80, 0x90, 0x04, 0x17, 0x7b,
-	0x6a, 0x5e, 0x0a, 0x58, 0x8e, 0x19, 0x2c, 0x07, 0xe3, 0x26, 0xb1, 0x81, 0xad, 0x35, 0x06, 0x04,
-	0x00, 0x00, 0xff, 0xff, 0x06, 0xfb, 0xc4, 0xb0, 0x86, 0x00, 0x00, 0x00,
+var xxx_messageInfo_DTGameReport proto.InternalMessageInfo
+
+func (m *DTGameReport) GetRtp() float32 {
+	if m != nil {
+		return m.Rtp
+	}
+	return 0
+}
+
+func (m *DTGameReport) GetTotalBet() float32 {
+	if m != nil {
+		return m.TotalBet
+	}
+	return 0
+}
+
+func (m *DTGameReport) GetTotalWin() float32 {
+	if m != nil {
+		return m.TotalWin
+	}
+	return 0
+}
+
+func (m *DTGameReport) GetSpinNums() int64 {
+	if m != nil {
+		return m.SpinNums
+	}
+	return 0
+}
+
+func (m *DTGameReport) GetCurrencyNums() int32 {
+	if m != nil {
+		return m.CurrencyNums
+	}
+	return 0
+}
+
+func (m *DTGameReport) GetMainCurrency() string {
+	if m != nil {
+		return m.MainCurrency
+	}
+	return ""
+}
+
+func (m *DTGameReport) GetBusinessNums() int32 {
+	if m != nil {
+		return m.BusinessNums
+	}
+	return 0
+}
+
+func (m *DTGameReport) GetBusinessid() []string {
+	if m != nil {
+		return m.Businessid
+	}
+	return nil
+}
+
+func (m *DTGameReport) GetGameCode() string {
+	if m != nil {
+		return m.GameCode
+	}
+	return ""
+}
+
+// DTBusinessReport - dt business report
+type DTBusinessReport struct {
+	Rtp                  float32  `protobuf:"fixed32,1,opt,name=rtp,proto3" json:"rtp,omitempty"`
+	TotalBet             float32  `protobuf:"fixed32,2,opt,name=totalBet,proto3" json:"totalBet,omitempty"`
+	TotalWin             float32  `protobuf:"fixed32,3,opt,name=totalWin,proto3" json:"totalWin,omitempty"`
+	SpinNums             int64    `protobuf:"varint,4,opt,name=spinNums,proto3" json:"spinNums,omitempty"`
+	CurrencyNums         int32    `protobuf:"varint,5,opt,name=currencyNums,proto3" json:"currencyNums,omitempty"`
+	GameNums             int32    `protobuf:"varint,6,opt,name=gameNums,proto3" json:"gameNums,omitempty"`
+	MainCurrency         string   `protobuf:"bytes,7,opt,name=mainCurrency,proto3" json:"mainCurrency,omitempty"`
+	Gamecode             []string `protobuf:"bytes,20,rep,name=gamecode,proto3" json:"gamecode,omitempty"`
+	BusinessID           string   `protobuf:"bytes,100,opt,name=businessID,proto3" json:"businessID,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DTBusinessReport) Reset()         { *m = DTBusinessReport{} }
+func (m *DTBusinessReport) String() string { return proto.CompactTextString(m) }
+func (*DTBusinessReport) ProtoMessage()    {}
+func (*DTBusinessReport) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dtdata_62dc9fc679648e5e, []int{2}
+}
+func (m *DTBusinessReport) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DTBusinessReport.Unmarshal(m, b)
+}
+func (m *DTBusinessReport) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DTBusinessReport.Marshal(b, m, deterministic)
+}
+func (dst *DTBusinessReport) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DTBusinessReport.Merge(dst, src)
+}
+func (m *DTBusinessReport) XXX_Size() int {
+	return xxx_messageInfo_DTBusinessReport.Size(m)
+}
+func (m *DTBusinessReport) XXX_DiscardUnknown() {
+	xxx_messageInfo_DTBusinessReport.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DTBusinessReport proto.InternalMessageInfo
+
+func (m *DTBusinessReport) GetRtp() float32 {
+	if m != nil {
+		return m.Rtp
+	}
+	return 0
+}
+
+func (m *DTBusinessReport) GetTotalBet() float32 {
+	if m != nil {
+		return m.TotalBet
+	}
+	return 0
+}
+
+func (m *DTBusinessReport) GetTotalWin() float32 {
+	if m != nil {
+		return m.TotalWin
+	}
+	return 0
+}
+
+func (m *DTBusinessReport) GetSpinNums() int64 {
+	if m != nil {
+		return m.SpinNums
+	}
+	return 0
+}
+
+func (m *DTBusinessReport) GetCurrencyNums() int32 {
+	if m != nil {
+		return m.CurrencyNums
+	}
+	return 0
+}
+
+func (m *DTBusinessReport) GetGameNums() int32 {
+	if m != nil {
+		return m.GameNums
+	}
+	return 0
+}
+
+func (m *DTBusinessReport) GetMainCurrency() string {
+	if m != nil {
+		return m.MainCurrency
+	}
+	return ""
+}
+
+func (m *DTBusinessReport) GetGamecode() []string {
+	if m != nil {
+		return m.Gamecode
+	}
+	return nil
+}
+
+func (m *DTBusinessReport) GetBusinessID() string {
+	if m != nil {
+		return m.BusinessID
+	}
+	return ""
+}
+
+// DTReport - dt report
+type DTReport struct {
+	Rtp                  float32             `protobuf:"fixed32,1,opt,name=rtp,proto3" json:"rtp,omitempty"`
+	TotalBet             float32             `protobuf:"fixed32,2,opt,name=totalBet,proto3" json:"totalBet,omitempty"`
+	TotalWin             float32             `protobuf:"fixed32,3,opt,name=totalWin,proto3" json:"totalWin,omitempty"`
+	SpinNums             int64               `protobuf:"varint,4,opt,name=spinNums,proto3" json:"spinNums,omitempty"`
+	CurrencyNums         int32               `protobuf:"varint,5,opt,name=currencyNums,proto3" json:"currencyNums,omitempty"`
+	GameNums             int32               `protobuf:"varint,6,opt,name=gameNums,proto3" json:"gameNums,omitempty"`
+	MainCurrency         string              `protobuf:"bytes,7,opt,name=mainCurrency,proto3" json:"mainCurrency,omitempty"`
+	BusinessNums         int32               `protobuf:"varint,8,opt,name=businessNums,proto3" json:"businessNums,omitempty"`
+	TopGames             []*DTGameReport     `protobuf:"bytes,100,rep,name=topGames,proto3" json:"topGames,omitempty"`
+	TopBusiness          []*DTBusinessReport `protobuf:"bytes,101,rep,name=topBusiness,proto3" json:"topBusiness,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
+}
+
+func (m *DTReport) Reset()         { *m = DTReport{} }
+func (m *DTReport) String() string { return proto.CompactTextString(m) }
+func (*DTReport) ProtoMessage()    {}
+func (*DTReport) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dtdata_62dc9fc679648e5e, []int{3}
+}
+func (m *DTReport) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DTReport.Unmarshal(m, b)
+}
+func (m *DTReport) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DTReport.Marshal(b, m, deterministic)
+}
+func (dst *DTReport) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DTReport.Merge(dst, src)
+}
+func (m *DTReport) XXX_Size() int {
+	return xxx_messageInfo_DTReport.Size(m)
+}
+func (m *DTReport) XXX_DiscardUnknown() {
+	xxx_messageInfo_DTReport.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DTReport proto.InternalMessageInfo
+
+func (m *DTReport) GetRtp() float32 {
+	if m != nil {
+		return m.Rtp
+	}
+	return 0
+}
+
+func (m *DTReport) GetTotalBet() float32 {
+	if m != nil {
+		return m.TotalBet
+	}
+	return 0
+}
+
+func (m *DTReport) GetTotalWin() float32 {
+	if m != nil {
+		return m.TotalWin
+	}
+	return 0
+}
+
+func (m *DTReport) GetSpinNums() int64 {
+	if m != nil {
+		return m.SpinNums
+	}
+	return 0
+}
+
+func (m *DTReport) GetCurrencyNums() int32 {
+	if m != nil {
+		return m.CurrencyNums
+	}
+	return 0
+}
+
+func (m *DTReport) GetGameNums() int32 {
+	if m != nil {
+		return m.GameNums
+	}
+	return 0
+}
+
+func (m *DTReport) GetMainCurrency() string {
+	if m != nil {
+		return m.MainCurrency
+	}
+	return ""
+}
+
+func (m *DTReport) GetBusinessNums() int32 {
+	if m != nil {
+		return m.BusinessNums
+	}
+	return 0
+}
+
+func (m *DTReport) GetTopGames() []*DTGameReport {
+	if m != nil {
+		return m.TopGames
+	}
+	return nil
+}
+
+func (m *DTReport) GetTopBusiness() []*DTBusinessReport {
+	if m != nil {
+		return m.TopBusiness
+	}
+	return nil
+}
+
+func init() {
+	proto.RegisterType((*GetDTDataCommand)(nil), "plugindtdatapb.GetDTDataCommand")
+	proto.RegisterType((*DTGameReport)(nil), "plugindtdatapb.DTGameReport")
+	proto.RegisterType((*DTBusinessReport)(nil), "plugindtdatapb.DTBusinessReport")
+	proto.RegisterType((*DTReport)(nil), "plugindtdatapb.DTReport")
+}
+
+func init() { proto.RegisterFile("dtdata.proto", fileDescriptor_dtdata_62dc9fc679648e5e) }
+
+var fileDescriptor_dtdata_62dc9fc679648e5e = []byte{
+	// 375 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x54, 0x3d, 0x6b, 0xeb, 0x30,
+	0x14, 0xc5, 0x76, 0x3e, 0x6f, 0xc2, 0x23, 0x88, 0x37, 0x88, 0x47, 0x78, 0x18, 0x4f, 0x9e, 0x32,
+	0xbc, 0xb7, 0x74, 0x4e, 0x0c, 0xa1, 0x4b, 0x07, 0x61, 0xc8, 0x56, 0x50, 0x22, 0x11, 0x04, 0x91,
+	0x2c, 0x6c, 0x79, 0xe8, 0x3f, 0xe9, 0xd0, 0xdf, 0xd9, 0xb9, 0xe8, 0xc6, 0x76, 0xed, 0x26, 0x3f,
+	0xa0, 0x74, 0xd3, 0x39, 0xe7, 0xde, 0x93, 0x9b, 0xc3, 0xbd, 0x86, 0xa5, 0x70, 0x82, 0x3b, 0xbe,
+	0xb1, 0x65, 0xe1, 0x0a, 0xf2, 0xcb, 0x5e, 0xea, 0xb3, 0x32, 0x57, 0xce, 0x1e, 0x93, 0x67, 0x58,
+	0xed, 0xa5, 0xcb, 0xf2, 0x8c, 0x3b, 0xbe, 0x2b, 0xb4, 0xe6, 0x46, 0x10, 0x02, 0x23, 0x5d, 0x08,
+	0x49, 0x83, 0x38, 0x48, 0xe7, 0x0c, 0xdf, 0x64, 0x0d, 0xf3, 0xca, 0xf1, 0xd2, 0xe5, 0x4a, 0x4b,
+	0x1a, 0xa2, 0xf0, 0x49, 0x10, 0x0a, 0x53, 0x69, 0x04, 0x6a, 0x11, 0x6a, 0x2d, 0x4c, 0xde, 0x42,
+	0x58, 0x66, 0xf9, 0x9e, 0x6b, 0xc9, 0xa4, 0x2d, 0x4a, 0x47, 0x56, 0x10, 0x95, 0xce, 0xa2, 0x77,
+	0xc8, 0xfc, 0x93, 0xfc, 0x81, 0x99, 0x2b, 0x1c, 0xbf, 0x6c, 0xa5, 0x43, 0xe7, 0x90, 0x75, 0xb8,
+	0xd3, 0x0e, 0xca, 0xa0, 0x73, 0xab, 0x1d, 0x94, 0xf1, 0x5a, 0x65, 0x95, 0x79, 0xaa, 0x75, 0x45,
+	0x47, 0x71, 0x90, 0x46, 0xac, 0xc3, 0x24, 0x81, 0xe5, 0xa9, 0x2e, 0x4b, 0x69, 0x4e, 0x2f, 0xa8,
+	0x8f, 0xe3, 0x20, 0x1d, 0xb3, 0x01, 0xe7, 0x6b, 0x34, 0x57, 0x66, 0xd7, 0x70, 0x74, 0x82, 0x93,
+	0x0f, 0x38, 0x5f, 0x73, 0xac, 0x2b, 0x65, 0x64, 0x55, 0xa1, 0xcf, 0xf4, 0xea, 0xd3, 0xe7, 0xc8,
+	0x5f, 0x80, 0x16, 0x2b, 0x41, 0x7f, 0xc7, 0x51, 0x3a, 0x67, 0x3d, 0xc6, 0xcf, 0x79, 0xe6, 0x5a,
+	0xee, 0x7c, 0xa4, 0x02, 0x7f, 0xa3, 0xc3, 0xc9, 0x6b, 0x08, 0xab, 0x2c, 0xdf, 0x36, 0xc5, 0xdf,
+	0x2e, 0xa2, 0x66, 0x74, 0xd4, 0x27, 0xa8, 0x77, 0xf8, 0x26, 0xbe, 0xe9, 0x9d, 0xf8, 0x9a, 0xfe,
+	0x93, 0xff, 0xeb, 0xd7, 0x60, 0x3a, 0xdc, 0x8f, 0xed, 0x31, 0x6b, 0x82, 0xe9, 0x31, 0xc9, 0x7b,
+	0x08, 0xb3, 0x2c, 0xff, 0x71, 0x91, 0x7c, 0xdd, 0xa8, 0xd9, 0x9d, 0x8d, 0x7a, 0xf0, 0xf3, 0x5b,
+	0x7f, 0x34, 0x15, 0x15, 0x71, 0x94, 0x2e, 0xfe, 0xad, 0x37, 0xc3, 0xbb, 0xdd, 0xf4, 0x6f, 0x8a,
+	0x75, 0xd5, 0x64, 0x0b, 0x0b, 0x57, 0xd8, 0x76, 0x9f, 0xa8, 0xc4, 0xe6, 0xf8, 0xb6, 0x79, 0xb8,
+	0x71, 0xac, 0xdf, 0x74, 0x9c, 0xe0, 0x97, 0xe2, 0xff, 0x47, 0x00, 0x00, 0x00, 0xff, 0xff, 0x29,
+	0x4c, 0x48, 0x38, 0x39, 0x04, 0x00, 0x00,
 }
