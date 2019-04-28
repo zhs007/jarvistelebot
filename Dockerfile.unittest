@@ -1,15 +1,13 @@
-FROM golang:1.10
+FROM golang:1.12
 
 MAINTAINER zerro "zerrozhao@gmail.com"
 
-RUN go get -u github.com/golang/dep/cmd/dep
+WORKDIR /src/jarvistelebot
 
-WORKDIR $GOPATH/src/github.com/zhs007/jarvistelebot
+COPY ./go.* /src/jarvistelebot/
 
-COPY ./Gopkg.* $GOPATH/src/github.com/zhs007/jarvistelebot/
+RUN go mod download
 
-RUN dep ensure -vendor-only -v
-
-COPY . $GOPATH/src/github.com/zhs007/jarvistelebot
+COPY . /src/jarvistelebot
 
 RUN go test ./... -cover

@@ -1,28 +1,28 @@
-FROM golang:1.10 as builder
+FROM golang:1.12 as builder
 
 MAINTAINER zerro "zerrozhao@gmail.com"
 
-WORKDIR $GOPATH/src/github.com/zhs007/jarvistelebot
+WORKDIR /src/jarvistelebot
 
-COPY ./Gopkg.* $GOPATH/src/github.com/zhs007/jarvistelebot/
+COPY ./go.* /src/jarvistelebot/
 
-RUN go get -u github.com/golang/dep/cmd/dep \
-    && dep ensure -vendor-only -v
+RUN go mod download
 
-COPY . $GOPATH/src/github.com/zhs007/jarvistelebot
+COPY . /src/jarvistelebot
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o jarvistelebot . \
-    && mkdir /home/jarvistelebot \
-    && mkdir /home/jarvistelebot/cfg \
-    && mkdir /home/jarvistelebot/dat \
-    && mkdir /home/jarvistelebot/logs \
-    && cp ./jarvistelebot /home/jarvistelebot/ \
-    && cp -r www /home/jarvistelebot/www \
-    && cp ./cfg/config.yaml.default /home/jarvistelebot/cfg/config.yaml
+    && mkdir /app \
+    && mkdir /app/jarvistelebot \
+    && mkdir /app/jarvistelebot/cfg \
+    && mkdir /app/jarvistelebot/dat \
+    && mkdir /app/jarvistelebot/logs \
+    && cp ./jarvistelebot /app/jarvistelebot/ \
+    && cp -r www /app/jarvistelebot/www \
+    && cp ./cfg/config.yaml.default /app/jarvistelebot/cfg/config.yaml
 
 FROM alpine
 RUN apk upgrade && apk add --no-cache ca-certificates
-WORKDIR /home/jarvistelebot
+WORKDIR /app/jarvistelebot
 COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
-COPY --from=builder /home/jarvistelebot /home/jarvistelebot
+COPY --from=builder /app/jarvistelebot /app/jarvistelebot
 CMD ["./jarvistelebot"]

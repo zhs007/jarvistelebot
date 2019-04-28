@@ -1,5 +1,15 @@
 # JarvisTeleBot Development Log
 
+### 2019-04-28
+
+今天将jarvistelebot切到golang 1.12了，新的依赖直接用go module处理。
+
+更新的指令，记录一下。  
+
+```
+updnodes -t jarvisshell -v 0.2.58
+```
+
 ### 2019-04-23
 
 增加了随机密码插件。  
