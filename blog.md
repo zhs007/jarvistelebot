@@ -41,7 +41,7 @@ getdtdata -m gamedatareport -s 2019-04-17 -e 2019-04-17
 这个是目前最全的订阅新闻配置。
 
 ```
-subscribearticles -t 300 -w=huxiu -w=baijingapp -w=tmtpost -w=36kr -w=geekpark -w=lieyunwang -w=techcrunch
+subscribearticles -t 300 -w=huxiu -w=baijingapp -w=tmtpost -w=36kr -w=geekpark -w=lieyunwang -w=techcrunch -w=techinasia -w=iheima -w=smzdm.post -w=smzdm.news
 ```
 
 ### 2019-04-17
