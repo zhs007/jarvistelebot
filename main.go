@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	_ "net/http/pprof"
 
+	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarvistelebot/chatbot"
 	"github.com/zhs007/jarvistelebot/jarvisnode"
 	"github.com/zhs007/jarvistelebot/telebot"
@@ -25,6 +27,9 @@ func main() {
 
 		return
 	}
+
+	// pprof
+	jarviscore.InitPprof(myni)
 
 	node, err := jarvisnode.NewNode(myni)
 	if err != nil {

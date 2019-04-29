@@ -1,5 +1,24 @@
 # JarvisTeleBot Development Log
 
+### 2019-04-29
+
+可以新增配置pprof，需要在jarvisnode.yaml文件里加入配置，即可开启
+
+``` yaml
+# pprof - pprof
+pprof:
+  baseurl: ':6061'
+```
+
+如果是docker启动的，还需要端口映射。  
+可以通过浏览器来看到数据，也可以用to tools来进一步分析，我一般生成svg图片，会看得清楚一些。
+
+``` bash
+go tool pprof http://127.0.0.1:6061/debug/pprof/heap
+
+go tool pprof http://127.0.0.1:6061/debug/pprof/goroutine
+```
+
 ### 2019-04-28
 
 今天将jarvistelebot切到golang 1.12了，新的依赖直接用go module处理。
