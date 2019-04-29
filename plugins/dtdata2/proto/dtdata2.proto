@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package plugindtdata2pb;
+
+// GameDayReportCommand - game day report
+message GameDayReportCommand {
+    // env - env
+    string env = 1;
+    // dayTime - is like 2019-05-01
+    string dayTime = 2;
+    // currency - is like USD
+    string currency = 3;
+    // scaleMoney - is like 10000
+	int32 scaleMoney = 4;
+}

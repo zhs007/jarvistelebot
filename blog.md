@@ -19,6 +19,40 @@ go tool pprof http://127.0.0.1:6061/debug/pprof/heap
 go tool pprof http://127.0.0.1:6061/debug/pprof/goroutine
 ```
 
+为用户更新脚本的例子。  
+
+```
+updscript -u zeroz777 -s updcrawler141 -n dt141
+```
+
+今天还新增了dtdata2，这个是对接dtdataserv的，依然有独立的配置文件，且需要在config.yaml里开启插件才有效。  
+因为dtdataserv是一个Jarvis节点，所以这里是Jarvis地址，然后，还需要dtdataserv信任jarvistelebot节点（节点间信任关系，目前必须手动修改配置文件），这个插件才有效。
+
+```yaml
+# jarvis telegram bot plugin dtdata2 config file
+
+# dtdataserv node addr
+dtdataservaddr: nodeaddr
+```
+
+``` yaml
+# plugins - enable plugins
+plugins:
+  - 'core'
+  - 'assistant'
+  - 'jarvisnode'
+  - 'jarvisnodeex'
+  - 'timestamp'
+  - 'xlsx2json'
+  - 'filetransfer'
+  - 'usermgr'
+  - 'userscript'
+  - 'filetemplate'
+  - 'crawler'
+  - 'translate'
+  - 'dtdata2'
+```
+
 ### 2019-04-28
 
 今天将jarvistelebot切到golang 1.12了，新的依赖直接用go module处理。
