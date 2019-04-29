@@ -53,6 +53,8 @@ var (
 	ErrNoCommand = errors.New("No command")
 	// ErrInvalidCommandLineItemNums - Invalid command line item nums
 	ErrInvalidCommandLineItemNums = errors.New("Invalid command line item nums")
+	// ErrInvalidCommandLineCommand - Invalid command line command
+	ErrInvalidCommandLineCommand = errors.New("Invalid command line command")
 	// ErrMsgNotMine - This message should not be processed by me
 	ErrMsgNotMine = errors.New("This message should not be processed by me")
 	// ErrInvalidCommandLine - Invalid command line

@@ -11,3 +11,50 @@ message GetDTDataCommand {
     // endTime - end time
     string endTime = 3;
 }
+
+// DTGameReport - dt game report
+message DTGameReport {
+    float rtp = 1;
+    float totalBet = 2;
+    float totalWin = 3;
+    int64 spinNums = 4;
+    int32 currencyNums = 5;
+    string mainCurrency = 6;
+    int32 businessNums = 7;
+
+    repeated string businessid = 20;
+    repeated DTBusinessReport businessReport = 21;
+
+    string gameCode = 100;
+}
+
+// DTBusinessReport - dt business report
+message DTBusinessReport {
+    float rtp = 1;
+    float totalBet = 2;
+    float totalWin = 3;
+    int64 spinNums = 4;
+    int32 currencyNums = 5;
+    int32 gameNums = 6;
+    string mainCurrency = 7;
+
+    repeated string gamecode = 20;
+    repeated DTGameReport gameReport = 21;
+
+    string businessID = 100;
+}
+
+// DTReport - dt report
+message DTReport {
+    float rtp = 1;
+    float totalBet = 2;
+    float totalWin = 3;
+    int64 spinNums = 4;
+    int32 currencyNums = 5;
+    int32 gameNums = 6;
+    string mainCurrency = 7;
+    int32 businessNums = 8;
+
+    repeated DTGameReport topGames = 100;
+    repeated DTBusinessReport topBusiness = 101;
+}

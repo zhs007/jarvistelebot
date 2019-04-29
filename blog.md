@@ -1,5 +1,61 @@
 # JarvisTeleBot Development Log
 
+### 2019-04-29
+
+可以新增配置pprof，需要在jarvisnode.yaml文件里加入配置，即可开启
+
+``` yaml
+# pprof - pprof
+pprof:
+  baseurl: ':6061'
+```
+
+如果是docker启动的，还需要端口映射。  
+可以通过浏览器来看到数据，也可以用to tools来进一步分析，我一般生成svg图片，会看得清楚一些。
+
+``` bash
+go tool pprof http://127.0.0.1:6061/debug/pprof/heap
+
+go tool pprof http://127.0.0.1:6061/debug/pprof/goroutine
+```
+
+### 2019-04-28
+
+今天将jarvistelebot切到golang 1.12了，新的依赖直接用go module处理。
+
+更新的指令，记录一下。  
+
+```
+updnodes -t jarvisshell -v 0.2.58
+```
+
+### 2019-04-23
+
+增加了随机密码插件。  
+一样需要在config.yaml里开启。
+
+```
+generatepassword -m normal -l 16
+```
+
+### 2019-04-22
+
+前几天基本上都在尝试rasa，也做了一些训练，基本的基本上搞清楚了。  
+现在最大的问题其实是我觉得准确率堪忧，首先就是ner的识别率不够高，前期缺少时间的识别，后来发现duckling就是干这事的，然后看到duckling上还有人问rasa和duckling结果不一样，我看rasa维护的duckling是4个月以前的，所以就自己做了duckling的服务。  
+haskell编译很慢，不知道是不是服务器机器配置的问题，折腾了几次都失败了，后来干脆直接丢给Jarvis处理了，比我ssh连上去要顺利多了。
+
+接下来，想用bert来做ner，缺数据。  
+
+估计还是会分几步走，一方面训练现在的rasa，一方面用自己的想法来优化吧。
+
+今天加入了duckling的plugin，可以先测一下duckling解析。  
+还是加了duckling的配置文件，以及需要修改config.yaml，开启duckling插件。
+
+```
+duckling -l zh_CN -t "这个星期四要去看复联"
+duckling -l en_GB -t "I am going to see the movie this Thursday."
+```
+
 ### 2019-04-18
 
 今天增加了``dtdata``，还是有单独的配置文件，并需要配置插件开关。  
@@ -14,7 +70,7 @@ getdtdata -m gamedatareport -s 2019-04-17 -e 2019-04-17
 这个是目前最全的订阅新闻配置。
 
 ```
-subscribearticles -t 300 -w=huxiu -w=baijingapp -w=tmtpost -w=36kr -w=geekpark -w=lieyunwang -w=techcrunch
+subscribearticles -t 300 -w=huxiu -w=baijingapp -w=tmtpost -w=36kr -w=geekpark -w=lieyunwang -w=techcrunch -w=techinasia -w=iheima -w=smzdm.post -w=smzdm.news
 ```
 
 ### 2019-04-17

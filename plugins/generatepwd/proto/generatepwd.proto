@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package plugingeneratepwdpb;
+
+// GeneratePassword - generate password
+message GeneratePassword {
+    // length - length
+    int32 length = 1;
+    // mode - mode
+    string mode = 2;
+}

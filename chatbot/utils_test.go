@@ -68,6 +68,7 @@ func Test_SplitString(t *testing.T) {
 		strarr{src: " getdtdata  -m  gamedatareport  -s    2019-04-17   -e 2019-04-17   ", dest: []string{"getdtdata", "-m", "gamedatareport", "-s", "2019-04-17", "-e", "2019-04-17"}},
 		strarr{src: " getdtdata  -m  gamedatareport  -s    \"2019-04-17\"   -e 2019-04-17   ", dest: []string{"getdtdata", "-m", "gamedatareport", "-s", "2019-04-17", "-e", "2019-04-17"}},
 		strarr{src: " getdtdata  -m  gamedatareport  -s    \"2019-04-17   \"   -e 2019-04-17   ", dest: []string{"getdtdata", "-m", "gamedatareport", "-s", "2019-04-17   ", "-e", "2019-04-17"}},
+		strarr{src: "duckling -l zh_CN -t \"这个星期四要去看复联\"", dest: []string{"duckling", "-l", "zh_CN", "-t", "这个星期四要去看复联"}},
 	}
 
 	for _, v := range arrok {

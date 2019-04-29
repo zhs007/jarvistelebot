@@ -21,8 +21,10 @@ import (
 	"github.com/zhs007/jarvistelebot/plugins/core"
 	"github.com/zhs007/jarvistelebot/plugins/crawler"
 	"github.com/zhs007/jarvistelebot/plugins/dtdata"
+	"github.com/zhs007/jarvistelebot/plugins/duckling"
 	"github.com/zhs007/jarvistelebot/plugins/filetemplate"
 	"github.com/zhs007/jarvistelebot/plugins/filetransfer"
+	"github.com/zhs007/jarvistelebot/plugins/generatepwd"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
 	"github.com/zhs007/jarvistelebot/plugins/jarvisnodeex"
 	"github.com/zhs007/jarvistelebot/plugins/normal"
@@ -67,6 +69,8 @@ func regPlugins(cfg *Config, mgrPlugins chatbot.PluginsMgr) {
 	mgrPlugins.RegPlugin(plugincrawler.PluginName, plugincrawler.NewPlugin)
 	mgrPlugins.RegPlugin(plugintranslate.PluginName, plugintranslate.NewPlugin)
 	mgrPlugins.RegPlugin(plugindtdata.PluginName, plugindtdata.NewPlugin)
+	mgrPlugins.RegPlugin(pluginduckling.PluginName, pluginduckling.NewPlugin)
+	mgrPlugins.RegPlugin(plugingeneratepwd.PluginName, plugingeneratepwd.NewPlugin)
 
 	mgrPlugins.SetDefaultPlugin(cfg.DefaultPlugin)
 
