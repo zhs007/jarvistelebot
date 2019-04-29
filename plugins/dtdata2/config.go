@@ -10,6 +10,7 @@ import (
 // config - config
 type config struct {
 	DTDataServAddr string
+	URL            string
 }
 
 // LoadConfig - load config
@@ -43,6 +44,10 @@ func checkConfig(cfg *config) error {
 
 	if cfg.DTDataServAddr == "" {
 		return ErrConfigNoDTDataServAddr
+	}
+
+	if cfg.URL == "" {
+		return ErrConfigNoURL
 	}
 
 	return nil

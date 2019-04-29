@@ -110,7 +110,9 @@ func (cmd *cmdGameDayReport) RunCommand(ctx context.Context, params *chatbot.Mes
 									return nil
 								}
 
-								chatbot.SendTextMsg(params.ChatBot, from, reply.Token, params.Msg)
+								chatbot.SendTextMsg(params.ChatBot, from,
+									jarviscore.AppendString(pluginDTData2.cfg.URL, reply.Token),
+									params.Msg)
 
 								return nil
 							}
