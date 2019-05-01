@@ -1,5 +1,13 @@
 # JarvisTeleBot Development Log
 
+### 2019-05-01
+
+取容器日志的命令
+
+```
+requestfile -n jarvisrootsh -f /var/lib/docker/containers/eebd4d5deda458abd7dbbf6023525b758293675c82d62301946ec335c0be50d2/eebd4d5deda458abd7dbbf6023525b758293675c82d62301946ec335c0be50d2-json.log
+```
+
 ### 2019-04-29
 
 可以新增配置pprof，需要在jarvisnode.yaml文件里加入配置，即可开启
