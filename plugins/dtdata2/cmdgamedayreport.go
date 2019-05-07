@@ -5,11 +5,11 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
-	"github.com/zhs007/dtdataserv/client"
+	dtdataclient "github.com/zhs007/dtdataserv/client"
 	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/proto"
+	jarviscorepb "github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/plugins/dtdata2/proto"
+	plugindtdata2pb "github.com/zhs007/jarvistelebot/plugins/dtdata2/proto"
 )
 
 // CommandGameDayReport - command
@@ -68,6 +68,11 @@ func (cmd *cmdGameDayReport) RunCommand(ctx context.Context, params *chatbot.Mes
 						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 							jarviscore.AppendString("I send the task to ", curnode.Name),
 							params.Msg)
+
+					} else if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeRemoved {
+
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							jarviscore.AppendString(curnode.Name, " maybe restarted, you can restart the gamedayreport."), params.Msg)
 
 					} else if curret.Err != nil {
 
