@@ -65,12 +65,8 @@ github.com/zhs007/dtdataserv v0.1.13 h1:e7Ae/GFzG47P4DJko09zJWpCGIzPuzPXwDCcQxOP
 github.com/zhs007/dtdataserv v0.1.13/go.mod h1:T2aPC/nHIc//bFqoSWHXkzW2VS6JsUOfgXEwNB+EzwE=
 github.com/zhs007/jarviscore v0.7.140 h1:K4eZnYoNYNzjrokY/+pZH9+c+idjcSlP7kqaqKGQx98=
 github.com/zhs007/jarviscore v0.7.140/go.mod h1:+lY94wxshPqm+usTNBKrjWoEm4BbozJJX7yYOKD0/9s=
-github.com/zhs007/jarviscore v0.7.165 h1:ncnixdo1cZeVf2Oyc0B5JylCWZqLae1X0/Jpd6e1Slw=
-github.com/zhs007/jarviscore v0.7.165/go.mod h1:O39wAE/vkftdb2c6JJnMd4Fi9pwy8ozIK4ezr1Aklt4=
-github.com/zhs007/jarviscore v0.7.166 h1:8A/sNbzrp6nkSeGRufXwwgjt9uDwQPKZXV2vS+hG/0M=
-github.com/zhs007/jarviscore v0.7.166/go.mod h1:O39wAE/vkftdb2c6JJnMd4Fi9pwy8ozIK4ezr1Aklt4=
-github.com/zhs007/jarviscore v0.7.167 h1:WDvWc//sR38NqrjJff4GX0mz3L9oJPeD1xb5MD7Cnak=
-github.com/zhs007/jarviscore v0.7.167/go.mod h1:O39wAE/vkftdb2c6JJnMd4Fi9pwy8ozIK4ezr1Aklt4=
+github.com/zhs007/jarviscore v0.7.168 h1:fZgm9Ax81fi6Udd+FdbRD198gjW7exdxYKoplkje/W0=
+github.com/zhs007/jarviscore v0.7.168/go.mod h1:O39wAE/vkftdb2c6JJnMd4Fi9pwy8ozIK4ezr1Aklt4=
 go.uber.org/atomic v1.3.2 h1:2Oa65PReHzfn29GpvgsYwloV9AVFHPDk8tYxt2c2tr4=
 go.uber.org/atomic v1.3.2/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=
 go.uber.org/multierr v1.1.0 h1:HoEmRHQPVSqub6w2z2d2EOVs2fjyFRGyofhKuyDq0QI=
