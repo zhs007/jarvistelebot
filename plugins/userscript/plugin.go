@@ -5,13 +5,13 @@ import (
 	"fmt"
 
 	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/base"
+	jarvisbase "github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/zhs007/jarviscore/proto"
+	jarviscorepb "github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/plugins/userscript/proto"
+	pluginuserscriptpb "github.com/zhs007/jarvistelebot/plugins/userscript/proto"
 )
 
 // PluginName - plugin name
@@ -103,7 +103,7 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 							chatbot.SendTextMsg(params.ChatBot, from, "It's done.", params.Msg)
 
 						} else if cm.MsgType == jarviscorepb.MSGTYPE_REPLY2 &&
-							cm.ReplyType == jarviscorepb.REPLYTYPE_ISME {
+							cm.ReplyType == jarviscorepb.REPLYTYPE_IGOTIT {
 
 							chatbot.SendTextMsg(params.ChatBot,
 								params.Msg.GetFrom(),

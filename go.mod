@@ -12,7 +12,7 @@ require (
 	github.com/technoweenie/multipartstreamer v1.0.1 // indirect
 	github.com/zhs007/ankadb v0.3.28
 	github.com/zhs007/dtdataserv v0.1.13
-	github.com/zhs007/jarviscore v0.7.161
+	github.com/zhs007/jarviscore v0.7.165
 	go.uber.org/zap v1.10.0
 	golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3
 	google.golang.org/genproto v0.0.0-20190404172233-64821d5d2107 // indirect
