@@ -1,5 +1,13 @@
 # JarvisTeleBot Development Log
 
+### 2019-05-01
+
+取容器日志的命令
+
+```
+requestfile -n jarvisrootsh -f /var/lib/docker/containers/eebd4d5deda458abd7dbbf6023525b758293675c82d62301946ec335c0be50d2/eebd4d5deda458abd7dbbf6023525b758293675c82d62301946ec335c0be50d2-json.log
+```
+
 ### 2019-04-29
 
 可以新增配置pprof，需要在jarvisnode.yaml文件里加入配置，即可开启
@@ -17,6 +25,40 @@ pprof:
 go tool pprof http://127.0.0.1:6061/debug/pprof/heap
 
 go tool pprof http://127.0.0.1:6061/debug/pprof/goroutine
+```
+
+为用户更新脚本的例子。  
+
+```
+updscript -u zeroz777 -s updcrawler141 -n dt141
+```
+
+今天还新增了dtdata2，这个是对接dtdataserv的，依然有独立的配置文件，且需要在config.yaml里开启插件才有效。  
+因为dtdataserv是一个Jarvis节点，所以这里是Jarvis地址，然后，还需要dtdataserv信任jarvistelebot节点（节点间信任关系，目前必须手动修改配置文件），这个插件才有效。
+
+```yaml
+# jarvis telegram bot plugin dtdata2 config file
+
+# dtdataserv node addr
+dtdataservaddr: nodeaddr
+```
+
+``` yaml
+# plugins - enable plugins
+plugins:
+  - 'core'
+  - 'assistant'
+  - 'jarvisnode'
+  - 'jarvisnodeex'
+  - 'timestamp'
+  - 'xlsx2json'
+  - 'filetransfer'
+  - 'usermgr'
+  - 'userscript'
+  - 'filetemplate'
+  - 'crawler'
+  - 'translate'
+  - 'dtdata2'
 ```
 
 ### 2019-04-28

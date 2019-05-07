@@ -1,0 +1,7 @@
+# jarvis telegram bot plugin dtdata2 config file
+
+# dtdataserv node addr
+dtdataservaddr: nodeaddr
+
+#url
+url: http://serv/getdata?token=
