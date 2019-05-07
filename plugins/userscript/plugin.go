@@ -82,6 +82,11 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 							jarviscore.AppendString("I send script ", rscmd.ScriptName, " to ", us.JarvisNodeName), params.Msg)
 
+					} else if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeRemoved {
+
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							jarviscore.AppendString(us.JarvisNodeName, " maybe restarted, you can resend the ", rscmd.ScriptName), params.Msg)
+
 					} else if lstResult[len(lstResult)-1].Err != nil {
 						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 							lstResult[len(lstResult)-1].Err.Error(), params.Msg)
