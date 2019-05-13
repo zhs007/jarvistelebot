@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/zhs007/jarviscore/base"
-	"github.com/zhs007/jarviscore/proto"
+	jarvisbase "github.com/zhs007/jarviscore/base"
+	jarviscorepb "github.com/zhs007/jarviscore/proto"
 	"go.uber.org/zap"
 
 	"github.com/zhs007/jarviscore"
@@ -57,7 +57,7 @@ func (p *jarvisnodeexPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 				Filename: file.Filename,
 				File:     file.Data,
 			}
-			ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
+			ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil, file.Filename)
 			if err != nil {
 				jarvisbase.Warn("jarvisnodeexPlugin.OnMessage", zap.Error(err))
 

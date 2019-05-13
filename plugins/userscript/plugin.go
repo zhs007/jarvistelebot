@@ -55,7 +55,7 @@ func (p *userscriptPlugin) OnMessage(ctx context.Context, params *chatbot.Messag
 			Filename: us.File.Filename,
 			File:     us.File.Data,
 		}
-		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
+		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil, rscmd.ScriptName)
 		// ci, err := jarviscore.BuildCtrlInfoForScriptFile(1, us.File.Filename, us.File.Data, "")
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)

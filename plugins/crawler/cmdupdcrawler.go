@@ -69,7 +69,7 @@ func (cmd *cmdUpdCrawler) RunCommand(ctx context.Context, params *chatbot.Messag
 			File:     buf,
 		}
 
-		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
+		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil, "updcrawler")
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 

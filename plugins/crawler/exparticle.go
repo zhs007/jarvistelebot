@@ -60,7 +60,7 @@ func runExportArticle(ctx context.Context, params *chatbot.MessageParams, eacmd 
 
 		ci, err := jarviscore.BuildCtrlInfoForScriptFile3(sf, []string{
 			path.Join(pluginCrawler.cfg.CrawlerPath, "./output/", eacmd.PDF),
-		})
+		}, "exparticle")
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
