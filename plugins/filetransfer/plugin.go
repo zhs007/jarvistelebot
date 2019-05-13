@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/proto"
+	jarviscorepb "github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
 )
 
@@ -75,6 +75,11 @@ func (p *filetransferPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 
 								chatbot.SendTextMsg(params.ChatBot, from,
 									jarviscore.AppendString("I start sendfile to ", curnode.Name), params.Msg)
+
+							} else if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeRemoved {
+
+								chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+									jarviscore.AppendString(curnode.Name, " maybe restarted, you can resend the file."), params.Msg)
 
 							} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
 								if curmsg.ReplyType == jarviscorepb.REPLYTYPE_IGOTIT {

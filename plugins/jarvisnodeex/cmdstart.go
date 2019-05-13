@@ -5,9 +5,9 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/proto"
+	jarviscorepb "github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/plugins/jarvisnodeex/proto"
+	pluginjarvisnodeexpb "github.com/zhs007/jarvistelebot/plugins/jarvisnodeex/proto"
 )
 
 // cmdStart - start
@@ -82,7 +82,7 @@ func (cmd *cmdStart) RunCommand(ctx context.Context, params *chatbot.MessagePara
 			Filename: rscmd.ScriptFile.Filename,
 			File:     rscmd.ScriptFile.Data,
 		}
-		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, arr)
+		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, arr, "rscmd.ScriptFile.Filename")
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 

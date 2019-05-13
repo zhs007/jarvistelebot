@@ -6,10 +6,10 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/base"
-	"github.com/zhs007/jarviscore/proto"
+	jarvisbase "github.com/zhs007/jarviscore/base"
+	jarviscorepb "github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/plugins/crawler/proto"
+	plugincrawlerpb "github.com/zhs007/jarvistelebot/plugins/crawler/proto"
 	"go.uber.org/zap"
 )
 
@@ -69,7 +69,7 @@ func (cmd *cmdUpdCrawler) RunCommand(ctx context.Context, params *chatbot.Messag
 			File:     buf,
 		}
 
-		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil)
+		ci, err := jarviscore.BuildCtrlInfoForScriptFile2(sf, nil, "updcrawler")
 		if err != nil {
 			chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), err.Error(), params.Msg)
 
@@ -86,6 +86,11 @@ func (cmd *cmdUpdCrawler) RunCommand(ctx context.Context, params *chatbot.Messag
 
 						chatbot.SendTextMsg(params.ChatBot, from,
 							"I send the script updcrawler for "+curnode.Name, params.Msg)
+
+					} else if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeRemoved {
+
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							jarviscore.AppendString(curnode.Name, " maybe restarted, you can restart the crawler."), params.Msg)
 
 					} else if lstResult[len(lstResult)-1].Err != nil {
 

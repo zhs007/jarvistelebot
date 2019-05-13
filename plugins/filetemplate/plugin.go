@@ -6,14 +6,14 @@ import (
 	"fmt"
 
 	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/base"
+	jarvisbase "github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/zhs007/jarviscore/proto"
+	jarviscorepb "github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
-	"github.com/zhs007/jarvistelebot/plugins/filetemplate/proto"
+	chatbotdbpb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
+	pluginfiletemplatepb "github.com/zhs007/jarvistelebot/plugins/filetemplate/proto"
 )
 
 // PluginName - plugin name
@@ -72,9 +72,15 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 			params.ChatBot.GetJarvisNode().SendFile2(ctx, curnode.Addr, fd,
 				func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
-					if len(lstResult) > 0 && lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeSend {
-						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-							jarviscore.AppendString("I send ", ft.FullPath, " to ", ft.JarvisNodeName), params.Msg)
+					if len(lstResult) > 0 {
+						if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeSend {
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								jarviscore.AppendString("I send ", ft.FullPath, " to ", ft.JarvisNodeName), params.Msg)
+						} else if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeRemoved {
+
+							chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+								jarviscore.AppendString(ft.JarvisNodeName, " maybe restarted, you can resend the file."), params.Msg)
+						}
 					}
 
 					for ; sendfilelastresultindex < len(lstResult); sendfilelastresultindex++ {
@@ -152,9 +158,15 @@ func (p *filetemplatePlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 		params.ChatBot.GetJarvisNode().RequestFile(ctx, curnode.Addr, rf,
 			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, lstResult []*jarviscore.JarvisMsgInfo) error {
 
-				if len(lstResult) > 0 && lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeSend {
-					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
-						jarviscore.AppendString("I send request ", ft.FullPath, " from ", ft.JarvisNodeName), params.Msg)
+				if len(lstResult) > 0 {
+					if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeSend {
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							jarviscore.AppendString("I send request ", ft.FullPath, " from ", ft.JarvisNodeName), params.Msg)
+					} else if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeRemoved {
+
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							jarviscore.AppendString(ft.JarvisNodeName, " maybe restarted, you can retry request the file."), params.Msg)
+					}
 				}
 
 				curmsg := lstResult[len(lstResult)-1].Msg

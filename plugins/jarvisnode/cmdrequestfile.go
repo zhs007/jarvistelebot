@@ -9,10 +9,10 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
 	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/proto"
+	jarviscorepb "github.com/zhs007/jarviscore/proto"
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
-	"github.com/zhs007/jarvistelebot/plugins/jarvisnode/proto"
+	chatbotdbpb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
+	pluginjarvisnodepb "github.com/zhs007/jarvistelebot/plugins/jarvisnode/proto"
 )
 
 // cmdRequestFile - request file
@@ -52,6 +52,11 @@ func (cmd *cmdRequestFile) RunCommand(ctx context.Context, params *chatbot.Messa
 
 						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 							jarviscore.AppendString("I send request ", rfcmd.FileFullPath, " to ", curnode.Name), params.Msg)
+
+					} else if lstResult[len(lstResult)-1].JarvisResultType == jarviscore.JarvisResultTypeRemoved {
+
+						chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
+							jarviscore.AppendString(curnode.Name, " maybe restarted, you can resend the file."), params.Msg)
 
 					} else if curmsg.MsgType == jarviscorepb.MSGTYPE_REPLY2 {
 						if curmsg.ReplyType == jarviscorepb.REPLYTYPE_IGOTIT {
