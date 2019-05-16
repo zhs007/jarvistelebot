@@ -138,6 +138,8 @@ func (cmd *cmdUpdCrawler) RunCommand(ctx context.Context, params *chatbot.Messag
 										chatbot.SendTextMsg(params.ChatBot, from, cr.ErrInfo, params.Msg)
 									}
 
+									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
+
 									return nil
 								})
 						}
