@@ -127,7 +127,11 @@ func runExportArticle(ctx context.Context, params *chatbot.MessageParams, eacmd 
 										chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), cr.CtrlResult, params.Msg)
 									}
 
-									chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
+									if cr.ErrInfo != "" {
+										chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), cr.ErrInfo, params.Msg)
+									}
+
+									// chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(), "It's done.", params.Msg)
 
 									return nil
 								})

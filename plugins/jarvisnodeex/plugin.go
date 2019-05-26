@@ -74,7 +74,13 @@ func (p *jarvisnodeexPlugin) OnMessage(ctx context.Context, params *chatbot.Mess
 			params.ChatBot.AddJarvisMsgCallback(curnode.Addr, 0, func(ctx context.Context, msg *jarviscorepb.JarvisMsg) error {
 				cr := msg.GetCtrlResult()
 
-				chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+				if cr.CtrlResult != "" {
+					chatbot.SendTextMsg(params.ChatBot, from, cr.CtrlResult, params.Msg)
+				}
+
+				if cr.ErrInfo != "" {
+					chatbot.SendTextMsg(params.ChatBot, from, cr.ErrInfo, params.Msg)
+				}
 
 				return nil
 			})
