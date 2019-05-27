@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/zhs007/jarviscore"
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/plugins/jarvisnodeex/proto"
+	pluginjarvisnodeexpb "github.com/zhs007/jarvistelebot/plugins/jarvisnodeex/proto"
 )
 
 // cmdUpdNodes - updnodes
@@ -80,18 +80,20 @@ func (cmd *cmdUpdNodes) ParseCommandLine(params *chatbot.MessageParams) (proto.M
 
 	var nodetype = flagset.StringP("nodetype", "t", "", "you want update nodetype")
 	var ver = flagset.StringP("version", "v", "", "you want update to the version")
+	var restart = flagset.BoolP("restart", "r", false, "restart node")
 
 	err := flagset.Parse(params.LstStr[1:])
 	if err != nil {
 		return nil, err
 	}
 
-	if *nodetype == "" || *ver == "" {
+	if *nodetype == "" || (*ver == "" && !*restart) {
 		return nil, chatbot.ErrInvalidCommandLine
 	}
 
 	return &pluginjarvisnodeexpb.UpdNodesCommand{
-		NodeType:    *nodetype,
-		NodeTypeVer: *ver,
+		NodeType:      *nodetype,
+		NodeTypeVer:   *ver,
+		IsOnlyRestart: *restart,
 	}, nil
 }
