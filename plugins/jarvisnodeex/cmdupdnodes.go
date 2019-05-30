@@ -32,7 +32,10 @@ func (cmd *cmdUpdNodes) RunCommand(ctx context.Context, params *chatbot.MessageP
 		lastend := 0
 		firstlog := false
 		params.ChatBot.GetJarvisNode().UpdateAllNodes(ctx, updnodes.NodeType, updnodes.NodeTypeVer,
-			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, numsNode int, lstResult []*jarviscore.ClientGroupProcMsgResults) error {
+			updnodes.IsOnlyRestart,
+			func(ctx context.Context, jarvisnode jarviscore.JarvisNode, numsNode int,
+				lstResult []*jarviscore.ClientGroupProcMsgResults) error {
+
 				if !firstlog {
 					chatbot.SendTextMsg(params.ChatBot, params.Msg.GetFrom(),
 						fmt.Sprintf("The total number of nodes is %v.", numsNode), params.Msg)
