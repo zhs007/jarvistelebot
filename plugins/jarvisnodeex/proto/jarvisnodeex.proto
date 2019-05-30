@@ -36,4 +36,6 @@ message UpdNodesCommand {
     string nodeType = 1;
     // nodeTypeVer - new version
     string nodeTypeVer = 2;
+    // isOnlyRestart - restart node
+    bool isOnlyRestart = 3;
 }

@@ -12,7 +12,7 @@ func Init(filename string) (*jarviscore.Config, error) {
 		return nil, err
 	}
 
-	jarviscore.InitJarvisCore(cfg)
+	jarviscore.InitJarvisCore(cfg, basedef.JARVISNODETYPE, basedef.VERSION)
 
 	return cfg, nil
 }

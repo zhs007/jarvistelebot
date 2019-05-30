@@ -3,12 +3,12 @@ package pluginassistant
 import (
 	"testing"
 
-	"github.com/zhs007/jarviscore/base"
+	jarvisbase "github.com/zhs007/jarviscore/base"
 
 	"go.uber.org/zap/zapcore"
 
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
+	chatbotdbpb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
 )
 
 // testMessage - test Message
@@ -88,7 +88,8 @@ func (msg *testMessage) InGroup() bool {
 }
 
 func Test_assistantPlugin_IsMyMessage(t *testing.T) {
-	jarvisbase.InitLogger(zapcore.InfoLevel, true, "./")
+	subname := jarvisbase.BuildLogSubFilename("testnode", "0.1.0")
+	jarvisbase.InitLogger(zapcore.InfoLevel, true, "./", subname)
 	chatbot.InitLogger(zapcore.InfoLevel, true, "./")
 
 	p, err := NewPlugin("../../test")
