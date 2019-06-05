@@ -67,6 +67,7 @@ github.com/zhs007/jarviscore v0.7.140 h1:K4eZnYoNYNzjrokY/+pZH9+c+idjcSlP7kqaqKG
 github.com/zhs007/jarviscore v0.7.140/go.mod h1:+lY94wxshPqm+usTNBKrjWoEm4BbozJJX7yYOKD0/9s=
 github.com/zhs007/jarviscore v0.7.201 h1:iqKFxW95HAzfexpST2f2Iu0cFqH9l+PULOtdK6CP+y4=
 github.com/zhs007/jarviscore v0.7.201/go.mod h1:L/2/uYfXLWQ3RaF05hgLOnEG+K3YXbqh1opFmXGheCs=
+github.com/zhs007/jarviscore v0.7.202/go.mod h1:L/2/uYfXLWQ3RaF05hgLOnEG+K3YXbqh1opFmXGheCs=
 go.uber.org/atomic v1.3.2 h1:2Oa65PReHzfn29GpvgsYwloV9AVFHPDk8tYxt2c2tr4=
 go.uber.org/atomic v1.3.2/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=
 go.uber.org/atomic v1.4.0 h1:cxzIVoETapQEqDhQu3QfnvXAV4AlzcvUCxkVUFw3+EU=
