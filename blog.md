@@ -1,5 +1,13 @@
 # JarvisTeleBot Development Log
 
+### 2019-06-05
+
+前几天加了个不更新但可以重启节点的命令
+
+```
+updnodes -t jarvisshell -r=true
+```
+
 ### 2019-05-01
 
 取容器日志的命令
