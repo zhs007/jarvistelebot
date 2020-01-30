@@ -173,7 +173,7 @@ func (cb *teleChatBot) procPhotoWithMsg(msg chatbot.Message, photo *tgbotapi.Pho
 
 // procGroup
 func (cb *teleChatBot) procGroup(msg chatbot.Message, tgmsg *tgbotapi.Message) {
-	if tgmsg.Chat != nil && tgmsg.Chat.IsGroup() || tgmsg.Chat.IsSuperGroup() {
+	if tgmsg.Chat != nil && (tgmsg.Chat.IsGroup() || tgmsg.Chat.IsSuperGroup()) {
 		groupid := strconv.FormatInt(tgmsg.Chat.ID, 10)
 		msg.SetGroupID(groupid)
 
