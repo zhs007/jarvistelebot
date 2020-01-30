@@ -10,31 +10,31 @@ import (
 	"time"
 
 	"github.com/zhs007/jarviscore"
-	"github.com/zhs007/jarviscore/base"
-	"github.com/zhs007/jarviscore/proto"
+	jarvisbase "github.com/zhs007/jarviscore/base"
+	jarviscorepb "github.com/zhs007/jarviscore/proto"
 
-	"github.com/go-telegram-bot-api/telegram-bot-api"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
-	"github.com/zhs007/jarvistelebot/plugins/assistant"
-	"github.com/zhs007/jarvistelebot/plugins/core"
-	"github.com/zhs007/jarvistelebot/plugins/crawler"
-	"github.com/zhs007/jarvistelebot/plugins/dtdata"
-	"github.com/zhs007/jarvistelebot/plugins/dtdata2"
-	"github.com/zhs007/jarvistelebot/plugins/duckling"
-	"github.com/zhs007/jarvistelebot/plugins/filetemplate"
-	"github.com/zhs007/jarvistelebot/plugins/filetransfer"
-	"github.com/zhs007/jarvistelebot/plugins/generatepwd"
-	"github.com/zhs007/jarvistelebot/plugins/jarvisnode"
-	"github.com/zhs007/jarvistelebot/plugins/jarvisnodeex"
-	"github.com/zhs007/jarvistelebot/plugins/normal"
-	"github.com/zhs007/jarvistelebot/plugins/notekeyword"
-	"github.com/zhs007/jarvistelebot/plugins/timestamp"
-	"github.com/zhs007/jarvistelebot/plugins/translate"
-	"github.com/zhs007/jarvistelebot/plugins/usermgr"
-	"github.com/zhs007/jarvistelebot/plugins/userscript"
-	"github.com/zhs007/jarvistelebot/plugins/xlsx2json"
+	chatbotdbpb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
+	pluginassistant "github.com/zhs007/jarvistelebot/plugins/assistant"
+	plugincore "github.com/zhs007/jarvistelebot/plugins/core"
+	plugincrawler "github.com/zhs007/jarvistelebot/plugins/crawler"
+	plugindtdata "github.com/zhs007/jarvistelebot/plugins/dtdata"
+	plugindtdata2 "github.com/zhs007/jarvistelebot/plugins/dtdata2"
+	pluginduckling "github.com/zhs007/jarvistelebot/plugins/duckling"
+	pluginfiletemplate "github.com/zhs007/jarvistelebot/plugins/filetemplate"
+	pluginfiletransfer "github.com/zhs007/jarvistelebot/plugins/filetransfer"
+	plugingeneratepwd "github.com/zhs007/jarvistelebot/plugins/generatepwd"
+	pluginjarvisnode "github.com/zhs007/jarvistelebot/plugins/jarvisnode"
+	pluginjarvisnodeex "github.com/zhs007/jarvistelebot/plugins/jarvisnodeex"
+	pluginnormal "github.com/zhs007/jarvistelebot/plugins/normal"
+	pluginnotekeyword "github.com/zhs007/jarvistelebot/plugins/notekeyword"
+	plugintimestamp "github.com/zhs007/jarvistelebot/plugins/timestamp"
+	plugintranslate "github.com/zhs007/jarvistelebot/plugins/translate"
+	pluginusermgr "github.com/zhs007/jarvistelebot/plugins/usermgr"
+	pluginuserscript "github.com/zhs007/jarvistelebot/plugins/userscript"
+	pluginxlsx2json "github.com/zhs007/jarvistelebot/plugins/xlsx2json"
 
 	"go.uber.org/zap"
 )
@@ -173,7 +173,7 @@ func (cb *teleChatBot) procPhotoWithMsg(msg chatbot.Message, photo *tgbotapi.Pho
 
 // procGroup
 func (cb *teleChatBot) procGroup(msg chatbot.Message, tgmsg *tgbotapi.Message) {
-	if tgmsg.Chat != nil && tgmsg.Chat.Type == "group" {
+	if tgmsg.Chat != nil && tgmsg.Chat.IsGroup() || tgmsg.Chat.IsSuperGroup() {
 		groupid := strconv.FormatInt(tgmsg.Chat.ID, 10)
 		msg.SetGroupID(groupid)
 

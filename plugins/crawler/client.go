@@ -3,9 +3,9 @@ package plugincrawler
 import (
 	"context"
 
-	"github.com/zhs007/jarviscore/base"
 	"go.uber.org/zap"
 
+	jarvisbase "github.com/zhs007/jarviscore/base"
 	"github.com/zhs007/jarvistelebot/jarviscrawlercore"
 	"google.golang.org/grpc"
 )
@@ -64,6 +64,10 @@ func (cc *crawlerClient) getArticles(ctx context.Context, website string) (*jarv
 func (cc *crawlerClient) translate(ctx context.Context, text string, srclang string, destlang string) (string, error) {
 	if cc.cfg == nil {
 		return "", ErrNoConfig
+	}
+
+	if text == "" {
+		return "", nil
 	}
 
 	if cc.conn == nil || cc.client == nil {
