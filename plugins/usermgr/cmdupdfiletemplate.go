@@ -6,8 +6,8 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/pflag"
 	"github.com/zhs007/jarvistelebot/chatbot"
-	"github.com/zhs007/jarvistelebot/chatbotdb/proto"
-	"github.com/zhs007/jarvistelebot/plugins/usermgr/proto"
+	chatbotdbpb "github.com/zhs007/jarvistelebot/chatbotdb/proto"
+	pluginusermgrpb "github.com/zhs007/jarvistelebot/plugins/usermgr/proto"
 )
 
 // cmdUpdFileTemplate - updfiletemplate
@@ -117,15 +117,15 @@ func (cmd *cmdUpdFileTemplate) ParseCommandLine(params *chatbot.MessageParams) (
 				FullPath:         *fullpath,
 				SubfilesPath:     *subfilespath,
 			}, nil
-		} else {
-			return &pluginusermgrpb.UpdFileTemplateCommand{
-				UserID:           *uid,
-				UserName:         *uname,
-				FileTemplateName: *filetemplatename,
-				JarvisNodeName:   *nodename,
-				FullPath:         *fullpath,
-			}, nil
 		}
+
+		return &pluginusermgrpb.UpdFileTemplateCommand{
+			UserID:           *uid,
+			UserName:         *uname,
+			FileTemplateName: *filetemplatename,
+			JarvisNodeName:   *nodename,
+			FullPath:         *fullpath,
+		}, nil
 	}
 
 	return nil, chatbot.ErrInvalidCommandLine
